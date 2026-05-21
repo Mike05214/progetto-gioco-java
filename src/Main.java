@@ -18,5 +18,6 @@ public class Main {
         finestra.setVisible(true);
 
         System.out.println("ciao");
+        System.out.println("ciao");
     }
 }
