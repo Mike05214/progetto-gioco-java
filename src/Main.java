@@ -15,7 +15,9 @@ public class Main {
         finestra.setLocationRelativeTo(null);
         
         // Rende la finestra visibile
-        finestra.setVisible(true);
+        finestra.setVisible(true); 
+
+        System.out.println("Absolute cinema project");
 
     }
 }
