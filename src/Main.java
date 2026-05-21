@@ -17,7 +17,5 @@ public class Main {
         // Rende la finestra visibile
         finestra.setVisible(true);
 
-        System.out.println("ciao");
-        System.out.println("ciao");
     }
 }
