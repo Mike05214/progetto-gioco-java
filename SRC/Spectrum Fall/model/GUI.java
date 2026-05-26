@@ -1,4 +1,4 @@
-package controller;
+package model;
 import javax.swing.JFrame;
 import java.awt.Container;
 import javax.swing.JButton;
@@ -29,7 +29,6 @@ public class GUI extends JFrame {
             public void run(){
                 new GUI().setVisible(true);
             }
-            //helo
             
         });
 
