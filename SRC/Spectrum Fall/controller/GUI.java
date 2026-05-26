@@ -1,4 +1,4 @@
-
+package controller;
 import javax.swing.JFrame;
 import java.awt.Container;
 import javax.swing.JButton;
