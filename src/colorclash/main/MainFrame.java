@@ -10,13 +10,16 @@ public class MainFrame extends JFrame {
     
     private CardLayout cardLayout;
     private JPanel pannelloPrincipale;
+    private final int FRAME_WIDTH = 800;
+    private final int FRAME_HEIGHT = 600;
+
     
     public MainFrame() {
         setTitle("Color Clash");
-        setSize(800, 600);
+        setSize(FRAME_WIDTH, FRAME_HEIGHT);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setResizable(false);
-        setLocationRelativeTo(null); // Centra la finestra
+        setResizable(false); // Da RIVEDERE
+        setLocationRelativeTo(null); // Centra la finestra DA RIVEDERE ANCHE QUESTO
         
         cardLayout = new CardLayout();
         pannelloPrincipale = new JPanel(cardLayout);
