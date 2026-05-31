@@ -1,4 +1,4 @@
-package src.colorclash;
+package src.colorclash.main;
 import javax.swing.JFrame;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -9,9 +9,9 @@ public class Main {
     public static void main (String[] args){
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run(){
-                JFrame jframe= new JFrame();
-                jframe.setVisible(true);
-                // ciao
+                MainFrame mainFrame= new MainFrame();
+                mainFrame.setVisible(true);
+                
             }
             
         });
