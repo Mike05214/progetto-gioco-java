@@ -6,6 +6,7 @@ import javax.swing.JPanel;
 import src.colorclash.view.GamePanel;
 import src.colorclash.view.MenuPanel;
 import java.awt.Container;
+import java.awt.BorderLayout;
 
 public class MainFrame extends JFrame {
     
@@ -24,22 +25,23 @@ public class MainFrame extends JFrame {
         Container contPane = this.getContentPane();
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
-        
         MenuPanel menuPanel = new MenuPanel(this);
         GamePanel gamePanel = new GamePanel(this);
-        
+        contPane.add(mainPanel, BorderLayout.CENTER);
         mainPanel.add(menuPanel, "MENU");
-        mainPanel.add(gamePanel, "Play");
+        mainPanel.add(gamePanel, "GAME");
         
         contPane.add(mainPanel);
         cardLayout.show(mainPanel, "MENU");
+        
     }
     
     
     public void changeFrame(String frameName) {
         cardLayout.show(mainPanel, frameName);
-        if(frameName.equals("Play")) {
-            mainPanel.getComponent(1).requestFocusInWindow(); 
+        if(frameName.equals("GAME")) {
+            mainPanel.getComponent(1).requestFocusInWindow(); // imposta il focus sulla schermata del gioco
         }
+        
     }
 }

@@ -10,17 +10,17 @@ import src.colorclash.main.MainFrame;
 public class MenuPanel extends JPanel {
 
     public MenuPanel(MainFrame frame) {
-        setBackground(Color.DARK_GRAY);
+        this.setBackground(Color.DARK_GRAY);
         
-        JButton playButton = new JButton("Play");
+        JButton playButton = new JButton("GAME");
         
         playButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                frame.changeFrame("Play");
+                frame.changeFrame("GAME");
             }
         });
         
-        add(playButton);
+        this.add(playButton);
     }
 }
