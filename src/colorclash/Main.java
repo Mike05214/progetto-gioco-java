@@ -11,7 +11,7 @@ public class Main {
             public void run(){
                 JFrame jframe= new JFrame();
                 jframe.setVisible(true);
-                jframe.setPreferredSize(new Dimension(800, 800));
+                // ciao
             }
             
         });
