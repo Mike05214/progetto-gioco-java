@@ -12,15 +12,15 @@ public class MenuPanel extends JPanel {
     public MenuPanel(MainFrame frame) {
         setBackground(Color.DARK_GRAY);
         
-        JButton btnGioca = new JButton("Gioca");
+        JButton playButton = new JButton("Play");
         
-        btnGioca.addActionListener(new ActionListener() {
+        playButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                frame.cambiaSchermata("GIOCO");
+                frame.changeFrame("Play");
             }
         });
         
-        add(btnGioca);
+        add(playButton);
     }
 }

@@ -1,8 +1,4 @@
 package src.colorclash.main;
-import javax.swing.JFrame;
-import java.awt.Container;
-import java.awt.Dimension;
-import javax.swing.JButton;
 
 
 public class Main {
@@ -10,11 +6,9 @@ public class Main {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run(){
                 MainFrame mainFrame= new MainFrame();
-                mainFrame.setVisible(true);
-                
-            }
-            
+                mainFrame.setVisible(true);     
+            } 
         });
-        
+ 
     }
 }

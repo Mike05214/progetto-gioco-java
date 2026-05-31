@@ -12,15 +12,15 @@ public class GamePanel extends JPanel {
     public GamePanel(MainFrame frame) {
         setBackground(Color.BLACK);
         
-        JButton btnIndietro = new JButton("Torna al Menu (Test)");
+        JButton backButton = new JButton("Back to Menu");
         
-        btnIndietro.addActionListener(new ActionListener() {
+        backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                frame.cambiaSchermata("MENU");
+                frame.changeFrame(TOOL_TIP_TEXT_KEY);
             }
         });
         
-        add(btnIndietro);
+        add(backButton);
     }
 }

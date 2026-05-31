@@ -5,11 +5,12 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import src.colorclash.view.GamePanel;
 import src.colorclash.view.MenuPanel;
+import java.awt.Container;
 
 public class MainFrame extends JFrame {
     
     private CardLayout cardLayout;
-    private JPanel pannelloPrincipale;
+    private JPanel mainPanel;
     private final int FRAME_WIDTH = 800;
     private final int FRAME_HEIGHT = 600;
 
@@ -20,24 +21,25 @@ public class MainFrame extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false); // Da RIVEDERE
         setLocationRelativeTo(null); // Centra la finestra DA RIVEDERE ANCHE QUESTO
-        
+        Container contPane = this.getContentPane();
         cardLayout = new CardLayout();
-        pannelloPrincipale = new JPanel(cardLayout);
+        mainPanel = new JPanel(cardLayout);
         
         MenuPanel menuPanel = new MenuPanel(this);
         GamePanel gamePanel = new GamePanel(this);
         
-        pannelloPrincipale.add(menuPanel, "MENU");
-        pannelloPrincipale.add(gamePanel, "GIOCO");
+        mainPanel.add(menuPanel, "MENU");
+        mainPanel.add(gamePanel, "Play");
         
-        add(pannelloPrincipale);
-        cardLayout.show(pannelloPrincipale, "MENU");
+        contPane.add(mainPanel);
+        cardLayout.show(mainPanel, "MENU");
     }
     
-    public void cambiaSchermata(String nomeSchermata) {
-        cardLayout.show(pannelloPrincipale, nomeSchermata);
-        if(nomeSchermata.equals("GIOCO")) {
-            pannelloPrincipale.getComponent(1).requestFocusInWindow(); 
+    
+    public void changeFrame(String frameName) {
+        cardLayout.show(mainPanel, frameName);
+        if(frameName.equals("Play")) {
+            mainPanel.getComponent(1).requestFocusInWindow(); 
         }
     }
 }
