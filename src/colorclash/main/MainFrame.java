@@ -37,9 +37,9 @@ public class MainFrame extends JFrame {
     }
     
     
-    public void changeFrame(String frameName) {
-        cardLayout.show(mainPanel, frameName);
-        if(frameName.equals("GAME")) {
+    public void changeFrame(String panelName) {
+        cardLayout.show(mainPanel, panelName);
+        if(panelName.equals("GAME")) {
             mainPanel.getComponent(1).requestFocusInWindow(); // imposta il focus sulla schermata del gioco
         }
         

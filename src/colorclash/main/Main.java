@@ -6,7 +6,7 @@ public class Main {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run(){
                 MainFrame mainFrame= new MainFrame();
-                mainFrame.setVisible(true);     
+                mainFrame.setVisible(true);
             } 
         });
  
