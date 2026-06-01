@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JLabel;
 import java.awt.GridLayout;
 import java.awt.GridBagLayout;
 
@@ -15,13 +16,15 @@ public class MenuPanel extends JPanel {
     private final int GRID_HGAP = 0;
     private final int GRID_VGAP = 20;
 
+    private JLabel highScoreLabel; // etichetta dell'Highscore 
+
 
     public MenuPanel(MainFrame frame) {
         this.setBackground(Color.DARK_GRAY);
         
         this.setLayout(new GridBagLayout()); //layout base del MenuPanel, serve a disporre al centro buttonGrid (consiglio di gemini)
         JButton playButton = new JButton("GAME");
-        JButton hiButton = new JButton("HIGHSCORE");
+        this.highScoreLabel = new JLabel("High Score:");
         
         playButton.addActionListener(new ActionListener() {
             @Override
@@ -34,8 +37,14 @@ public class MenuPanel extends JPanel {
         JPanel buttonGrid = new JPanel(new GridLayout(GRID_ROWS, GRID_COLS, GRID_HGAP, GRID_VGAP));
         buttonGrid.setOpaque(false);
         buttonGrid.add(playButton);
-        buttonGrid.add(hiButton);
-        this.add(buttonGrid);
+        buttonGrid.add(highScoreLabel); // ho messo il label alla fine mi ha detto anche gemini che andava tolto il bottone 
+        this.add(buttonGrid); //aggiunge il panello con la griglia bottoni al menu (ottimo fili)
         
+    }
+
+    // --- METODO HELPER PER IL FUTURO ---
+    // Quando la partita finirà, chiameremo questo metodo per aggiornare il testo!
+    public void updateHighScoreDisplay(int newScore) {
+        highScoreLabel.setText("High Score: " + newScore);
     }
 }
