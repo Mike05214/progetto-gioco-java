@@ -13,7 +13,7 @@ public class MenuPanel extends JPanel {
     private final int GRID_ROWS = 2;
     private final int GRID_COLS = 1;
     private final int GRID_HGAP = 0;
-    private final int GRID_VGAP = 2;
+    private final int GRID_VGAP = 20;
 
 
     public MenuPanel(MainFrame frame) {
