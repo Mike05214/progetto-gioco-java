@@ -5,7 +5,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.GridBagLayout;
 import src.colorclash.main.MainFrame;
@@ -32,6 +31,7 @@ public class MenuPanel extends JPanel {
             }
         });
 
+        //nuovo layout dei bottoni
         JPanel buttonGrid = new JPanel(new GridLayout(GRID_ROWS, GRID_COLS, GRID_HGAP, GRID_VGAP));
         buttonGrid.setOpaque(false);
         buttonGrid.add(playButton);
