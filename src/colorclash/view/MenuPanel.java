@@ -7,7 +7,6 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import java.awt.GridLayout;
 import java.awt.GridBagLayout;
-import src.colorclash.main.MainFrame;
 
 public class MenuPanel extends JPanel {
 

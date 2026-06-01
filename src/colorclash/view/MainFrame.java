@@ -1,10 +1,9 @@
-package src.colorclash.main;
+package src.colorclash.view;
 
 import java.awt.CardLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import src.colorclash.view.GamePanel;
-import src.colorclash.view.MenuPanel;
+
 import java.awt.Container;
 import java.awt.BorderLayout;
 

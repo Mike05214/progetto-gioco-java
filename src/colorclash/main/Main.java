@@ -1,5 +1,6 @@
 package src.colorclash.main;
 
+import src.colorclash.view.MainFrame;
 
 public class Main {
     public static void main (String[] args){
