@@ -25,6 +25,7 @@ public class MenuPanel extends JPanel {
         this.setLayout(new GridBagLayout()); //layout base del MenuPanel, serve a disporre al centro buttonGrid (consiglio di gemini)
         JButton playButton = new JButton("GAME");
         this.highScoreLabel = new JLabel("High Score:");
+        this.highScoreLabel.setForeground(Color.WHITE); // imposto colore etichetta
         
         playButton.addActionListener(new ActionListener() {
             @Override
