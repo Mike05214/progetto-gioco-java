@@ -22,6 +22,16 @@ public class MenuPanel extends JPanel {
     private final int BUTTON_TEXT_SIZE = 20;
     private final int TITLE_SIZE = 60;
     private final int HI_LABEL_SIZE = 18;
+    private final int DEFAULT_TOP = 0;
+    private final int DEFAULT_RIGHT = 0;
+    private final int DEFAULT_LEFT = 0;
+    private final int DEFAULT_BOTTOM = 0;
+    private final int BETWEEN_SPACE = 30;
+    private final int COL_1 = 0;
+    private final int ROW_0 = 0;
+    private final int ROW_1 = 1;
+    private final int ROW_2 = 2;
+
 
     private JLabel highScoreLabel; // etichetta dell'Highscore 
     private JButton resumeButton; // Dichiariamo il bottone qui per poterlo abilitare/disabilitare dopo
@@ -59,18 +69,18 @@ public class MenuPanel extends JPanel {
         centerPanel.setOpaque(false);
         // Posizioniamo gli elementi nel pannellino centrale
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0; // Colonna unica centrale
+        gbc.gridx = COL_1; // Colonna unica centrale
         
-        gbc.gridy = 0; // Riga 0 per il bottone
-        gbc.insets = new Insets(0, 0, 30, 0); // 30 pixel di spazio vuoto SOTTO il bottone
+        gbc.gridy = ROW_0; // Riga 0 per il bottone
+        gbc.insets = new Insets(DEFAULT_TOP, DEFAULT_LEFT, BETWEEN_SPACE, DEFAULT_RIGHT); // 30 pixel di spazio vuoto SOTTO il bottone
         centerPanel.add(playButton, gbc);
 
-        gbc.gridy=1;
-        gbc.insets= new Insets(0, 0, 30, 0);
+        gbc.gridy=ROW_1;
+        gbc.insets= new Insets(DEFAULT_TOP, DEFAULT_LEFT, BETWEEN_SPACE, DEFAULT_RIGHT);
         centerPanel.add(resumeButton,gbc);
 
-        gbc.gridy = 2; // Riga 1 per la label
-        gbc.insets = new Insets(0, 0, 0, 0); // Nessuno spazio sotto
+        gbc.gridy = ROW_2; // Riga 1 per la label
+        gbc.insets = new Insets(DEFAULT_TOP, DEFAULT_LEFT, DEFAULT_BOTTOM, DEFAULT_RIGHT); // Nessuno spazio sotto
         centerPanel.add(highScoreLabel, gbc);
         
         // 3. INSERIMENTO AL CENTRO DELLA FINESTRA
