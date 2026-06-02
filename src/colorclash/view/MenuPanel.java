@@ -16,10 +16,12 @@ import java.awt.Font; // Importante per la grandezza del testo!
 
 public class MenuPanel extends JPanel {
 
-    private final int GRID_ROWS = 2;
-    private final int GRID_COLS = 1;
-    private final int GRID_HGAP = 0;
-    private final int GRID_VGAP = 20;
+    //parametri dichiarati come costanti
+    private final int BUTTON_WIDTH = 200;
+    private final int BUTTON_HEIGHT = 50;
+    private final int BUTTON_TEXT_SIZE = 20;
+    private final int TITLE_SIZE = 60;
+    private final int HI_LABEL_SIZE = 18;
 
     private JLabel highScoreLabel; // etichetta dell'Highscore 
     private JButton resumeButton; // Dichiariamo il bottone qui per poterlo abilitare/disabilitare dopo
@@ -29,19 +31,19 @@ public class MenuPanel extends JPanel {
         this.setBackground(Color.DARK_GRAY);
         
         this.setLayout(new BorderLayout()); //layout base del MenuPanel, serve a disporre al centro buttonGrid (consiglio di gemini)
-        JButton playButton = new JButton("GAME");
-        playButton.setFont(new Font("Arial", Font.BOLD, 20));
-        playButton.setPreferredSize(new Dimension(200,50));
+        JButton playButton = new JButton("PLAY");
+        playButton.setFont(new Font("Arial", Font.BOLD, BUTTON_TEXT_SIZE));
+        playButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
         this.highScoreLabel = new JLabel("High Score:");
-        this.highScoreLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        this.highScoreLabel.setFont(new Font("Arial", Font.PLAIN, HI_LABEL_SIZE));
         this.highScoreLabel.setForeground(Color.WHITE); // imposto colore etichetta
         this.resumeButton = new JButton("RESUME");
-        this.resumeButton.setPreferredSize(new Dimension(200, 50));
-        this.resumeButton.setFont(new Font("Arial", Font.BOLD, 20));
+        this.resumeButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+        this.resumeButton.setFont(new Font("Arial", Font.BOLD, BUTTON_TEXT_SIZE));
         this.resumeButton.setEnabled(false); // Appena apri il gioco, non puoi fare "Riprendi"
 
         JLabel titleLabel = new JLabel("COLOR CLASH",SwingConstants.CENTER); // etichetta del titolo gioco e forzo a stare al centro
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 60));
+        titleLabel.setFont(new Font("Arial", Font.BOLD, TITLE_SIZE));
         titleLabel.setForeground(Color.CYAN); 
         this.add(titleLabel,BorderLayout.NORTH);
     

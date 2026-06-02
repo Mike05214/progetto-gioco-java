@@ -36,6 +36,14 @@ public class Avatar {
     public void moveRight() {
         this.x += speed;
     }
+
+    public void moveUp(){
+        this.y -= speed;
+    }
+
+    public void moveDown(){
+        this.y += speed;
+    }
     
     public void switchColor() {
         // Passa al colore successivo. Supponiamo di avere 3 colori totali (0, 1, 2)

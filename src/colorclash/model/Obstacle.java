@@ -1,6 +1,6 @@
 package src.colorclash.model;
 
-public class Obstacle {
+public abstract class Obstacle {
     
     // Variabili "protected" così le classi figlie(le sotto-classi) (es. SpeedRacer) potranno leggerle
     protected int x;
