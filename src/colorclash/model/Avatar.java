@@ -23,7 +23,7 @@ public class Avatar {
         // Valori base (in futuro li sposteremo nella classe Config per comodità)
         this.width = 50;
         this.height = 50;
-        this.speed = 15;
+        this.speed = 5;
         this.colorId = 0; // Parte con il primo colore (es. 0 = Rosso)
         this.isInvulnerable = false;
     }
