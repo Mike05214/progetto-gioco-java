@@ -7,6 +7,8 @@ import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyAdapter;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -53,46 +55,46 @@ public class GamePanel extends JPanel {
         });
         this.gameLoop.start(); //senza sta riga gli update non avvengono, di conseguenza il gioco non parte
         //INIZIO PROTOTIPO MOVIMENTO PLAYER (magari da rivedere i metodi usati in base a quelli che ci sono nelle dispense del prof se questi non ci piacciono)
-        this.addKeyListener(new java.awt.event.KeyAdapter() { //listener della tastiera nella view come da programma
-        @Override
-        public void keyPressed(java.awt.event.KeyEvent e) {
-            int key = e.getKeyCode();
+        this.addKeyListener(new KeyAdapter() { //listener della tastiera nella view come da programma
+            @Override
+            public void keyPressed(KeyEvent e) {
+                int key = e.getKeyCode();
         
          // Quando premi il tasto, ACCENDI l'interruttore (true)
-            if (key == java.awt.event.KeyEvent.VK_W || key == java.awt.event.KeyEvent.VK_UP) {
-                model.getPlayer().setMovingUp(true);
+                if (key == KeyEvent.VK_W || key == KeyEvent.VK_UP) {
+                    model.getPlayer().setMovingUp(true);
+                }
+                if (key == KeyEvent.VK_S || key == KeyEvent.VK_DOWN) {
+                    model.getPlayer().setMovingDown(true);
+                }
+                if (key == KeyEvent.VK_A || key == KeyEvent.VK_LEFT) {
+                    model.getPlayer().setMovingLeft(true);
+                }
+                if (key == KeyEvent.VK_D || key == KeyEvent.VK_RIGHT) {
+                    model.getPlayer().setMovingRight(true);
+                }
             }
-            if (key == java.awt.event.KeyEvent.VK_S || key == java.awt.event.KeyEvent.VK_DOWN) {
-                model.getPlayer().setMovingDown(true);
-            }
-            if (key == java.awt.event.KeyEvent.VK_A || key == java.awt.event.KeyEvent.VK_LEFT) {
-                model.getPlayer().setMovingLeft(true);
-            }
-            if (key == java.awt.event.KeyEvent.VK_D || key == java.awt.event.KeyEvent.VK_RIGHT) {
-                model.getPlayer().setMovingRight(true);
-            }
-        }
 
-        @Override
-        public void keyReleased(java.awt.event.KeyEvent e) {
-            int key = e.getKeyCode();
+            @Override
+            public void keyReleased(KeyEvent e) {
+                int key = e.getKeyCode();
         
         // Quando rilasci il tasto, SPEGNI l'interruttore (false)
-            if (key == java.awt.event.KeyEvent.VK_W || key == java.awt.event.KeyEvent.VK_UP) {
-                model.getPlayer().setMovingUp(false);
+                if (key == KeyEvent.VK_W || key == KeyEvent.VK_UP) {
+                    model.getPlayer().setMovingUp(false);
+                }
+                if (key == KeyEvent.VK_S || key == KeyEvent.VK_DOWN) {
+                    model.getPlayer().setMovingDown(false);
+                }
+                if (key == KeyEvent.VK_A || key == KeyEvent.VK_LEFT) {
+                    model.getPlayer().setMovingLeft(false);
+                }
+                if (key == KeyEvent.VK_D || key == KeyEvent.VK_RIGHT) {
+                    model.getPlayer().setMovingRight(false);
+                }
             }
-            if (key == java.awt.event.KeyEvent.VK_S || key == java.awt.event.KeyEvent.VK_DOWN) {
-                model.getPlayer().setMovingDown(false);
-            }
-            if (key == java.awt.event.KeyEvent.VK_A || key == java.awt.event.KeyEvent.VK_LEFT) {
-                model.getPlayer().setMovingLeft(false);
-            }
-            if (key == java.awt.event.KeyEvent.VK_D || key == java.awt.event.KeyEvent.VK_RIGHT) {
-                model.getPlayer().setMovingRight(false);
-            }
-        }
         //FINE PROTOTIPO MOVIMENTO PLAYER
-});
+        });
 
         
     }// FINE COSTRUTTORE
@@ -119,4 +121,4 @@ public class GamePanel extends JPanel {
 
 
 
-}
+}//FINE CLASSE PANNELLO
