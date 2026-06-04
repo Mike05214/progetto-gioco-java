@@ -93,7 +93,8 @@ public class Avatar {
     
     public boolean isInvulnerable() { return isInvulnerable; }
     public void setInvulnerable(boolean invulnerable) { this.isInvulnerable = invulnerable; }
-    // 3. I METODI "SET" PER ACCENDERE/SPEGNERE GLI INTERRUTTORI
+    // 3. I METODI "SET" PER ACCENDERE/SPEGNERE GLI INTERRUTTORI, permettono al metodo update di chiamare continuamente ad ogni tick il metodo move 
+    // che a sua volta muove il quadratino in base a quale delle variabili moving è settata a true da questi metodi
     public void setMovingUp(boolean movingUp)       { this.movingUp = movingUp; }
     public void setMovingDown(boolean movingDown)   { this.movingDown = movingDown; }
     public void setMovingLeft(boolean movingLeft)   { this.movingLeft = movingLeft; }
