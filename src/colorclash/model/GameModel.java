@@ -37,19 +37,21 @@ public class GameModel {
     
     // Ogni volta che il Timer del pannello "suona" (circa 60 volte al secondo), 
     // il pannello chiama model.update() per far calcolare la fisica, e subito dopo chiama repaint() per disegnare la nuova scena.
-    public void update() {
+    public void update(int panelWidth, int panelHeight) {
         // Se il gioco è finito, fermiamo i calcoli
         if (isGameOver) {
             return;
         }
-        
+        player.move();
+        player.constrainX(0, panelWidth);
+        player.constrainY(0, panelHeight);
         // Nei prossimi passaggi aggiungeremo qui altri helper methods come:
         // spawnObstacles();
         // moveEntities();
         // checkCollisions();
         
         // Per ora facciamo solo salire il punteggio per testare che il tempo scorre!
-        score++; 
+        score++;
     }
     //HELPER METODI:
 

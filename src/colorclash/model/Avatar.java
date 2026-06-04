@@ -13,6 +13,7 @@ public class Avatar {
     private int colorId; // Usiamo un ID logico invece di java.awt.Color, nel game panel mettiamo un array di tipo color 
                                // dove ongni colore è associato ad un indice 
     private boolean isInvulnerable;
+    private boolean movingUp, movingDown, movingLeft, movingRight; //quattro "interruttori" per il movimento
     
     // Costruttore
     public Avatar(int startX, int startY) {
@@ -27,24 +28,47 @@ public class Avatar {
         this.isInvulnerable = false;
     }
     
-    // --- METODI DI AZIONE (Chiamati dal GameModel quando l'utente preme i tasti) ---
+   // UNICO METODO MOVE PER UN CONTROLLO PIU FLUIDO DEL MOVIMENTO DELL'AVATAR
     
-    public void moveLeft() {
-        this.x -= speed;
+    public void move(){
+        if(movingUp){
+            y -= speed;
+        }
+
+        if(movingDown){
+            y += speed;
+        }
+
+        if(movingLeft){
+            x -= speed;
+        }
+
+        if(movingRight){
+            x += speed;
+        }
     }
     
-    public void moveRight() {
-        this.x += speed;
+    // Questo metodo servirà al GameModel per evitare che l'avatar esca dallo schermo
+    public void constrainX(int minX, int maxX) {
+        if (this.x < minX) {
+            this.x = minX;
+        }
+        
+        if (this.x + this.width > maxX) {
+            this.x = maxX - this.width;
+        }
     }
 
-    public void moveUp(){
-        this.y -= speed;
+    public void constrainY(int minY, int maxY){
+        if(this.y < minY){
+            this.y = minY;
+        }
+
+        if(this.y + this.height > maxY){
+            this.y = maxY - this.height;
+        }
     }
 
-    public void moveDown(){
-        this.y += speed;
-    }
-    
     public void switchColor() {
         // Passa al colore successivo. Supponiamo di avere 3 colori totali (0, 1, 2)
         this.colorId++;
@@ -57,16 +81,7 @@ public class Avatar {
     
     // --- METODI HELPER LOGICI ---
     
-    // Questo metodo servirà al GameModel per evitare che l'avatar esca dallo schermo
-    public void constrainX(int minX, int maxX) {
-        if (this.x < minX) {
-            this.x = minX;
-        }
-        
-        if (this.x + this.width > maxX) {
-            this.x = maxX - this.width;
-        }
-    }
+    
     
     // --- GETTERS & SETTERS (Per far leggere i dati alla View e al GameModel) ---
     
@@ -78,4 +93,9 @@ public class Avatar {
     
     public boolean isInvulnerable() { return isInvulnerable; }
     public void setInvulnerable(boolean invulnerable) { this.isInvulnerable = invulnerable; }
+    // 3. I METODI "SET" PER ACCENDERE/SPEGNERE GLI INTERRUTTORI
+    public void setMovingUp(boolean movingUp)       { this.movingUp = movingUp; }
+    public void setMovingDown(boolean movingDown)   { this.movingDown = movingDown; }
+    public void setMovingLeft(boolean movingLeft)   { this.movingLeft = movingLeft; }
+    public void setMovingRight(boolean movingRight) { this.movingRight = movingRight; }
 }

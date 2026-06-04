@@ -6,7 +6,10 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyListener;
+
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer; // Attenzione: importare quello di javax.swing!
 
@@ -37,19 +40,61 @@ public class GamePanel extends JPanel {
             }
         });
         this.add(backButton);
-
         // --- CREAZIONE DEL GAME LOOP (IL MOTORE DEL TEMPO) ---
         this.gameLoop = new Timer(DELAY,new ActionListener(){        //Metodo mostratoci dal prof su dispensa per animazione 
             @Override
             public void actionPerformed(ActionEvent e){
                 // 1. Il tempo scorre: facciamo muovere la logica
-                model.update();
+                model.update(getWidth(), getHeight()); //i metodi nei parametri sono nativi di Java Swing a quanto dice gemini
 
                 // 2. Ridisegniamo lo schermo con le nuove posizioni
                 repaint();
             }
-
         });
+        this.gameLoop.start(); //senza sta riga gli update non avvengono, di conseguenza il gioco non parte
+        //INIZIO PROTOTIPO MOVIMENTO PLAYER (magari da rivedere i metodi usati in base a quelli che ci sono nelle dispense del prof se questi non ci piacciono)
+        this.addKeyListener(new java.awt.event.KeyAdapter() { //listener della tastiera nella view come da programma
+        @Override
+        public void keyPressed(java.awt.event.KeyEvent e) {
+            int key = e.getKeyCode();
+        
+         // Quando premi il tasto, ACCENDI l'interruttore (true)
+            if (key == java.awt.event.KeyEvent.VK_W || key == java.awt.event.KeyEvent.VK_UP) {
+                model.getPlayer().setMovingUp(true);
+            }
+            if (key == java.awt.event.KeyEvent.VK_S || key == java.awt.event.KeyEvent.VK_DOWN) {
+                model.getPlayer().setMovingDown(true);
+            }
+            if (key == java.awt.event.KeyEvent.VK_A || key == java.awt.event.KeyEvent.VK_LEFT) {
+                model.getPlayer().setMovingLeft(true);
+            }
+            if (key == java.awt.event.KeyEvent.VK_D || key == java.awt.event.KeyEvent.VK_RIGHT) {
+                model.getPlayer().setMovingRight(true);
+            }
+        }
+
+        @Override
+        public void keyReleased(java.awt.event.KeyEvent e) {
+            int key = e.getKeyCode();
+        
+        // Quando rilasci il tasto, SPEGNI l'interruttore (false)
+            if (key == java.awt.event.KeyEvent.VK_W || key == java.awt.event.KeyEvent.VK_UP) {
+                model.getPlayer().setMovingUp(false);
+            }
+            if (key == java.awt.event.KeyEvent.VK_S || key == java.awt.event.KeyEvent.VK_DOWN) {
+                model.getPlayer().setMovingDown(false);
+            }
+            if (key == java.awt.event.KeyEvent.VK_A || key == java.awt.event.KeyEvent.VK_LEFT) {
+                model.getPlayer().setMovingLeft(false);
+            }
+            if (key == java.awt.event.KeyEvent.VK_D || key == java.awt.event.KeyEvent.VK_RIGHT) {
+                model.getPlayer().setMovingRight(false);
+            }
+        }
+        //FINE PROTOTIPO MOVIMENTO PLAYER
+});
+
+        
     }// FINE COSTRUTTORE
 
     // --- IL METODO PER DISEGNARE ---
