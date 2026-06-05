@@ -61,7 +61,11 @@ public class GameModel {
         player.constrainX(0, panelWidth);
         player.constrainY(0, panelHeight);
         // Nei prossimi passaggi aggiungeremo qui altri helper methods come:
-        // spawnObstacles();
+        // 2. Genera nuovi nemici se serve
+        handleSpawning(panelWidth);
+        // 3. Muovi i nemici e cancella quelli usciti dallo schermo
+        updateEnemies(panelHeight); // Modifica il tuo metodo updateEnemies per fargli usare panelHeight!
+
         // moveEntities();
         // checkCollisions();
         
@@ -70,11 +74,11 @@ public class GameModel {
     }
     //HELPER METODI:
 
-    private void updateEnemies() {
+    private void updateEnemies(int panelHeight ) {
         // 1. Facciamo cadere ogni sotacolo presente nella lista 
         for (Obstacle obs : enemies) { //in questo modo si ottimizza la sintassi al posto del for tradizionale con la size della lista(UTILE)
             obs.fall();
-            obs.checkOffScreen(600); // Controlla se sono usciti dal fondo dello schermo
+            obs.checkOffScreen(panelHeight); // Controlla se sono usciti dal fondo dello schermo
         }
         
         // 2. RIMOZIONE INTELLIGENTE
