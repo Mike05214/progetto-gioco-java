@@ -12,6 +12,10 @@ public class GameModel {
     private int score;
     private int lives;
     private boolean isGameOver;
+
+    //costanti
+    private final int START_X = 375;
+    private final int START_Y = 450;  
     
     // Costruttore: viene chiamato quando l'utente preme "Gioca"
     public GameModel() {
@@ -24,7 +28,7 @@ public class GameModel {
     private void initGame() {
 
         // Posizioniamo l'Avatar in basso al centro (es. per una finestra 800x600)
-        this.player = new Avatar(375, 450); 
+        this.player = new Avatar(START_X, START_Y); 
         this.enemies = new ArrayList<>(); // Lista vuota all'inizio
         this.enemies.add(new StandardObstacle(375, 0, 5, 1));
 
@@ -109,5 +113,11 @@ public class GameModel {
     }
     public boolean isGameOver() {
         return isGameOver;
+    }
+    public int getStartX(){
+        return this.START_X;
+    }
+    public int getStartY(){
+        return this.START_Y;
     }
 }

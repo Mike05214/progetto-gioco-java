@@ -39,6 +39,7 @@ public class GamePanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 frame.changeFrame("MENU");
+                model.getPlayer().resetPosition(model.getStartX(), model.getStartY());
             }
         });
         this.add(backButton);

@@ -86,6 +86,11 @@ public class Avatar {
             this.colorId = 0;
         }
     }
+
+    public void resetPosition(int startX, int startY){
+        this.x = startX;
+        this.y = startY;
+    }
     
     // --- METODI HELPER LOGICI ---
     
