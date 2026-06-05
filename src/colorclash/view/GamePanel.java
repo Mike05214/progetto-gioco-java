@@ -75,6 +75,10 @@ public class GamePanel extends JPanel {
                 if (key == KeyEvent.VK_D || key == KeyEvent.VK_RIGHT) {
                     model.getPlayer().setMovingRight(true);
                 }
+                if(key == KeyEvent.VK_SPACE){
+                    model.getPlayer().switchColor();
+                }
+
             }
 
             @Override
@@ -108,8 +112,10 @@ public class GamePanel extends JPanel {
         super.paintComponent(g);
         // 1. Disegniamo l'Avatar
         Avatar player = this.model.getPlayer();
-        g.setColor(this.colorPalette[player.getColorId()]);
-        g.fillRect(player.getX(), player.getY(), player.getWidth(), player.getHeight());
+        int PlayerColorId = model.getPlayer().getColorId();
+        Color currentColor = this.colorPalette[PlayerColorId];
+        g.setColor(currentColor);
+        g.fillRect((int)player.getX(), (int)player.getY(), player.getWidth(), player.getHeight());
 
         // 2. Disegniamo TUTTI gli ostacoli presenti nella lista
         for (Obstacle obs : this.model.getEnemies()){

@@ -7,7 +7,7 @@ public class Avatar {
     private double y;
     private int width;
     private int height;
-    private final double VECTOR_LENGHT = 0.7071; //lunghezza del vettore velocità (teorema di pitagora)
+    private final double SCALE_FACTOR = 0.7071; //lunghezza del vettore velocità (teorema di pitagora)
     
     // Attributi di gioco
     private double speed;  // Lo speed rappresenta la lunghezza del passo quando si piagia il comando daje 
@@ -36,7 +36,7 @@ public class Avatar {
         boolean diagonalMovement = (movingLeft ^ movingRight) && (movingUp ^ movingDown); // ^ è l'operatore logico XOR, diagonal movement è true solo se si stanno premento un tasto laterale e uno verticale allo stesso tempo
         double speedVector = 0;
         if(diagonalMovement){
-            speedVector = speed*VECTOR_LENGHT; //si divide il vettore velocità diagonale per la sua lunghezza, normalizzandolo
+            speedVector = speed*SCALE_FACTOR; //si divide il vettore velocità diagonale per la sua lunghezza, normalizzandolo
         }
         else{
             speedVector = speed;
