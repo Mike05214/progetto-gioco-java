@@ -3,10 +3,11 @@ package src.colorclash.model;
 public class Avatar {
     
     // Coordinate e dimensioni pure (nessun rettangolo grafico, solo matematica)
-    private int x;
-    private int y;
+    private double x;
+    private double y;
     private int width;
     private int height;
+    private final double VECTOR_LENGHT = 0.7071; //lunghezza del vettore velocità (teorema di pitagora)
     
     // Attributi di gioco
     private double speed;  // Lo speed rappresenta la lunghezza del passo quando si piagia il comando daje 
@@ -31,21 +32,28 @@ public class Avatar {
    // UNICO METODO MOVE PER UN CONTROLLO PIU FLUIDO DEL MOVIMENTO DELL'AVATAR
     
     public void move(){
-        if(movingUp){
-            y -= speed;
+       // Si muove in diagonale solo se c'è un movimento orizzontale REALE e uno verticale REALE
+        boolean diagonalMovement = (movingLeft ^ movingRight) && (movingUp ^ movingDown); // ^ è l'operatore logico XOR, diagonal movement è true solo se si stanno premento un tasto laterale e uno verticale allo stesso tempo
+        double speedVector = 0;
+        if(diagonalMovement){
+            speedVector = speed*VECTOR_LENGHT; //si divide il vettore velocità diagonale per la sua lunghezza, normalizzandolo
+        }
+        else{
+            speedVector = speed;
         }
 
-        if(movingDown){
-            y += speed;
-        }
-
-        if(movingLeft){
-            x -= speed;
-        }
-
-        if(movingRight){
-            x += speed;
-        }
+        if(movingUp && !movingDown) {
+            y -= speedVector;
+        }   
+        if(movingDown && !movingUp){
+            y += speedVector;
+        }    
+        if(movingLeft && !movingRight){
+            x -= speedVector;
+        }   
+        if(movingRight && !movingLeft){
+            x += speedVector;
+        }  
     }
     
     // Questo metodo servirà al GameModel per evitare che l'avatar esca dallo schermo
@@ -85,8 +93,8 @@ public class Avatar {
     
     // --- GETTERS & SETTERS (Per far leggere i dati alla View e al GameModel) ---
     
-    public int getX() { return x; }
-    public int getY() { return y; }
+    public int getX() { return (int)x; } //cast esplicito a int, il metodo fillRect nella view si aspetta delle coordinate intere non double
+    public int getY() { return (int)y; }
     public int getWidth() { return width; }
     public int getHeight() { return height; }
     public int getColorId() { return colorId; }
