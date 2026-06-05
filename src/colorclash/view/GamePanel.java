@@ -40,6 +40,7 @@ public class GamePanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 frame.changeFrame("MENU");
                 model.getPlayer().resetPosition(model.getStartX(), model.getStartY());
+                model.getPlayer().resetMovementFlags();
             }
         });
         this.add(backButton);

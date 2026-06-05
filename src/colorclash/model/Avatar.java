@@ -91,6 +91,13 @@ public class Avatar {
         this.x = startX;
         this.y = startY;
     }
+
+    public void resetMovementFlags() {
+        this.movingUp = false;
+        this.movingDown = false;
+        this.movingLeft = false;
+        this.movingRight = false;
+    }
     
     // --- METODI HELPER LOGICI ---
     
