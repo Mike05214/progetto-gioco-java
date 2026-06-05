@@ -45,7 +45,7 @@ public class GameModel {
 
         this.random = new Random();
         this.frameCounter = 0;
-        this.spawnInterval = 125; // 125 frame = 1 secondo (se il timer è a ~8ms)
+        this.spawnInterval = 62; // 125 frame = 1 secondo (se il timer è a ~8ms)
     }
     
     // --- METODI PUBBLICI (Richiamati dalla View) ---
