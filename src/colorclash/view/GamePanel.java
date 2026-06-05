@@ -22,7 +22,7 @@ public class GamePanel extends JPanel {
     private Timer gameLoop;
 
     // Calcoliamo i millisecondi per avere 60 FPS (1000 ms / 60 = ~16 ms)
-    private final int DELAY = 16;
+    private final int DELAY = 8;
 
     // Palete dei colori per associare ID(indice) a un colore specifico 
     private final Color[] colorPalette = {

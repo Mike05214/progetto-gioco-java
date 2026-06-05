@@ -9,7 +9,7 @@ public class Avatar {
     private int height;
     
     // Attributi di gioco
-    private int speed;  // Lo speed rappresenta la lunghezza del passo quando si piagia il comando daje 
+    private double speed;  // Lo speed rappresenta la lunghezza del passo quando si piagia il comando daje 
     private int colorId; // Usiamo un ID logico invece di java.awt.Color, nel game panel mettiamo un array di tipo color 
                                // dove ongni colore è associato ad un indice 
     private boolean isInvulnerable;
@@ -23,7 +23,7 @@ public class Avatar {
         // Valori base (in futuro li sposteremo nella classe Config per comodità)
         this.width = 50;
         this.height = 50;
-        this.speed = 5;
+        this.speed = 2.5;
         this.colorId = 0; // Parte con il primo colore (es. 0 = Rosso)
         this.isInvulnerable = false;
     }
