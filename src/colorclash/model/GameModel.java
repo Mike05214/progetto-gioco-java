@@ -1,6 +1,7 @@
 package src.colorclash.model;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class GameModel {
 
@@ -15,7 +16,13 @@ public class GameModel {
 
     //costanti
     private final int START_X = 375;
-    private final int START_Y = 450;  
+    private final int START_Y = 450;
+    private final int START_COLOR_ID = 0;
+
+    // --- VARIABILI PER LO SPAWNER ---
+    private Random random;
+    private int frameCounter;
+    private int spawnInterval; // Ogni quanti frame nasce un nemico
     
     // Costruttore: viene chiamato quando l'utente preme "Gioca"
     public GameModel() {
@@ -28,13 +35,17 @@ public class GameModel {
     private void initGame() {
 
         // Posizioniamo l'Avatar in basso al centro (es. per una finestra 800x600)
-        this.player = new Avatar(START_X, START_Y); 
+        this.player = new Avatar(START_X, START_Y,START_COLOR_ID); 
         this.enemies = new ArrayList<>(); // Lista vuota all'inizio
         this.enemies.add(new StandardObstacle(375, 0, 5, 1));
 
         this.score = 0;
         this.lives = 3; // In futuro questo "3" lo prenderemo dalla classe Config!
         this.isGameOver = false;
+
+        this.random = new Random();
+        this.frameCounter = 0;
+        this.spawnInterval = 125; // 125 frame = 1 secondo (se il timer è a ~8ms)
     }
     
     // --- METODI PUBBLICI (Richiamati dalla View) ---
@@ -82,6 +93,38 @@ public class GameModel {
         enemies.add(newObstacle);
     }
 
+    // Controlla se è il momento di far nascere un nemico
+    private void handleSpawning(int panelWidth) {
+        frameCounter++;
+    
+        if (frameCounter >= spawnInterval) {
+            spawnRandomEnemy(panelWidth);
+            frameCounter = 0; // Azzera il contatore per il prossimo nemico!
+        }
+    }
+
+// Crea fisicamente il nemico
+    private void spawnRandomEnemy(int panelWidth) {
+        int obstacleWidth = 50; // Larghezza standard del nemico
+    
+    // 1. Genera una coordinata X casuale dentro i limiti dello schermo
+    // Se lo schermo è 800, la X sarà tra 0 e 750 (per non uscire fuori col lato destro)
+        int randomX = random.nextInt(panelWidth - obstacleWidth);
+    
+    // 2. Sceglie un colore a caso (0 = Rosso, 1 = Verde, 2 = Blu)
+        int randomColorId = random.nextInt(3);
+    
+    // 3. Velocità di caduta (es. 5 pixel a frame)
+        int fallSpeed = 5;
+    
+    // IL TRUCCO: La Y di partenza è -50! (Così nasce FUORI dallo schermo in alto e "scivola" dentro)
+        int startY = -50; 
+    
+    // Creiamo il nemico concreto e lo mettiamo nella lista
+        Obstacle newEnemy = new StandardObstacle(randomX, startY, fallSpeed, randomColorId);
+        enemies.add(newEnemy);
+    }
+
 
 
 
@@ -119,5 +162,8 @@ public class GameModel {
     }
     public int getStartY(){
         return this.START_Y;
+    }
+    public int getStartColorId(){
+        return this.START_COLOR_ID;
     }
 }

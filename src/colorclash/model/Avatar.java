@@ -17,7 +17,7 @@ public class Avatar {
     private boolean movingUp, movingDown, movingLeft, movingRight; //quattro "interruttori" per il movimento
     
     // Costruttore
-    public Avatar(int startX, int startY) {
+    public Avatar(int startX, int startY,int startColorId) {
         this.x = startX;
         this.y = startY;
         
@@ -25,7 +25,7 @@ public class Avatar {
         this.width = 50;
         this.height = 50;
         this.speed = 2.5;
-        this.colorId = 0; // Parte con il primo colore (es. 0 = Rosso)
+        this.colorId = startColorId; // Parte con il primo colore (es. 0 = Rosso)
         this.isInvulnerable = false;
     }
     
@@ -87,9 +87,10 @@ public class Avatar {
         }
     }
 
-    public void resetPosition(int startX, int startY){
+    public void resetToInitialSettings(int startX, int startY, int startColorId){
         this.x = startX;
         this.y = startY;
+        this.colorId = startColorId;
     }
 
     public void resetMovementFlags() {

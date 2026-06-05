@@ -39,7 +39,7 @@ public class GamePanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 frame.changeFrame("MENU");
-                model.getPlayer().resetPosition(model.getStartX(), model.getStartY());
+                model.getPlayer().resetToInitialSettings(model.getStartX(), model.getStartY(),model.getStartColorId());
                 model.getPlayer().resetMovementFlags();
             }
         });
