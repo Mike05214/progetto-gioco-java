@@ -13,11 +13,11 @@ public abstract class Obstacle {
     protected boolean isActive; // Ci serve per sapere quando eliminarlo dallo schermo
     
     // Costruttore: ogni ostacolo nasce con coordinate, velocità e colore specifici
-    public Obstacle(int startX, int startY, int speed, int colorId) {
+    public Obstacle(int startX, int startY, int speed, int colorId,int width,int height) {
         this.x = startX;
         this.y = startY;
-        this.width = 50;  // Dimensione standard
-        this.height = 50; // Dimensione standard
+        this.width = width;  // Dimensione standard
+        this.height = height; // Dimensione standard
         
         this.fallSpeed = speed;
         this.colorId = colorId;

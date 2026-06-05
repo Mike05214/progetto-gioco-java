@@ -37,7 +37,7 @@ public class GameModel {
         // Posizioniamo l'Avatar in basso al centro (es. per una finestra 800x600)
         this.player = new Avatar(START_X, START_Y,START_COLOR_ID); 
         this.enemies = new ArrayList<>(); // Lista vuota all'inizio
-        this.enemies.add(new StandardObstacle(375, 0, 5, 1));
+        
 
         this.score = 0;
         this.lives = 3; // In futuro questo "3" lo prenderemo dalla classe Config!
@@ -109,11 +109,13 @@ public class GameModel {
 
 // Crea fisicamente il nemico
     private void spawnRandomEnemy(int panelWidth) {
-        int obstacleWidth = 50; // Larghezza standard del nemico
+        
+        int randomWidth = random.nextInt(50, 100); 
+        int randomHeigth = random.nextInt(50, 100);
     
     // 1. Genera una coordinata X casuale dentro i limiti dello schermo
     // Se lo schermo è 800, la X sarà tra 0 e 750 (per non uscire fuori col lato destro)
-        int randomX = random.nextInt(panelWidth - obstacleWidth);
+        int randomX = random.nextInt(panelWidth - randomWidth);
     
     // 2. Sceglie un colore a caso (0 = Rosso, 1 = Verde, 2 = Blu)
         int randomColorId = random.nextInt(3);
@@ -122,10 +124,11 @@ public class GameModel {
         int fallSpeed = 5;
     
     // IL TRUCCO: La Y di partenza è -50! (Così nasce FUORI dallo schermo in alto e "scivola" dentro)
-        int startY = -50; 
-    
+        int startY = -150;
+
+        
     // Creiamo il nemico concreto e lo mettiamo nella lista
-        Obstacle newEnemy = new StandardObstacle(randomX, startY, fallSpeed, randomColorId);
+        Obstacle newEnemy = new StandardObstacle(randomX, startY, fallSpeed, randomColorId,randomWidth,randomHeigth);
         enemies.add(newEnemy);
     }
 
