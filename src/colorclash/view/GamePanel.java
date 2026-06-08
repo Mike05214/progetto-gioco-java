@@ -20,6 +20,7 @@ public class GamePanel extends JPanel {
 
     private GameModel model;
     private Timer gameLoop;
+    private boolean spaceAlreadyPressed = false;
 
     // Calcoliamo i millisecondi per avere 60 FPS (1000 ms / 60 = ~16 ms)
     private final int DELAY = 8;
@@ -76,7 +77,7 @@ public class GamePanel extends JPanel {
                     model.getPlayer().setMovingRight(true);
                 }
                 if(key == KeyEvent.VK_SPACE){
-                    model.getPlayer().switchColor();
+                    spaceKeyLogic();
                 }
 
             }
@@ -97,6 +98,9 @@ public class GamePanel extends JPanel {
                 }
                 if (key == KeyEvent.VK_D || key == KeyEvent.VK_RIGHT) {
                     model.getPlayer().setMovingRight(false);
+                }
+                if(key == KeyEvent.VK_SPACE){
+                    spaceAlreadyPressed = false;
                 }
             }
         //FINE PROTOTIPO MOVIMENTO PLAYER
@@ -122,6 +126,14 @@ public class GamePanel extends JPanel {
             g.setColor(this.colorPalette[obs.getColorId()]);
             g.fillRect(obs.getX(),obs.getY(),obs.getWidth(),obs.getHeight());
         }
+    }
+
+    public void spaceKeyLogic(){
+        if (!spaceAlreadyPressed){
+            model.getPlayer().colorCooldown();
+            spaceAlreadyPressed = true;
+        }
+
     }
     
 

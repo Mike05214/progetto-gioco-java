@@ -7,7 +7,10 @@ public class Avatar {
     private double y;
     private int width;
     private int height;
+    private long lastColorChange = 0;
+    private long currentTime = 0;
     private final double SCALE_FACTOR = 0.7071; //lunghezza del vettore velocità (teorema di pitagora)
+    private final long COLOR_COOLDOWN = 1000;
     
     // Attributi di gioco
     private double speed;  // Lo speed rappresenta la lunghezza del passo quando si piagia il comando daje 
@@ -77,14 +80,22 @@ public class Avatar {
         }
     }
 
-    public void switchColor() {
-        // Passa al colore successivo. Supponiamo di avere 3 colori totali (0, 1, 2)
-        this.colorId++;
-        
-        // Se supera il numero massimo di colori, torna a 0 (effetto circolare)
-        if (this.colorId > 2) {
-            this.colorId = 0;
+    public void colorCooldown() {
+        this.currentTime = System.currentTimeMillis(); //metodo che restituisce il tempo del sistema operativo in millisecondi
+        if(currentTime - lastColorChange >= COLOR_COOLDOWN){ //se il tempo passato dall'ultimo cambio colore è maggiore o uguale al cooldown che è una costante, sarà di nuovo possibile cambiare colore
+            switchColor();
         }
+        else{
+            System.out.println("Cooldown attivo!");
+        }
+    }
+
+    public void switchColor(){
+        this.colorId++;
+            if(this.colorId > 2){
+                colorId = 0;
+            }
+            lastColorChange = currentTime;
     }
 
     public void resetToInitialSettings(int startX, int startY, int startColorId){
