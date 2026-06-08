@@ -129,7 +129,7 @@ public class GamePanel extends JPanel {
         }
     }
 
-    public void spaceKeyLogic(){
+    public void spaceKeyLogic(){  //per farsì che il metodo colorcooldown non venga chiamato più volte se continui a tenr prenuto space 
         if (!spaceAlreadyPressed){
             model.getPlayer().colorCooldown();
             spaceAlreadyPressed = true;
