@@ -20,7 +20,8 @@ public class GamePanel extends JPanel {
 
     private GameModel model;
     private Timer gameLoop;
-    private boolean spaceAlreadyPressed = false;
+    private  boolean spaceAlreadyPressed =false; //A cosa serve ?
+    
 
     // Calcoliamo i millisecondi per avere 60 FPS (1000 ms / 60 = ~16 ms)
     private final int DELAY = 8;
