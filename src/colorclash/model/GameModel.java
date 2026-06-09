@@ -71,6 +71,7 @@ public class GameModel {
         
         // Per ora facciamo solo salire il punteggio per testare che il tempo scorre!
         score++;
+        System.out.println("aggiornamento numero: "+ score); //ho usato sta variabile per checkare se il gameLoop effettivamente inizia/si interrompe alla pressione dei tasti nel menu
     }
     //HELPER METODI:
 

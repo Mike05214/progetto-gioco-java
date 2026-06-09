@@ -70,6 +70,7 @@ public class GamePanel extends JPanel {
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                gameLoop.stop();
                 frame.changeFrame("MENU");
                 model.getPlayer().resetToInitialSettings(model.getStartX(), model.getStartY(),model.getStartColorId());
                 model.getPlayer().resetMovementFlags();
@@ -90,7 +91,7 @@ public class GamePanel extends JPanel {
                 repaint();
             }
         });
-        this.gameLoop.start(); //senza sta riga gli update non avvengono, di conseguenza il gioco non parte
+        //this.gameLoop.start(); //senza sta riga gli update non avvengono, di conseguenza il gioco non parte
     }
 
     public void initSetupListeners(){
@@ -154,6 +155,16 @@ public class GamePanel extends JPanel {
             spaceAlreadyPressed = false;
         }
 
+    }
+
+    @Override
+    public void setVisible(boolean visible){
+        super.setVisible(visible);
+        if(this.gameLoop != null){
+            if(visible){
+                this.gameLoop.start();
+            }
+        }
     }
 
 
