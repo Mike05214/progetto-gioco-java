@@ -74,6 +74,7 @@ public class GamePanel extends JPanel {
                 frame.changeFrame("MENU");
                 model.getPlayer().resetToInitialSettings(model.getStartX(), model.getStartY(),model.getStartColorId());
                 model.getPlayer().resetMovementFlags();
+                model.resetScore();
             }
         });
         this.add(backButton);

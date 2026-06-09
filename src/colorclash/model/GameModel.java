@@ -70,9 +70,18 @@ public class GameModel {
         handleSpawning(panelWidth);
         // 3. Muovi i nemici e cancella quelli usciti dallo schermo
         updateEnemies(panelHeight); // Modifica il tuo metodo updateEnemies per fargli usare panelHeight!
-
+        
         // moveEntities();
         // checkCollisions();
+        scoreHandler();
+    }
+    
+    
+        
+    
+    //HELPER METODI: (quelli privati li può usare solo il Model)
+
+    private void scoreHandler(){
         this.stackedTime += TICK_TIME;
 
         // Se l'accumulatore supera la soglia (es. 1 secondo), scatta il punto!
@@ -82,11 +91,6 @@ public class GameModel {
             System.out.println("Model: Secondo passato! Nuovo Score: " + this.score);
         }
     }
-    
-    
-        
-    
-    //HELPER METODI:
 
     private void updateEnemies(int panelHeight ) {
         // 1. Facciamo cadere ogni sotacolo presente nella lista 
