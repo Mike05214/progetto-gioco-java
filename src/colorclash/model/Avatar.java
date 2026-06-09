@@ -10,7 +10,7 @@ public class Avatar {
     private long lastColorChange = 0;
     private long currentTime = 0;
     private final double SCALE_FACTOR = 0.7071; //lunghezza del vettore velocità (teorema di pitagora)
-    private final long COLOR_COOLDOWN = 1000;
+    private final long COLOR_COOLDOWN = 500;
     
     // Attributi di gioco
     private double speed;  // Lo speed rappresenta la lunghezza del passo quando si piagia il comando daje 
