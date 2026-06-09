@@ -21,7 +21,7 @@ public class GamePanel extends JPanel {
     private GameModel model;
     private Timer gameLoop;
     private  boolean spaceAlreadyPressed = false;
-    private MainFrame frame;
+    private MainFrame frame; //reso frame variabilie d'istanza per poterla passare ai metodi helper del costruttore
     
 
     // Calcoliamo i millisecondi per avere 60 FPS (1000 ms / 60 = ~16 ms)
@@ -63,17 +63,6 @@ public class GamePanel extends JPanel {
             g.setColor(this.colorPalette[obs.getColorId()]);
             g.fillRect(obs.getX(),obs.getY(),obs.getWidth(),obs.getHeight());
         }
-    }
-
-    public void spaceKeyLogic(){  //per farsì che il metodo colorcooldown non venga chiamato più volte se continui a tenr prenuto space, si serve a quello spaceAlreadyPressed
-        if (!spaceAlreadyPressed){
-            model.getPlayer().colorCooldown();
-            spaceAlreadyPressed = true;
-        }
-        else{
-            spaceAlreadyPressed = false;
-        }
-
     }
 
     public void initGameComponents(){
@@ -152,8 +141,20 @@ public class GamePanel extends JPanel {
             }
         //FINE PROTOTIPO MOVIMENTO PLAYER
         });
+
+        
     }
     
+    public void spaceKeyLogic(){  //per farsì che il metodo colorcooldown non venga chiamato più volte se continui a tenr prenuto space, si serve a quello spaceAlreadyPressed
+        if (!spaceAlreadyPressed){
+            model.getPlayer().colorCooldown();
+            spaceAlreadyPressed = true;
+        }
+        else{
+            spaceAlreadyPressed = false;
+        }
+
+    }
 
 
 
