@@ -20,7 +20,8 @@ public class GamePanel extends JPanel {
 
     private GameModel model;
     private Timer gameLoop;
-    private  boolean spaceAlreadyPressed =false; //A cosa serve ?
+    private  boolean spaceAlreadyPressed = false;
+    private MainFrame frame;
     
 
     // Calcoliamo i millisecondi per avere 60 FPS (1000 ms / 60 = ~16 ms)
@@ -35,7 +36,47 @@ public class GamePanel extends JPanel {
 
     public GamePanel(MainFrame frame) {  // al costruttore del pannello viene passata la nostra finestra principale 
         this.model = new GameModel();
+        this.frame = frame;
         this.setBackground(Color.BLACK);
+        initGameComponents();
+        initGameLoop();
+        //INIZIO PROTOTIPO MOVIMENTO PLAYER (magari da rivedere i metodi usati in base a quelli che ci sono nelle dispense del prof se questi non ci piacciono)
+        initSetupListeners();
+
+        
+    }// FINE COSTRUTTORE
+
+    // --- IL METODO PER DISEGNARE ---
+    @Override
+    public void paintComponent(Graphics g){  // non si usa paint perchè noi vogliamo disegnare il pannello specifico
+        //chiamare SEMPRE il super all'inizio per pulire lo schermo vecchio!
+        super.paintComponent(g);
+        // 1. Disegniamo l'Avatar
+        Avatar player = this.model.getPlayer();
+        int PlayerColorId = model.getPlayer().getColorId();
+        Color currentColor = this.colorPalette[PlayerColorId];
+        g.setColor(currentColor);
+        g.fillRect((int)player.getX(), (int)player.getY(), player.getWidth(), player.getHeight());
+
+        // 2. Disegniamo TUTTI gli ostacoli presenti nella lista
+        for (Obstacle obs : this.model.getEnemies()){
+            g.setColor(this.colorPalette[obs.getColorId()]);
+            g.fillRect(obs.getX(),obs.getY(),obs.getWidth(),obs.getHeight());
+        }
+    }
+
+    public void spaceKeyLogic(){  //per farsì che il metodo colorcooldown non venga chiamato più volte se continui a tenr prenuto space, si serve a quello spaceAlreadyPressed
+        if (!spaceAlreadyPressed){
+            model.getPlayer().colorCooldown();
+            spaceAlreadyPressed = true;
+        }
+        else{
+            spaceAlreadyPressed = false;
+        }
+
+    }
+
+    public void initGameComponents(){
         JButton backButton = new JButton("Back to Menu");
         backButton.addActionListener(new ActionListener() {
             @Override
@@ -46,6 +87,9 @@ public class GamePanel extends JPanel {
             }
         });
         this.add(backButton);
+    }
+
+    public void initGameLoop(){
         // --- CREAZIONE DEL GAME LOOP (IL MOTORE DEL TEMPO) ---
         this.gameLoop = new Timer(DELAY,new ActionListener(){        //Metodo mostratoci dal prof su dispensa per animazione 
             @Override
@@ -58,8 +102,10 @@ public class GamePanel extends JPanel {
             }
         });
         this.gameLoop.start(); //senza sta riga gli update non avvengono, di conseguenza il gioco non parte
-        //INIZIO PROTOTIPO MOVIMENTO PLAYER (magari da rivedere i metodi usati in base a quelli che ci sono nelle dispense del prof se questi non ci piacciono)
-        this.addKeyListener(new KeyAdapter() { //listener della tastiera nella view come da programma
+    }
+
+    public void initSetupListeners(){
+         this.addKeyListener(new KeyAdapter() { //listener della tastiera nella view come da programma
             @Override
             public void keyPressed(KeyEvent e) {
                 int key = e.getKeyCode();
@@ -101,40 +147,11 @@ public class GamePanel extends JPanel {
                     model.getPlayer().setMovingRight(false);
                 }
                 if(key == KeyEvent.VK_SPACE){
-                    spaceAlreadyPressed = false;
+                    spaceKeyLogic();
                 }
             }
         //FINE PROTOTIPO MOVIMENTO PLAYER
         });
-
-        
-    }// FINE COSTRUTTORE
-
-    // --- IL METODO PER DISEGNARE ---
-    @Override
-    public void paintComponent(Graphics g){  // non si usa paint perchè noi vogliamo disegnare il pannello specifico
-        //chiamare SEMPRE il super all'inizio per pulire lo schermo vecchio!
-        super.paintComponent(g);
-        // 1. Disegniamo l'Avatar
-        Avatar player = this.model.getPlayer();
-        int PlayerColorId = model.getPlayer().getColorId();
-        Color currentColor = this.colorPalette[PlayerColorId];
-        g.setColor(currentColor);
-        g.fillRect((int)player.getX(), (int)player.getY(), player.getWidth(), player.getHeight());
-
-        // 2. Disegniamo TUTTI gli ostacoli presenti nella lista
-        for (Obstacle obs : this.model.getEnemies()){
-            g.setColor(this.colorPalette[obs.getColorId()]);
-            g.fillRect(obs.getX(),obs.getY(),obs.getWidth(),obs.getHeight());
-        }
-    }
-
-    public void spaceKeyLogic(){  //per farsì che il metodo colorcooldown non venga chiamato più volte se continui a tenr prenuto space 
-        if (!spaceAlreadyPressed){
-            model.getPlayer().colorCooldown();
-            spaceAlreadyPressed = true;
-        }
-
     }
     
 
