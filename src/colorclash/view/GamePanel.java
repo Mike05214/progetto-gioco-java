@@ -158,7 +158,7 @@ public class GamePanel extends JPanel {
     }
 
     @Override
-    public void setVisible(boolean visible){
+    public void setVisible(boolean visible){   // quando viene invocato changeFrame "Game " viene invocato il metodo stVisible("true") del gamepanel sovrascritto
         super.setVisible(visible);
         if(this.gameLoop != null){
             if(visible){

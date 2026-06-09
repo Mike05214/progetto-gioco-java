@@ -10,14 +10,19 @@ public class GameModel {
     private List<Obstacle> enemies;
     
     // Variabili di stato del gioco
-    private int score;
+    private int updateCounter;
     private int lives;
     private boolean isGameOver;
+    private int score;
+    private int stackedTime = 0;
+
 
     //costanti
     private final int START_X = 375;
     private final int START_Y = 450;
     private final int START_COLOR_ID = 0;
+    private final int TICK_TIME = 8;
+    private final int SCORE_DELAY = 1000; // in ms
 
     // --- VARIABILI PER LO SPAWNER ---
     private Random random;
@@ -39,7 +44,7 @@ public class GameModel {
         this.enemies = new ArrayList<>(); // Lista vuota all'inizio
         
 
-        this.score = 0;
+        this.updateCounter = 0;
         this.lives = 3; // In futuro questo "3" lo prenderemo dalla classe Config!
         this.isGameOver = false;
 
@@ -68,11 +73,19 @@ public class GameModel {
 
         // moveEntities();
         // checkCollisions();
-        
-        // Per ora facciamo solo salire il punteggio per testare che il tempo scorre!
-        score++;
-        System.out.println("aggiornamento numero: "+ score); //ho usato sta variabile per checkare se il gameLoop effettivamente inizia/si interrompe alla pressione dei tasti nel menu
+        this.stackedTime += TICK_TIME;
+
+        // Se l'accumulatore supera la soglia (es. 1 secondo), scatta il punto!
+        if (this.stackedTime >= SCORE_DELAY) {
+            this.score++;
+            this.stackedTime -= SCORE_DELAY; // Scaliamo la soglia senza azzerare il resto, mantenendo la precisione
+            System.out.println("Model: Secondo passato! Nuovo Score: " + this.score);
+        }
     }
+    
+    
+        
+    
     //HELPER METODI:
 
     private void updateEnemies(int panelHeight ) {
@@ -149,6 +162,15 @@ public class GameModel {
         }
     }
     
+
+    
+    // Metodo di reset che chiamerai nel bottone Back To Menu
+    public void resetScore() {
+        this.score = 0;
+        this.stackedTime = 0;
+    }
+        
+    
     // --- GETTERS (Servono alla View per sapere cosa disegnare) ---
     public Avatar getPlayer() { 
         return player; 
@@ -157,7 +179,7 @@ public class GameModel {
         return enemies; 
     }
     public int getScore() {
-        return score;
+        return this.score;
     }
     public int getLives() {
         return lives;
