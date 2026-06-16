@@ -198,23 +198,23 @@ public class GamePanel extends JPanel {
             this.setBackground(Color.BLACK);
         }
              // --- IL METODO PER DISEGNARE ---
-    @Override
-    public void paintComponent(Graphics g){  // non si usa paint perchè noi vogliamo disegnare il pannello specifico
-        //chiamare SEMPRE il super all'inizio per pulire lo schermo vecchio!
-        super.paintComponent(g);
-        // 1. Disegniamo l'Avatar
-        Avatar player = model.getPlayer();
-        int PlayerColorId = model.getPlayer().getColorId();
-        Color currentColor = colorPalette[PlayerColorId];
-        g.setColor(currentColor);
-        g.fillRect((int)player.getX(), (int)player.getY(), player.getWidth(), player.getHeight());
+        @Override
+        public void paintComponent(Graphics g){  // non si usa paint perchè noi vogliamo disegnare il pannello specifico
+            //chiamare SEMPRE il super all'inizio per pulire lo schermo vecchio!
+            super.paintComponent(g);
+            // 1. Disegniamo l'Avatar
+            Avatar player = model.getPlayer();
+            int PlayerColorId = model.getPlayer().getColorId();
+            Color currentColor = colorPalette[PlayerColorId];
+            g.setColor(currentColor);
+            g.fillRect((int)player.getX(), (int)player.getY(), player.getWidth(), player.getHeight());
 
-        // 2. Disegniamo TUTTI gli ostacoli presenti nella lista
-        for (Obstacle obs : model.getEnemies()){
-            g.setColor(colorPalette[obs.getColorId()]);
-            g.fillRect(obs.getX(),obs.getY(),obs.getWidth(),obs.getHeight());
+            // 2. Disegniamo TUTTI gli ostacoli presenti nella lista
+            for (Obstacle obs : model.getEnemies()){
+                g.setColor(colorPalette[obs.getColorId()]);
+                g.fillRect(obs.getX(),obs.getY(),obs.getWidth(),obs.getHeight());
+            }
         }
-    }
     }
 
 
