@@ -2,6 +2,8 @@ package src.colorclash.view;
 import src.colorclash.model.GameModel;
 import src.colorclash.model.Obstacle;
 import src.colorclash.model.Avatar;
+
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
@@ -9,11 +11,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyAdapter;
+import java.awt.Font;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.Timer; // Attenzione: importare quello di javax.swing!
+import javax.swing.border.Border;
 
 
 public class GamePanel extends JPanel {
@@ -22,6 +27,8 @@ public class GamePanel extends JPanel {
     private Timer gameLoop;
     private  boolean spaceAlreadyPressed = false;
     private MainFrame frame; //reso frame variabilie d'istanza per poterla passare ai metodi helper del costruttore
+    private JLabel scoreLabel;
+    private GameSpace gameSpace;
     
 
     // Calcoliamo i millisecondi per avere 60 FPS (1000 ms / 60 = ~16 ms)
@@ -31,40 +38,26 @@ public class GamePanel extends JPanel {
     private final Color[] colorPalette = {
         Color.RED,   // ID 0
         Color.GREEN, // ID 1
-        Color.BLUE   // ID 2
+        Color.CYAN   // ID 2
     };
 
     public GamePanel(MainFrame frame) {  // al costruttore del pannello viene passata la nostra finestra principale 
         this.model = new GameModel();
         this.frame = frame;
         this.setBackground(Color.BLACK);
+        this.setLayout(new BorderLayout());
         initGameComponents();
         initGameLoop();
+        initToolbar(frame);
+        initGameSpace();
         //INIZIO PROTOTIPO MOVIMENTO PLAYER (magari da rivedere i metodi usati in base a quelli che ci sono nelle dispense del prof se questi non ci piacciono)
         initSetupListeners();
 
         
     }// FINE COSTRUTTORE
 
-    // --- IL METODO PER DISEGNARE ---
-    @Override
-    public void paintComponent(Graphics g){  // non si usa paint perchè noi vogliamo disegnare il pannello specifico
-        //chiamare SEMPRE il super all'inizio per pulire lo schermo vecchio!
-        super.paintComponent(g);
-        // 1. Disegniamo l'Avatar
-        Avatar player = this.model.getPlayer();
-        int PlayerColorId = model.getPlayer().getColorId();
-        Color currentColor = this.colorPalette[PlayerColorId];
-        g.setColor(currentColor);
-        g.fillRect((int)player.getX(), (int)player.getY(), player.getWidth(), player.getHeight());
-
-        // 2. Disegniamo TUTTI gli ostacoli presenti nella lista
-        for (Obstacle obs : this.model.getEnemies()){
-            g.setColor(this.colorPalette[obs.getColorId()]);
-            g.fillRect(obs.getX(),obs.getY(),obs.getWidth(),obs.getHeight());
-        }
-    }
-
+   
+    //INIZIALIZZATORI
     public void initGameComponents(){
         JButton backButton = new JButton("Back to Menu");
         backButton.addActionListener(new ActionListener() {
@@ -87,12 +80,43 @@ public class GamePanel extends JPanel {
             public void actionPerformed(ActionEvent e){
                 // 1. Il tempo scorre: facciamo muovere la logica
                 model.update(getWidth(), getHeight()); //i metodi nei parametri sono nativi di Java Swing a quanto dice gemini
-
+                scoreLabel.setText("SCORE: "+ model.getScore());
                 // 2. Ridisegniamo lo schermo con le nuove posizioni
                 repaint();
             }
         });
         //this.gameLoop.start(); //senza sta riga gli update non avvengono, di conseguenza il gioco non parte
+    }
+
+    private void initGameSpace(){
+        this.gameSpace = new GameSpace();
+        this.add(gameSpace, BorderLayout.CENTER);
+    }
+
+    //la toolbar non è una classe specifica, è un altro JPanel creato su misura per contenere bottone back e punteggio, per evitare interferenze con l'area di gioco
+    public void initToolbar(MainFrame frame){
+        JPanel toolbar = new JPanel(new BorderLayout());
+        toolbar.setBackground(Color.DARK_GRAY);
+         JButton backButton = new JButton("Back to Menu");
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                gameLoop.stop();
+                frame.changeFrame("MENU");
+                model.getPlayer().resetToInitialSettings(model.getStartX(), model.getStartY(),model.getStartColorId());
+                model.getPlayer().resetMovementFlags();
+                model.resetScore();
+            }
+        });
+        toolbar.add(backButton, BorderLayout.WEST);
+
+        scoreLabel = new JLabel("SCORE: ");
+        scoreLabel.setForeground(Color.WHITE);
+        scoreLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        scoreLabel.setHorizontalAlignment(SwingConstants.CENTER); //centra il testo nella sua area, SwingConstants è una interface
+        toolbar.add(scoreLabel, BorderLayout.CENTER);
+        this.add(toolbar, BorderLayout.NORTH);
+
     }
 
     public void initSetupListeners(){
@@ -146,6 +170,7 @@ public class GamePanel extends JPanel {
 
         
     }
+    //FINE INIZIALIZZATORI
     
     public void spaceKeyLogic(){  //per farsì che il metodo colorcooldown non venga chiamato più volte se continui a tenr prenuto space, si serve a quello spaceAlreadyPressed
         if (!spaceAlreadyPressed){
@@ -166,6 +191,30 @@ public class GamePanel extends JPanel {
                 this.gameLoop.start();
             }
         }
+    }
+    //CLASSE INTERNA CHE GESTISCE SEPARATAMENTE L'AREA DI GIOCO DALLA BARRA MENU
+    private class GameSpace extends JPanel{
+        public GameSpace(){
+            this.setBackground(Color.BLACK);
+        }
+             // --- IL METODO PER DISEGNARE ---
+    @Override
+    public void paintComponent(Graphics g){  // non si usa paint perchè noi vogliamo disegnare il pannello specifico
+        //chiamare SEMPRE il super all'inizio per pulire lo schermo vecchio!
+        super.paintComponent(g);
+        // 1. Disegniamo l'Avatar
+        Avatar player = model.getPlayer();
+        int PlayerColorId = model.getPlayer().getColorId();
+        Color currentColor = colorPalette[PlayerColorId];
+        g.setColor(currentColor);
+        g.fillRect((int)player.getX(), (int)player.getY(), player.getWidth(), player.getHeight());
+
+        // 2. Disegniamo TUTTI gli ostacoli presenti nella lista
+        for (Obstacle obs : model.getEnemies()){
+            g.setColor(colorPalette[obs.getColorId()]);
+            g.fillRect(obs.getX(),obs.getY(),obs.getWidth(),obs.getHeight());
+        }
+    }
     }
 
 

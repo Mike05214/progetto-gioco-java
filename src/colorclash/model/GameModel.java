@@ -86,7 +86,7 @@ public class GameModel {
 
         // Se l'accumulatore supera la soglia (es. 1 secondo), scatta il punto!
         if (this.stackedTime >= SCORE_DELAY) {
-            this.score++;
+            this.score+=100;
             this.stackedTime -= SCORE_DELAY; // Scaliamo la soglia senza azzerare il resto, mantenendo la precisione
             System.out.println("Model: Secondo passato! Nuovo Score: " + this.score);
         }
