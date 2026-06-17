@@ -35,13 +35,39 @@ public class MenuPanel extends JPanel {
 
     private JLabel highScoreLabel; // etichetta dell'Highscore 
     private JButton resumeButton; // Dichiariamo il bottone qui per poterlo abilitare/disabilitare dopo
+    private JButton playButton;
+
+    private JPanel centerPanel;
 
 
     public MenuPanel(MainFrame frame) {
         this.setBackground(Color.DARK_GRAY);
         
         this.setLayout(new BorderLayout()); //layout base del MenuPanel, serve a disporre al centro buttonGrid (consiglio di gemini)
-        JButton playButton = new JButton("PLAY");
+        initButtons();
+        initTitleLabel();
+        initButtonsLayout();
+        
+        playButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.changeFrame("GAME");
+            }
+        });
+
+        // 3. INSERIMENTO AL CENTRO DELLA FINESTRA
+        this.add(centerPanel, BorderLayout.CENTER);
+        
+    }//FINE COSTRUTTORE
+
+    // --- METODO HELPER PER IL FUTURO ---
+    // Quando la partita finirà, chiameremo questo metodo per aggiornare il testo!
+    public void updateHighScoreDisplay(int newScore) {
+        highScoreLabel.setText("High Score: " + newScore);
+    }
+
+    public void initButtons(){
+        this.playButton = new JButton("PLAY");
         playButton.setFont(new Font("Arial", Font.BOLD, BUTTON_TEXT_SIZE));
         playButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
         this.highScoreLabel = new JLabel("High Score:");
@@ -51,21 +77,17 @@ public class MenuPanel extends JPanel {
         this.resumeButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
         this.resumeButton.setFont(new Font("Arial", Font.BOLD, BUTTON_TEXT_SIZE));
         this.resumeButton.setEnabled(false); // Appena apri il gioco, non puoi fare "Riprendi"
+    }
 
+    private void initTitleLabel(){
         JLabel titleLabel = new JLabel("COLOR CLASH",SwingConstants.CENTER); // etichetta del titolo gioco e forzo a stare al centro
         titleLabel.setFont(new Font("Arial", Font.BOLD, TITLE_SIZE));
         titleLabel.setForeground(Color.CYAN); 
         this.add(titleLabel,BorderLayout.NORTH);
-    
-        playButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                frame.changeFrame("GAME");
-            }
-        });
+    }
 
-        //nuovo layout dei bottoni
-        JPanel centerPanel = new JPanel(new GridBagLayout());
+    private void initButtonsLayout(){
+        this.centerPanel = new JPanel(new GridBagLayout());
         centerPanel.setOpaque(false);
         // Posizioniamo gli elementi nel pannellino centrale
         GridBagConstraints gbc = new GridBagConstraints();
@@ -82,15 +104,5 @@ public class MenuPanel extends JPanel {
         gbc.gridy = ROW_2; // Riga 1 per la label
         gbc.insets = new Insets(DEFAULT_TOP, DEFAULT_LEFT, DEFAULT_BOTTOM, DEFAULT_RIGHT); // Nessuno spazio sotto
         centerPanel.add(highScoreLabel, gbc);
-        
-        // 3. INSERIMENTO AL CENTRO DELLA FINESTRA
-        this.add(centerPanel, BorderLayout.CENTER);
-        
-    }//FINE COSTRUTTORE
-
-    // --- METODO HELPER PER IL FUTURO ---
-    // Quando la partita finirà, chiameremo questo metodo per aggiornare il testo!
-    public void updateHighScoreDisplay(int newScore) {
-        highScoreLabel.setText("High Score: " + newScore);
     }
 }

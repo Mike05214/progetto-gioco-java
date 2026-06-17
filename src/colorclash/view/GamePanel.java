@@ -177,6 +177,7 @@ public class GamePanel extends JPanel {
             }
             else{
                 this.gameLoop.stop(); //così ogni volta che il gamePanel ha il setvisible impostato a false il gioco si ferma
+                model.getPlayer().resetMovementFlags(); //quando il pannello cambia le movementFlags vanno sempre resettate per evitare bug di movimento
             }
         }
     }

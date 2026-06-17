@@ -49,7 +49,6 @@ public class PausePanel extends JPanel{
 
     public void resetGame(){
         model.getPlayer().resetToInitialSettings(model.getStartX(), model.getStartY(),model.getStartColorId());
-        model.getPlayer().resetMovementFlags();
         model.resetScore();
         model.resetObstacles();
     }
