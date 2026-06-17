@@ -82,15 +82,15 @@ public class GamePanel extends JPanel {
     public void initToolbar(MainFrame frame){
         JPanel toolbar = new JPanel(new BorderLayout());
         toolbar.setBackground(Color.DARK_GRAY);
-         JButton backButton = new JButton("Back to Menu");
+         JButton backButton = new JButton("Pause");
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                frame.changeFrame("MENU");
-                model.getPlayer().resetToInitialSettings(model.getStartX(), model.getStartY(),model.getStartColorId());
+                frame.changeFrame("PAUSE");
+                /* model.getPlayer().resetToInitialSettings(model.getStartX(), model.getStartY(),model.getStartColorId());
                 model.getPlayer().resetMovementFlags();
                 model.resetScore();
-                model.resetObstacles();
+                model.resetObstacles(); */
             }
         });
         toolbar.add(backButton, BorderLayout.WEST);
@@ -176,7 +176,7 @@ public class GamePanel extends JPanel {
                 this.gameLoop.start();
             }
             else{
-                this.gameLoop.stop();
+                this.gameLoop.stop(); //così ogni volta che il gamePanel ha il setvisible impostato a false il gioco si ferma
             }
         }
     }
@@ -203,6 +203,10 @@ public class GamePanel extends JPanel {
                 g.fillRect(obs.getX(),obs.getY(),obs.getWidth(),obs.getHeight());
             }
         }
+    }
+
+    public GameModel getModel(){
+        return this.model;
     }
 
 

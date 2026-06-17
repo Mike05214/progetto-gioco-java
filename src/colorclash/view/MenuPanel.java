@@ -86,7 +86,7 @@ public class MenuPanel extends JPanel {
         // 3. INSERIMENTO AL CENTRO DELLA FINESTRA
         this.add(centerPanel, BorderLayout.CENTER);
         
-    }
+    }//FINE COSTRUTTORE
 
     // --- METODO HELPER PER IL FUTURO ---
     // Quando la partita finirà, chiameremo questo metodo per aggiornare il testo!

@@ -26,9 +26,11 @@ public class MainFrame extends JFrame {
         mainPanel = new JPanel(cardLayout);
         MenuPanel menuPanel = new MenuPanel(this);
         GamePanel gamePanel = new GamePanel(this);
+        PausePanel pausePanel = new PausePanel(this, gamePanel.getModel());
         contPane.add(mainPanel, BorderLayout.CENTER);
         mainPanel.add(menuPanel, "MENU");
         mainPanel.add(gamePanel, "GAME");
+        mainPanel.add(pausePanel, "PAUSE");
         
         contPane.add(mainPanel);
         cardLayout.show(mainPanel, "MENU"); // questo metodo per ogni pannello nel cardLayout chiama il metodo setVisible e lo imposta a true per il pannello nel secondo argomento, per gli altri li mette a false
