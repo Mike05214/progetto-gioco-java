@@ -42,11 +42,15 @@ public class PausePanel extends JPanel{
             @Override
             public void actionPerformed(ActionEvent e) {
                 frame.changeFrame("MENU");
-                model.getPlayer().resetToInitialSettings(model.getStartX(), model.getStartY(),model.getStartColorId());
-                model.getPlayer().resetMovementFlags();
-                model.resetScore();
-                model.resetObstacles();
+                resetGame();
             }
         });
+    }
+
+    public void resetGame(){
+        model.getPlayer().resetToInitialSettings(model.getStartX(), model.getStartY(),model.getStartColorId());
+        model.getPlayer().resetMovementFlags();
+        model.resetScore();
+        model.resetObstacles();
     }
 }
