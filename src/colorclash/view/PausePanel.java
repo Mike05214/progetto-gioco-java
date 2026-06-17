@@ -17,19 +17,25 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.Font; // Importante per la grandezza del testo!
 
-public class PausePanel extends JPanel{
+public class PausePanel extends BaseMenuPanel{
 
     private GameModel model;
+    private final int ROW_0 = 0;
+    private final int ROW_1 = 1;
 
 
     public PausePanel(MainFrame frame, GameModel model){ // il model da resettare è quello del gamePanel che infatti gli viene passato come parametro
+        super();
         this.model = model; // è quello del gamePanel
-        this.setLayout(new BorderLayout());
         this.setBackground(Color.DARK_GRAY);
+        initTitleLabel("PAUSE", Color.RED);
         JButton resume = new JButton("RESUME");
+        resume.setFont(new Font("Arial", Font.BOLD, BUTTON_TEXT_SIZE));
+        resume.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+
         JButton backToMenu = new JButton("BACK TO MENU");
-        this.add(resume, BorderLayout.NORTH);
-        this.add(backToMenu, BorderLayout.SOUTH);
+        backToMenu.setFont(new Font("Arial", Font.BOLD, BUTTON_TEXT_SIZE));
+        backToMenu.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
 
         resume.addActionListener(new ActionListener() {
             @Override
@@ -45,6 +51,9 @@ public class PausePanel extends JPanel{
                 resetGame();
             }
         });
+        //metodi ereditati dalla superclasse BaseMenuPanel che servono ad aggiungere i bottoni al PausePanel secondo la logica della BaseMenuPanel
+        addComponentToCenter(resume, ROW_0, true);
+        addComponentToCenter(backToMenu, ROW_1, true);
     }
 
     public void resetGame(){

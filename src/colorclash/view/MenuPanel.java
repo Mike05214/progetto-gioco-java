@@ -14,20 +14,10 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.Font; // Importante per la grandezza del testo!
 
-public class MenuPanel extends JPanel {
+public class MenuPanel extends BaseMenuPanel {
 
     //parametri dichiarati come costanti
-    private final int BUTTON_WIDTH = 200;
-    private final int BUTTON_HEIGHT = 50;
-    private final int BUTTON_TEXT_SIZE = 20;
-    private final int TITLE_SIZE = 60;
     private final int HI_LABEL_SIZE = 18;
-    private final int DEFAULT_TOP = 0;
-    private final int DEFAULT_RIGHT = 0;
-    private final int DEFAULT_LEFT = 0;
-    private final int DEFAULT_BOTTOM = 0;
-    private final int BETWEEN_SPACE = 30;
-    private final int COL_1 = 0;
     private final int ROW_0 = 0;
     private final int ROW_1 = 1;
     private final int ROW_2 = 2;
@@ -37,17 +27,13 @@ public class MenuPanel extends JPanel {
     private JButton resumeButton; // Dichiariamo il bottone qui per poterlo abilitare/disabilitare dopo
     private JButton playButton;
 
-    private JPanel centerPanel;
-
 
     public MenuPanel(MainFrame frame) {
+        super();
         this.setBackground(Color.DARK_GRAY);
         
-        this.setLayout(new BorderLayout()); //layout base del MenuPanel, serve a disporre al centro buttonGrid (consiglio di gemini)
-        initButtons();
-        initTitleLabel();
-        initButtonsLayout();
-        
+        initButtons(); // i bottoni vengono comunque costruiti qui nel MenuPanel, dal BaseMenuPanel arriva solo il layout
+        initTitleLabel("COLOR CLASH", Color.CYAN);
         playButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -55,8 +41,10 @@ public class MenuPanel extends JPanel {
             }
         });
 
-        // 3. INSERIMENTO AL CENTRO DELLA FINESTRA
-        this.add(centerPanel, BorderLayout.CENTER);
+        //metodi ereditati dalla superclasse BaseMenuPanel che servono ad aggiungere i bottoni al MenuPanel secondo la logica della BaseMenuPanel
+        addComponentToCenter(playButton, ROW_0, true);
+        addComponentToCenter(resumeButton, ROW_1, true);
+        addComponentToCenter(highScoreLabel, ROW_2, true);
         
     }//FINE COSTRUTTORE
 
@@ -77,32 +65,5 @@ public class MenuPanel extends JPanel {
         this.resumeButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
         this.resumeButton.setFont(new Font("Arial", Font.BOLD, BUTTON_TEXT_SIZE));
         this.resumeButton.setEnabled(false); // Appena apri il gioco, non puoi fare "Riprendi"
-    }
-
-    private void initTitleLabel(){
-        JLabel titleLabel = new JLabel("COLOR CLASH",SwingConstants.CENTER); // etichetta del titolo gioco e forzo a stare al centro
-        titleLabel.setFont(new Font("Arial", Font.BOLD, TITLE_SIZE));
-        titleLabel.setForeground(Color.CYAN); 
-        this.add(titleLabel,BorderLayout.NORTH);
-    }
-
-    private void initButtonsLayout(){
-        this.centerPanel = new JPanel(new GridBagLayout());
-        centerPanel.setOpaque(false);
-        // Posizioniamo gli elementi nel pannellino centrale
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = COL_1; // Colonna unica centrale
-        
-        gbc.gridy = ROW_0; // Riga 0 per il bottone
-        gbc.insets = new Insets(DEFAULT_TOP, DEFAULT_LEFT, BETWEEN_SPACE, DEFAULT_RIGHT); // 30 pixel di spazio vuoto SOTTO il bottone
-        centerPanel.add(playButton, gbc);
-
-        gbc.gridy=ROW_1;
-        gbc.insets= new Insets(DEFAULT_TOP, DEFAULT_LEFT, BETWEEN_SPACE, DEFAULT_RIGHT);
-        centerPanel.add(resumeButton,gbc);
-
-        gbc.gridy = ROW_2; // Riga 1 per la label
-        gbc.insets = new Insets(DEFAULT_TOP, DEFAULT_LEFT, DEFAULT_BOTTOM, DEFAULT_RIGHT); // Nessuno spazio sotto
-        centerPanel.add(highScoreLabel, gbc);
     }
 }
