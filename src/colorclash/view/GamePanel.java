@@ -46,7 +46,6 @@ public class GamePanel extends JPanel {
         this.frame = frame;
         this.setBackground(Color.BLACK);
         this.setLayout(new BorderLayout());
-        initGameComponents();
         initGameLoop();
         initToolbar(frame);
         initGameSpace();
@@ -58,20 +57,6 @@ public class GamePanel extends JPanel {
 
    
     //INIZIALIZZATORI
-    public void initGameComponents(){
-        JButton backButton = new JButton("Back to Menu");
-        backButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                gameLoop.stop();
-                frame.changeFrame("MENU");
-                model.getPlayer().resetToInitialSettings(model.getStartX(), model.getStartY(),model.getStartColorId());
-                model.getPlayer().resetMovementFlags();
-                model.resetScore();
-            }
-        });
-        this.add(backButton);
-    }
 
     public void initGameLoop(){
         // --- CREAZIONE DEL GAME LOOP (IL MOTORE DEL TEMPO) ---
@@ -101,11 +86,11 @@ public class GamePanel extends JPanel {
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                gameLoop.stop();
                 frame.changeFrame("MENU");
                 model.getPlayer().resetToInitialSettings(model.getStartX(), model.getStartY(),model.getStartColorId());
                 model.getPlayer().resetMovementFlags();
                 model.resetScore();
+                model.resetObstacles();
             }
         });
         toolbar.add(backButton, BorderLayout.WEST);
@@ -189,6 +174,9 @@ public class GamePanel extends JPanel {
         if(this.gameLoop != null){
             if(visible){
                 this.gameLoop.start();
+            }
+            else{
+                this.gameLoop.stop();
             }
         }
     }

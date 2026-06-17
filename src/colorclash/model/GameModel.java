@@ -122,6 +122,7 @@ public class GameModel {
         if (frameCounter >= spawnInterval) {
             spawnRandomEnemy(panelWidth);
             frameCounter = 0; // Azzera il contatore per il prossimo nemico!
+            //debugEnemiesTemp();
         }
     }
 
@@ -148,6 +149,7 @@ public class GameModel {
     // Creiamo il nemico concreto e lo mettiamo nella lista
         Obstacle newEnemy = new StandardObstacle(randomX, startY, fallSpeed, randomColorId,randomWidth,randomHeigth);
         enemies.add(newEnemy);
+        debugEnemiesTemp();
     }
 
 
@@ -172,6 +174,15 @@ public class GameModel {
     public void resetScore() {
         this.score = 0;
         this.stackedTime = 0;
+        System.out.println("score resettato con successo");
+    }
+
+    public void resetObstacles(){
+        System.out.println("lista prima del reset: ");
+        debugEnemiesTemp();
+        this.enemies.clear();
+        System.out.println("lista dopo il reset: ");
+        debugEnemiesTemp();
     }
         
     
@@ -199,5 +210,16 @@ public class GameModel {
     }
     public int getStartColorId(){
         return this.START_COLOR_ID;
+    }
+
+    public void debugEnemiesTemp(){
+        if(enemies.isEmpty()){
+            System.out.println("LISTA VUOTA");
+        }
+        else{
+            for(Obstacle obs : enemies){
+                System.out.println(obs);
+            }
+        }
     }
 }

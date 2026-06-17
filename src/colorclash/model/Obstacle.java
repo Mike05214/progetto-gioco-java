@@ -53,4 +53,15 @@ public abstract class Obstacle {
     public int getHeight() { return height; }
     public int getColorId() { return colorId; }
     public boolean isActive() { return isActive; }
+
+    //METODO DI DEBUG DA TOGLIERE IN SEGUITO
+    @Override
+    public String toString() {
+    return "Ostacolo [" +
+           "X=" + this.x + 
+           ", Y=" + this.y + 
+           ", ColoreID=" + this.colorId + 
+           ", Velocità=" + this.fallSpeed + 
+           "]";
+}
 }
