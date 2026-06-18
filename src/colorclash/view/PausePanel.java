@@ -35,7 +35,7 @@ public class PausePanel extends BaseMenuPanel{
         JButton resume = new JButton("RESUME");
         resume.setFont(new Font("Arial", Font.BOLD, BUTTON_TEXT_SIZE));
         resume.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
-        resume.setMnemonic(KeyEvent.VK_Z);
+        resume.setMnemonic(KeyEvent.VK_X);
         resume.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

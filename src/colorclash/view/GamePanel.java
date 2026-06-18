@@ -82,8 +82,8 @@ public class GamePanel extends JPanel {
     public void initHudPanel(MainFrame frame){
         JPanel hudPanel = new JPanel(new BorderLayout());
         hudPanel.setBackground(Color.DARK_GRAY);
-        JButton pauseButton = new JButton("PAUSE (ALT + Z)");
-        pauseButton.setMnemonic(KeyEvent.VK_Z);
+        JButton pauseButton = new JButton("PAUSE (ALT + X)");
+        pauseButton.setMnemonic(KeyEvent.VK_X);
         pauseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
