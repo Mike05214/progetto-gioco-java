@@ -30,17 +30,11 @@ public class MenuPanel extends BaseMenuPanel {
 
     public MenuPanel(MainFrame frame) {
         super();
-        this.setBackground(Color.DARK_GRAY);
+        setBackground(Color.DARK_GRAY);
         
-        initButtons(); // i bottoni vengono comunque costruiti qui nel MenuPanel, dal BaseMenuPanel arriva solo il layout
-        initTitleLabel("COLOR CLASH", Color.CYAN);
-        playButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                frame.changeFrame("GAME");
-            }
-        });
-
+        initButtons(frame); // i bottoni vengono comunque costruiti qui nel MenuPanel, dal BaseMenuPanel arriva solo il layout
+        initTitleLabel("COLOR CLASH", Color.YELLOW);
+        
         //metodi ereditati dalla superclasse BaseMenuPanel che servono ad aggiungere i bottoni al MenuPanel secondo la logica della BaseMenuPanel
         addComponentToCenter(playButton, ROW_0, true);
         addComponentToCenter(resumeButton, ROW_1, true);
@@ -54,16 +48,25 @@ public class MenuPanel extends BaseMenuPanel {
         highScoreLabel.setText("High Score: " + newScore);
     }
 
-    public void initButtons(){
-        this.playButton = new JButton("PLAY");
+    public void initButtons(MainFrame frame){
+        playButton = new JButton("PLAY");
         playButton.setFont(new Font("Arial", Font.BOLD, BUTTON_TEXT_SIZE));
         playButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
-        this.highScoreLabel = new JLabel("High Score:");
-        this.highScoreLabel.setFont(new Font("Arial", Font.PLAIN, HI_LABEL_SIZE));
-        this.highScoreLabel.setForeground(Color.WHITE); // imposto colore etichetta
-        this.resumeButton = new JButton("RESUME");
-        this.resumeButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
-        this.resumeButton.setFont(new Font("Arial", Font.BOLD, BUTTON_TEXT_SIZE));
-        this.resumeButton.setEnabled(false); // Appena apri il gioco, non puoi fare "Riprendi"
+        playButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.changeFrame("GAME");
+            }
+        });
+        
+        highScoreLabel = new JLabel("High Score:");
+        highScoreLabel.setFont(new Font("Arial", Font.PLAIN, HI_LABEL_SIZE));
+        highScoreLabel.setForeground(Color.WHITE); // imposto colore etichetta
+        resumeButton = new JButton("RESUME");
+        resumeButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+        resumeButton.setFont(new Font("Arial", Font.BOLD, BUTTON_TEXT_SIZE));
+        resumeButton.setEnabled(false); // Appena apri il gioco, non puoi fare "Riprendi"
+
+        
     }
 }

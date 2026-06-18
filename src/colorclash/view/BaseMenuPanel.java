@@ -13,7 +13,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.Font; // Importante per la grandezza del testo!
-import java.awt.Component;
+import java.awt.Component; // ogni oggetto grafico è di tipo component, la superclasse 
 
 public abstract class BaseMenuPanel extends JPanel {
     protected final int BUTTON_WIDTH = 200; //protected visibile  al package e alla classi figlie 
@@ -25,7 +25,6 @@ public abstract class BaseMenuPanel extends JPanel {
     protected JPanel centerPanel;
 
     public BaseMenuPanel(){
-        this.setBackground(Color.DARK_GRAY);
         this.setLayout(new BorderLayout());
 
         this.centerPanel = new JPanel(new GridBagLayout());

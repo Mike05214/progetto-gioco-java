@@ -184,6 +184,12 @@ public class GameModel {
         System.out.println("lista dopo il reset: ");
         debugEnemiesTemp();
     }
+
+    public void resetGame(){
+        getPlayer().resetToInitialSettings(getStartX(), getStartY(),getStartColorId());
+        resetScore();
+        resetObstacles();
+    }
         
     
     // --- GETTERS (Servono alla View per sapere cosa disegnare) ---

@@ -35,7 +35,7 @@ public class GamePanel extends JPanel {
     private final int DELAY = 8;
 
     // Palete dei colori per associare ID(indice) a un colore specifico 
-    private final Color[] colorPalette = {
+    private Color[] colorPalette = {
         Color.RED,   // ID 0
         Color.GREEN, // ID 1
         Color.CYAN   // ID 2
@@ -44,10 +44,10 @@ public class GamePanel extends JPanel {
     public GamePanel(MainFrame frame) {  // al costruttore del pannello viene passata la nostra finestra principale 
         this.model = new GameModel();
         this.frame = frame;
-        this.setBackground(Color.BLACK);
-        this.setLayout(new BorderLayout());
+        setBackground(Color.BLACK);
+        setLayout(new BorderLayout());
         initGameLoop();
-        initToolbar(frame);
+        initHudPanel(frame);
         initGameSpace();
         //INIZIO PROTOTIPO MOVIMENTO PLAYER (magari da rivedere i metodi usati in base a quelli che ci sono nelle dispense del prof se questi non ci piacciono)
         initSetupListeners();
@@ -79,28 +79,25 @@ public class GamePanel extends JPanel {
     }
 
     //la toolbar non è una classe specifica, è un altro JPanel creato su misura per contenere bottone back e punteggio, per evitare interferenze con l'area di gioco
-    public void initToolbar(MainFrame frame){
-        JPanel toolbar = new JPanel(new BorderLayout());
-        toolbar.setBackground(Color.DARK_GRAY);
-         JButton backButton = new JButton("Pause");
-        backButton.addActionListener(new ActionListener() {
+    public void initHudPanel(MainFrame frame){
+        JPanel hudPanel = new JPanel(new BorderLayout());
+        hudPanel.setBackground(Color.DARK_GRAY);
+        JButton pauseButton = new JButton("PAUSE (ALT + Z)");
+        pauseButton.setMnemonic(KeyEvent.VK_Z);
+        pauseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 frame.changeFrame("PAUSE");
-                /* model.getPlayer().resetToInitialSettings(model.getStartX(), model.getStartY(),model.getStartColorId());
-                model.getPlayer().resetMovementFlags();
-                model.resetScore();
-                model.resetObstacles(); */
             }
         });
-        toolbar.add(backButton, BorderLayout.WEST);
+        hudPanel.add(pauseButton, BorderLayout.WEST);
 
         scoreLabel = new JLabel("SCORE: ");
         scoreLabel.setForeground(Color.WHITE);
         scoreLabel.setFont(new Font("Arial", Font.BOLD, 16));
         scoreLabel.setHorizontalAlignment(SwingConstants.CENTER); //centra il testo nella sua area, SwingConstants è una interface
-        toolbar.add(scoreLabel, BorderLayout.CENTER);
-        this.add(toolbar, BorderLayout.NORTH);
+        hudPanel.add(scoreLabel, BorderLayout.CENTER);
+        this.add(hudPanel, BorderLayout.NORTH);
 
     }
 
@@ -184,7 +181,7 @@ public class GamePanel extends JPanel {
     //CLASSE INTERNA CHE GESTISCE SEPARATAMENTE L'AREA DI GIOCO DALLA BARRA MENU
     private class GameSpace extends JPanel{
         public GameSpace(){
-            this.setBackground(Color.BLACK);
+            setBackground(Color.BLACK);
         }
              // --- IL METODO PER DISEGNARE ---
         @Override
