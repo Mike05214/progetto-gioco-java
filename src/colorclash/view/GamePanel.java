@@ -64,7 +64,7 @@ public class GamePanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e){
                 // 1. Il tempo scorre: facciamo muovere la logica
-                model.update(getWidth(), getHeight()); //i metodi nei parametri sono nativi di Java Swing a quanto dice gemini
+                model.update(getGameSpaceWidth(), getGameSpaceHeight()); //i metodi nei parametri sono nativi di Java Swing a quanto dice gemini
                 scoreLabel.setText("SCORE: "+ model.getScore());
                 // 2. Ridisegniamo lo schermo con le nuove posizioni
                 repaint();
@@ -208,6 +208,13 @@ public class GamePanel extends JPanel {
 
     public GameModel getModel(){
         return this.model;
+    }
+
+    public int getGameSpaceWidth(){
+        return this.gameSpace.getWidth();
+    }
+    public int getGameSpaceHeight(){
+        return this.gameSpace.getHeight();
     }
 
 

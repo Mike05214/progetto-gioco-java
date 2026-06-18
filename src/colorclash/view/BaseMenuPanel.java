@@ -16,7 +16,7 @@ import java.awt.Font; // Importante per la grandezza del testo!
 import java.awt.Component;
 
 public abstract class BaseMenuPanel extends JPanel {
-    protected final int BUTTON_WIDTH = 200;
+    protected final int BUTTON_WIDTH = 200; //protected visibile  al package e alla classi figlie 
     protected final int BUTTON_HEIGHT = 50;
     protected final int BUTTON_TEXT_SIZE = 20;
     protected final int TITLE_SIZE = 60;
