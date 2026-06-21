@@ -1,4 +1,6 @@
 package src.colorclash.model;
+import java.awt.Shape;
+import java.awt.Rectangle;
 
 public class Avatar {
     
@@ -116,7 +118,12 @@ public class Avatar {
     
     
     // --- GETTERS & SETTERS (Per far leggere i dati alla View e al GameModel) ---
-    
+    public Shape getHitbox() {
+        return new Rectangle((int)x, (int)y, width, height);
+
+    }
+     
+
     public int getX() { return (int)x; } //cast esplicito a int, il metodo fillRect nella view si aspetta delle coordinate intere non double
     public int getY() { return (int)y; }
     public int getWidth() { return width; }

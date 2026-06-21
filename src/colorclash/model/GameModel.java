@@ -129,25 +129,53 @@ public class GameModel {
 // Crea fisicamente il nemico
     private void spawnRandomEnemy(int panelWidth) {
         
-        int randomWidth = random.nextInt(50, 100); 
-        int randomHeigth = random.nextInt(50, 100);
+        
     
     // 1. Genera una coordinata X casuale dentro i limiti dello schermo
     // Se lo schermo è 800, la X sarà tra 0 e 750 (per non uscire fuori col lato destro)
-        int randomX = random.nextInt(panelWidth - randomWidth);
+        int randomX = 0;
+        
+
     
     // 2. Sceglie un colore a caso (0 = Rosso, 1 = Verde, 2 = Blu)
         int randomColorId = random.nextInt(3);
     
     // 3. Velocità di caduta (es. 5 pixel a frame)
-        int fallSpeed = 5;
+        double fallSpeed = 5;
     
     // IL TRUCCO: La Y di partenza è -50! (Così nasce FUORI dallo schermo in alto e "scivola" dentro)
         int startY = -150;
 
         
     // Creiamo il nemico concreto e lo mettiamo nella lista
-        Obstacle newEnemy = new StandardObstacle(randomX, startY, fallSpeed, randomColorId,randomWidth,randomHeigth);
+        Obstacle.ObstacleShape[] shapes = Obstacle.ObstacleShape.values();
+        Obstacle.ObstacleShape randomShape = shapes[random.nextInt(shapes.length)];
+
+    // Dichiariamo il nemico generico (Padre)
+        Obstacle newEnemy;
+
+    // Scegliamo quale classe concreta istanziare passando i TUOI parametri
+        switch (randomShape) {
+            case SINUSOIDAL:
+                randomX = random.nextInt(panelWidth - 50); 
+                newEnemy = new SinusoidalMadness(randomX, startY, fallSpeed, randomColorId, 50, 50);
+                break;
+            
+            case SPEED_RACER:
+                randomX = random.nextInt(panelWidth - 50); 
+            // Visto che è uno "Speed Racer", per differenziarlo subito possiamo 
+            // passargli una velocità maggiore (es. fallSpeed * 2) rispetto agli altri!
+                newEnemy = new SpeedRacer(randomX, startY, fallSpeed *1.5 , randomColorId, 50, 50);
+                break;
+            
+            case STANDARD:
+            default: //In Java, se dichiari una variabile (come Obstacle newEnemy;) e poi provi a usarla (come in enemies.add(newEnemy);), il compilatore pretende la certezza matematica che quella variabile abbia ricevuto un valore in qualsiasi scenario possibile.
+            int randomWidth = random.nextInt(50, 100); 
+            int randomHeigth = random.nextInt(50, 100);
+            randomX = random.nextInt(panelWidth - randomWidth); 
+            newEnemy = new StandardObstacle(randomX, startY, fallSpeed, randomColorId, randomWidth, randomHeigth);
+            break;
+        }
         enemies.add(newEnemy);
         debugEnemiesTemp();
     }

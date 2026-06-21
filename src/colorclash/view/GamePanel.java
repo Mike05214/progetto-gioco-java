@@ -6,6 +6,7 @@ import src.colorclash.model.Avatar;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
@@ -188,17 +189,19 @@ public class GamePanel extends JPanel {
         public void paintComponent(Graphics g){  // non si usa paint perchè noi vogliamo disegnare il pannello specifico
             //chiamare SEMPRE il super all'inizio per pulire lo schermo vecchio!
             super.paintComponent(g);
-            // 1. Disegniamo l'Avatar
+            // 1. Facciamo il casting per sbloccare i superpoteri
+            Graphics2D g2d = (Graphics2D) g;
+
+            // 2. Disegniamo l'Avatar usando direttamente la sua Hitbox
             Avatar player = model.getPlayer();
-            int PlayerColorId = model.getPlayer().getColorId();
-            Color currentColor = colorPalette[PlayerColorId];
-            g.setColor(currentColor);
-            g.fillRect((int)player.getX(), (int)player.getY(), player.getWidth(), player.getHeight());
+            g2d.setColor(colorPalette[player.getColorId()]);
+            g2d.fill(player.getHitbox()); // <-- MAGIA!
 
             // 2. Disegniamo TUTTI gli ostacoli presenti nella lista
             for (Obstacle obs : model.getEnemies()){
-                g.setColor(colorPalette[obs.getColorId()]);
-                g.fillRect(obs.getX(),obs.getY(),obs.getWidth(),obs.getHeight());
+                g2d.setColor(colorPalette[obs.getColorId()]);
+                // Non ci interessa che forma sia. g2d.fill() accetta qualsiasi Shape!
+                g2d.fill(obs.getHitbox());
             }
         }
     }

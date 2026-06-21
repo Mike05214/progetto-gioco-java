@@ -1,4 +1,5 @@
 package src.colorclash.model;
+import java.awt.Shape;
 
 public abstract class Obstacle {
     
@@ -8,12 +9,12 @@ public abstract class Obstacle {
     protected int width;
     protected int height;
     
-    protected int fallSpeed;
+    protected double fallSpeed;
     protected int colorId;
     protected boolean isActive; // Ci serve per sapere quando eliminarlo dallo schermo
     
     // Costruttore: ogni ostacolo nasce con coordinate, velocità e colore specifici
-    public Obstacle(int startX, int startY, int speed, int colorId,int width,int height) {
+    public Obstacle(int startX, int startY, double speed, int colorId,int width,int height) {
         this.x = startX;
         this.y = startY;
         this.width = width;  // Dimensione standard
@@ -46,7 +47,8 @@ public abstract class Obstacle {
     }
     
     // --- GETTERS ---
-    
+    // Ogni ostacolo, non importa che forma abbia, DEVE saper restituire la sua Hitbox
+    public abstract Shape getHitbox();
     public int getX() { return x; }
     public int getY() { return y; }
     public int getWidth() { return width; }
@@ -63,5 +65,14 @@ public abstract class Obstacle {
            ", ColoreID=" + this.colorId + 
            ", Velocità=" + this.fallSpeed + 
            "]";
+
+    
 }
+
+    public enum ObstacleShape{ //parole chiave per distinguere i vari tipi di ostacoli
+        STANDARD,
+        SINUSOIDAL,
+        SPEED_RACER
+    }
+
 }
