@@ -162,18 +162,13 @@ public class GameModel {
                 break;
             
             case SPEED_RACER:
-                randomX = random.nextInt(panelWidth - 50); 
-            // Visto che è uno "Speed Racer", per differenziarlo subito possiamo 
-            // passargli una velocità maggiore (es. fallSpeed * 2) rispetto agli altri!
-                newEnemy = new SpeedRacer(randomX, startY, fallSpeed *1.5 , randomColorId, 50, 50);
+                
+                newEnemy = SpeedRacer.createSpeedRacerObstacle(panelWidth,startY,fallSpeed*1.5,randomColorId);
                 break;
             
             case STANDARD:
             default: //In Java, se dichiari una variabile (come Obstacle newEnemy;) e poi provi a usarla (come in enemies.add(newEnemy);), il compilatore pretende la certezza matematica che quella variabile abbia ricevuto un valore in qualsiasi scenario possibile.
-            int randomWidth = random.nextInt(50, 100); 
-            int randomHeigth = random.nextInt(50, 100);
-            randomX = random.nextInt(panelWidth - randomWidth); 
-            newEnemy = new StandardObstacle(randomX, startY, fallSpeed, randomColorId, randomWidth, randomHeigth);
+            newEnemy = StandardObstacle.createStandardObstacle(panelWidth, startY, fallSpeed, randomColorId);
             break;
         }
         enemies.add(newEnemy);
