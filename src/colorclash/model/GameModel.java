@@ -2,6 +2,9 @@ package src.colorclash.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.awt.Rectangle;
+import java.awt.Shape;
+import java.awt.geom.Area;
 
 public class GameModel {
 
@@ -72,7 +75,7 @@ public class GameModel {
         updateEnemies(panelHeight); // Modifica il tuo metodo updateEnemies per fargli usare panelHeight!
         
         // moveEntities();
-        // checkCollisions();
+        checkCollisions();
         scoreHandler();
     }
     
@@ -105,9 +108,61 @@ public class GameModel {
                                                   //"regola" che prende un oggetto e risponde VERO o FALSO.
     }
 
-    private void checkCollisions() {
-        // Nel prossimo step, scriveremo qui la matematica per 
-        // controllare se il rettangolo dell'Avatar tocca un Ostacolo
+    public void checkCollisions() {
+    // Otteniamo la forma del giocatore e la sua "scatola grezza" di delimitazione
+        Shape playerShape = player.getHitbox();
+        Rectangle playerBounds = playerShape.getBounds(); 
+
+    // Scorriamo tutta la lista dei nemici attuali a schermo
+        for (int i = 0; i < enemies.size(); i++) {
+            Obstacle obs = enemies.get(i);
+            Shape obsShape = obs.getHitbox();
+            Rectangle obsBounds = obsShape.getBounds(); 
+        
+        // ==========================================
+        // FASE 1: BROAD PHASE (Controllo Velocissimo)
+        // ==========================================
+        // Controlliamo prima i rettangoli esterni. Se non si sfiorano nemmeno,
+        // saltiamo questo ostacolo e passiamo al successivo senza sprecare calcoli!
+            if (!playerBounds.intersects(obsBounds)) {
+                continue; 
+            }
+        
+        // ==========================================
+        // FASE 2: NARROW PHASE (Controllo Millimetrico)
+        // ==========================================
+        // Arriviamo qui SOLO se le scatole si toccano. 
+        // Ora usiamo l'Area per vedere se i pixel geometrici si sovrappongono davvero.
+            Area playerArea = new Area(playerShape);
+            Area obsArea = new Area(obsShape);
+        
+        // Calcola l'intersezione matematica tra le due forme
+            playerArea.intersect(obsArea); //Non è più l'area della shape originale, ma viene "sovrascritta" con il risultato geometrico dello scontro.
+
+        
+        // Se l'area intersecata NON è vuota, si sono schiantati!
+            if (!playerArea.isEmpty()) {
+            
+            // --- GESTIONE DELLA LOGICA DI GIOCO ---
+            
+            // 1. Qui metterete il controllo del colore!
+            // Esempio fittizio:
+            // if (player.getColorId() == obs.getColorId()) {
+            //     score += 100; // Colore giusto = Punti!
+            // } else {
+            //     lives--;      // Colore sbagliato = Danno!
+            // }
+            
+            // 2. Rimuoviamo l'ostacolo dal gioco (è stato "assorbito" o "distrutto")
+                enemies.remove(i);
+
+            
+            // 3. TRUCCO SALVAVITA: 
+            // Siccome abbiamo rimosso un elemento, la lista si è accorciata. 
+            // Dobbiamo fare un passo indietro con l'indice 'i' per non saltare l'ostacolo successivo!
+                i--; 
+            }
+        }
     }
 
     // Questo metodo lo useremo in futuro per generare nemici a caso
