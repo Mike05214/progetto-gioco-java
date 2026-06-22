@@ -4,6 +4,8 @@ import src.colorclash.model.Obstacle;
 import src.colorclash.model.Avatar;
 
 import java.awt.BorderLayout;
+import java.awt.GridBagLayout;
+import java.awt.Dimension;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -29,7 +31,10 @@ public class GamePanel extends JPanel {
     private  boolean spaceAlreadyPressed = false;
     private MainFrame frame; //reso frame variabilie d'istanza per poterla passare ai metodi helper del costruttore
     private JLabel scoreLabel;
+    private JLabel liveLabel;
     private GameSpace gameSpace;
+    private JButton pauseButton;
+   
     
 
     // Calcoliamo i millisecondi per avere 60 FPS (1000 ms / 60 = ~16 ms)
@@ -67,6 +72,11 @@ public class GamePanel extends JPanel {
                 // 1. Il tempo scorre: facciamo muovere la logica
                 model.update(getGameSpaceWidth(), getGameSpaceHeight()); //i metodi nei parametri sono nativi di Java Swing a quanto dice gemini
                 scoreLabel.setText("SCORE: "+ model.getScore());
+                liveLabel.setText("LIVES: "+ model.getLives());
+                if(model.isGameOver()){
+                    gameSpace.restartButton.setVisible(true);
+                    pauseButton.setEnabled(false);
+                }
                 // 2. Ridisegniamo lo schermo con le nuove posizioni
                 repaint();
             }
@@ -83,7 +93,7 @@ public class GamePanel extends JPanel {
     public void initHudPanel(MainFrame frame){
         JPanel hudPanel = new JPanel(new BorderLayout());
         hudPanel.setBackground(Color.DARK_GRAY);
-        JButton pauseButton = new JButton("PAUSE (ALT + X)");
+        pauseButton = new JButton("PAUSE (ALT + X)");
         pauseButton.setMnemonic(KeyEvent.VK_X);
         pauseButton.addActionListener(new ActionListener() {
             @Override
@@ -98,8 +108,13 @@ public class GamePanel extends JPanel {
         scoreLabel.setFont(new Font("Arial", Font.BOLD, 16));
         scoreLabel.setHorizontalAlignment(SwingConstants.CENTER); //centra il testo nella sua area, SwingConstants è una interface
         hudPanel.add(scoreLabel, BorderLayout.CENTER);
+        liveLabel = new JLabel("LIVES: ");
+        liveLabel.setForeground(Color.WHITE);
+        liveLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        liveLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        hudPanel.add(liveLabel, BorderLayout.EAST);
         this.add(hudPanel, BorderLayout.NORTH);
-
+        
     }
 
     public void initSetupListeners(){
@@ -181,9 +196,39 @@ public class GamePanel extends JPanel {
     }
     //CLASSE INTERNA CHE GESTISCE SEPARATAMENTE L'AREA DI GIOCO DALLA BARRA MENU
     private class GameSpace extends JPanel{
+
+        private JButton restartButton;
+
         public GameSpace(){
             setBackground(Color.BLACK);
-        }
+            
+            // Usiamo il GridBagLayout solo per centrare il bottone automaticamente nello spazio
+                this.setLayout(new GridBagLayout()); 
+
+        // 2. Configuriamo il bottone una volta sola qui nel costruttore
+            restartButton = new JButton("BACK TO MENU");
+            restartButton.setFont(new Font("Arial", Font.BOLD, 20));
+            restartButton.setPreferredSize(new Dimension(200, 40));
+        
+        // Di base il gioco è attivo, quindi il bottone deve essere INVISIBILE
+            restartButton.setVisible(false); 
+
+        // Gestiamo il click del bottone
+            this.restartButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                // Qui chiamerete il metodo del vostro controller/model per resettare la partita
+                    frame.changeFrame("MENU");
+                    model.resetGame();
+                    restartButton.setVisible(false);
+                    pauseButton.setEnabled(true);
+                }
+            });
+
+        // 3. Lo aggiungiamo FISICAMENTE al pannello
+            this.add(restartButton); // di t
+        }// FINE COSTRUTTORE
+    
              // --- IL METODO PER DISEGNARE ---
         @Override
         public void paintComponent(Graphics g){  // non si usa paint perchè noi vogliamo disegnare il pannello specifico
@@ -191,21 +236,58 @@ public class GamePanel extends JPanel {
             super.paintComponent(g);
             // 1. Facciamo il casting per sbloccare i superpoteri
             Graphics2D g2d = (Graphics2D) g;
+            // 1. Decidiamo se l'Avatar deve essere disegnato in QUESTO specifico fotogramma
+            boolean drawAvatar = true;
 
-            // 2. Disegniamo l'Avatar usando direttamente la sua Hitbox
-            Avatar player = model.getPlayer();
-            g2d.setColor(colorPalette[player.getColorId()]);
-            g2d.fill(player.getHitbox()); // <-- MAGIA!
+            if (model.isInvulnerable()) {
+            // Se siamo invulnerabili, creiamo un ciclo di 20 frame.
+            // Per i primi 10 frame scompare, per gli altri 10 riappare.
+            // Più abbassate questo numero (es. % 10 < 5), più lampeggerà velocemente!
+                if (model.getInvulnTimer() % 20 < 10) {
+                drawAvatar = false;
+                }
+            }
 
+            // 2. Disegniamo l'Avatar SOLO se drawAvatar è rimasto true
+            if (drawAvatar) {
+                Avatar player = model.getPlayer();
+                g2d.setColor(colorPalette[player.getColorId()]);
+                g2d.fill(player.getHitbox()); 
+    
+    // (Opzionale) Se l'avatar ha un contorno o degli occhi, disegnateli dentro questo "if",
+    // altrimenti gli occhi rimarranno a fluttuare da soli mentre il corpo lampeggia!
+            }
             // 2. Disegniamo TUTTI gli ostacoli presenti nella lista
             for (Obstacle obs : model.getEnemies()){
                 g2d.setColor(colorPalette[obs.getColorId()]);
                 // Non ci interessa che forma sia. g2d.fill() accetta qualsiasi Shape!
                 g2d.fill(obs.getHitbox());
             }
+            
+            if (model.isGameOver()) {
+        
+        // A. Creiamo un "Velo" nero semi-trasparente
+        // I parametri di Color sono (Rosso, Verde, Blu, Trasparenza/Alpha)
+        // L'Alpha va da 0 (invisibile) a 255 (tinta unita). 150 crea un bell'effetto vetro affumicato.
+                g2d.setColor(new Color(0, 0, 0, 150)); 
+                g2d.fillRect(0, 0, getWidth(), getHeight()); // Copre tutto il pannello
+        
+        // B. Scriviamo il testo in grande al centro
+                g2d.setColor(Color.WHITE);
+                g2d.setFont(new Font("Monospaced", Font.BOLD, 100)); // Scegli il font che preferisci
+        
+        // C. Disegniamo la stringa (le coordinate X e Y andranno centrate in base al tuo schermo)
+                String gameOverText = "GAME OVER";
+                g2d.drawString(gameOverText, getWidth()/2 - 265, getHeight()/2 - 80);
+        
+        // Opzionale: Mostriamo il punteggio finale sotto
+                g2d.setFont(new Font("Monospaced", Font.PLAIN, 25));
+                g2d.drawString("SCORE: " + model.getScore(), getWidth()/2 - 100, getHeight()/2 - 35);
+            }
+    
         }
     }
-
+    
     public GameModel getModel(){
         return this.model;
     }

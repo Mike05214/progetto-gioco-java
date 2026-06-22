@@ -11,8 +11,8 @@ public class MainFrame extends JFrame {
     
     private CardLayout cardLayout;
     private JPanel mainPanel;
-    private final int FRAME_WIDTH = 800;
-    private final int FRAME_HEIGHT = 600;
+    private final int FRAME_WIDTH = 700;
+    private final int FRAME_HEIGHT = 900;
 
     
     public MainFrame() {

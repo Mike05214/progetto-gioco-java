@@ -19,6 +19,10 @@ public class GameModel {
     private int score;
     private int stackedTime = 0;
 
+    //Variabili per invulnerabilità
+    private boolean isInvulnerable = false;
+    private int invulnTimer = 0;
+    private static final int MAX_INVULN_FRAMES = 120; // 120 frame a 60fps = 2 secondi di pace
 
     //costanti
     private final int START_X = 375;
@@ -65,6 +69,7 @@ public class GameModel {
         if (isGameOver) {
             return;
         }
+        invulnerabilityHandler();
         player.move();
         player.constrainX(0, panelWidth);
         player.constrainY(0, panelHeight);
@@ -75,6 +80,7 @@ public class GameModel {
         updateEnemies(panelHeight); // Modifica il tuo metodo updateEnemies per fargli usare panelHeight!
         
         // moveEntities();
+        
         checkCollisions();
         scoreHandler();
     }
@@ -145,23 +151,42 @@ public class GameModel {
             
             // --- GESTIONE DELLA LOGICA DI GIOCO ---
             
-            // 1. Qui metterete il controllo del colore!
-            // Esempio fittizio:
-            // if (player.getColorId() == obs.getColorId()) {
-            //     score += 100; // Colore giusto = Punti!
-            // } else {
-            //     lives--;      // Colore sbagliato = Danno!
-            // }
-            
-            // 2. Rimuoviamo l'ostacolo dal gioco (è stato "assorbito" o "distrutto")
-                enemies.remove(i);
-
-            
-            // 3. TRUCCO SALVAVITA: 
-            // Siccome abbiamo rimosso un elemento, la lista si è accorciata. 
-            // Dobbiamo fare un passo indietro con l'indice 'i' per non saltare l'ostacolo successivo!
-                i--; 
+                if(player.getColorId()==obs.getColorId()){
+                    score+=100;
+                    enemies.remove(i);
+                    i--; 
+                }else{
+                    if(!isInvulnerable){
+                        decreaseLives();
+                        enemies.remove(i);
+                        i--; 
+                        isInvulnerable=true;
+                    }
+                }
             }
+        }
+    }
+    private void invulnerabilityHandler(){
+        if (isInvulnerable) {
+            invulnTimer++; // Il tempo passa
+            if (invulnTimer >= MAX_INVULN_FRAMES) {
+                isInvulnerable = false; // Torna vulnerabile
+                invulnTimer = 0;        // Resetta il timer
+            }
+        }
+    }
+
+
+     // Metodo per gestire il danno
+    public void decreaseLives() {
+        if (lives > 0) {
+            lives--;
+        }
+        
+        // Se le vite arrivano a zero, scatta il Game Over
+        if (lives <= 0) {
+            isGameOver = true;
+            System.out.println("GAME OVER!");
         }
     }
     
@@ -229,18 +254,7 @@ public class GameModel {
 
 
     
-    // Metodo per gestire il danno
-    public void decreaseLives() {
-        if (lives > 0) {
-            lives--;
-        }
-        
-        // Se le vite arrivano a zero, scatta il Game Over
-        if (lives <= 0) {
-            isGameOver = true;
-        }
-    }
-    
+   
 
     
     // Metodo di reset che chiamerai nel bottone Back To Menu
@@ -258,14 +272,41 @@ public class GameModel {
         debugEnemiesTemp();
     }
 
+    public void resetGameover(){
+        isGameOver=false;
+    }
+    
+    public void resetLives(){
+            lives=3;
+    }
+
+    public void resetInvulnerability(){
+        isInvulnerable=false;
+
+    }
+    
     public void resetGame(){
         getPlayer().resetToInitialSettings(getStartX(), getStartY(),getStartColorId());
         resetScore();
         resetObstacles();
+        resetGameover();
+        resetLives();
+        resetInvulnerability();
     }
+
+    
+
+    
         
     
     // --- GETTERS (Servono alla View per sapere cosa disegnare) ---
+    public boolean isInvulnerable() {
+        return isInvulnerable;
+    }
+
+    public int getInvulnTimer() {
+        return invulnTimer;
+    }
     public Avatar getPlayer() { 
         return player; 
     }
