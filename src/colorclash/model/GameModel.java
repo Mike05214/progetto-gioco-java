@@ -164,12 +164,7 @@ public class GameModel {
             }
         }
     }
-
-    // Questo metodo lo useremo in futuro per generare nemici a caso
-    public void spawnEnemy(Obstacle newObstacle) {
-        enemies.add(newObstacle);
-    }
-
+    
     // Controlla se è il momento di far nascere un nemico
     private void handleSpawning(int panelWidth) {
         frameCounter++;
