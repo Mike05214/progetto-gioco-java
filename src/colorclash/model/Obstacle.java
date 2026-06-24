@@ -45,6 +45,9 @@ public abstract class Obstacle {
     public void destroy() {
         this.isActive = false;
     }
+    public void setColorId(int colorId) {
+    this.colorId = colorId;
+    }
     
     // --- GETTERS ---
     // Ogni ostacolo, non importa che forma abbia, DEVE saper restituire la sua Hitbox

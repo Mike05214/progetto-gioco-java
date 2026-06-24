@@ -15,6 +15,15 @@ public class SinusoidalMadness extends Obstacle {
     // Il nostro orologio interno indipendente!
     private double angle = 0;
 
+    // Contatore per sapere da quanti frame non cambiamo colore
+    private int colorTimer = 0; 
+
+// Ogni quanti frame cambia colore? (es. 20 frame = cambia 3 volte al secondo a 60FPS)
+    private static final int COLOR_CHANGE_INTERVAL = 60; 
+
+// Il numero di colori attuali (0, 1, 2). In futuro questo diventerà 4!
+    private static final int CURRENT_MAX_COLORS = 3;
+
   
     public SinusoidalMadness(int x, int y, double fallSpeed, int colorId,int width,int height) {
         
@@ -34,6 +43,24 @@ public class SinusoidalMadness extends Obstacle {
 
         // 3. IL MOVIMENTO ORIZZONTALE: Usiamo l'angolo interno, non la Y!
         this.x = this.StartX + (int) (AMPLITUDE * Math.sin(angle));
+
+        // 2. IL CAMBIO COLORE CONTINUO (La nuova meccanica!)
+        colorTimer++; // Il tempo scorre...
+    
+    // Se è passato l'intervallo di tempo prestabilito...
+        if (colorTimer >= COLOR_CHANGE_INTERVAL) {
+        
+        // A. Resettiamo il cronometro a zero
+            colorTimer = 0;
+        
+        // B. Calcoliamo il prossimo colore
+        // L'operatore modulo (%) fa la magia: se il colore è 2, (2+1)%3 fa 0. 
+        // Il colore torna all'inizio creando un loop infinito: 0 -> 1 -> 2 -> 0 -> 1...
+            int nextColorId = (this.getColorId() + 1) % CURRENT_MAX_COLORS;
+        
+        // C. Aggiorniamo il colore effettivo dell'ostacolo
+            this.setColorId(nextColorId); 
+    }
     }
     
     public static SinusoidalMadness creatSinusoidalMadness(int panelWidth, int startY, int colorId){
@@ -45,6 +72,7 @@ public class SinusoidalMadness extends Obstacle {
         int safeMaxX = panelWidth - WIDTH - AMPLITUDE;
         int randomX = random.nextInt(safeMinX,safeMaxX);
         return new SinusoidalMadness(randomX, startY, SPEED, colorId,WIDTH,HEIGHT);
+        
 
     }
 
