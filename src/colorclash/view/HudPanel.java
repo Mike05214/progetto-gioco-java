@@ -88,10 +88,10 @@ public class HudPanel extends JPanel {
 }
 
         // Spinge i cuori contro il bordo destro
-        livesContainer = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0)); //allineamento laterale lasciando hgap
+        livesContainer = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0)); //allineamento laterale lasciando hgap
         livesContainer.setOpaque(false);
         this.add(livesContainer, BorderLayout.EAST);
-        livesLabel = new JLabel("LIVES: ");
+        livesLabel = new JLabel("LIVES:");
         livesLabel.setForeground(Color.WHITE);
         livesLabel.setFont(new Font("Arial", Font.BOLD, 16));
         livesContainer.add(livesLabel);
