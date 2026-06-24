@@ -12,7 +12,8 @@ import java.awt.event.KeyEvent;
 
 public class HudPanel extends JPanel {
     private GameModel model;
-    private MainFrame frame; 
+    private MainFrame frame;
+    private JLabel livesLabel; 
     
     private JButton pauseButton;
     private JLabel scoreLabel;
@@ -20,6 +21,8 @@ public class HudPanel extends JPanel {
     private ImageIcon heartIcon;
     private int lastLives = -1;
     private int lastScore = -1;
+    private final int MAX_LIVES = 3;
+    private JLabel[] heartLabels = new JLabel[MAX_LIVES];
 
     // Il costruttore riceve il modello, il frame e il pulsante pausa originale
     public HudPanel( MainFrame frame) {
@@ -49,7 +52,7 @@ public class HudPanel extends JPanel {
         // Crea un bordo vuoto: (Alto, Sinistra, Basso, Destra)
 // Mettendo un valore a DESTRA (es. 50), crei un muro invisibile 
 // che spinge la scritta dello Score verso SINISTRA!
-        scoreLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 100));
+        
         scoreLabel.setForeground(Color.WHITE);
         scoreLabel.setFont(new Font("Arial", Font.BOLD, 16));
         scoreContainer.add(scoreLabel);
@@ -87,24 +90,36 @@ public class HudPanel extends JPanel {
         // Spinge i cuori contro il bordo destro
         livesContainer = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0)); //allineamento laterale lasciando hgap
         livesContainer.setOpaque(false);
-        
         this.add(livesContainer, BorderLayout.EAST);
+        livesLabel = new JLabel("LIVES: ");
+        livesLabel.setForeground(Color.WHITE);
+        livesLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        livesContainer.add(livesLabel);
+        // Creiamo i 3 cuori e li mettiamo nell'Array in modo da non perderli di vista
+    for (int i = 0; i < MAX_LIVES; i++) {
+        heartLabels[i] = new JLabel("♥");
+        heartLabels[i].setFont(new Font("Arial", Font.BOLD, 24));
+        heartLabels[i].setForeground(Color.RED); // Tutti rossi all'inizio
+    
+    // Li aggiungiamo al pannello una volta per tutte
+        livesContainer.add(heartLabels[i]); 
     }
+        
+}//FINE COSTRUTTORE
 
-    // Metodo per aggiornare i cuori grafici
     public void updateLivesView(int currentLives) {
-        if(currentLives == lastLives){
-            return;
-        }
-        if (livesContainer != null && heartIcon != null) { //impedisce il crash del gioco in caso l'immagine del cuore non venga caricata correttamente
-            livesContainer.removeAll();
-            for (int i = 0; i < currentLives; i++) {
-                livesContainer.add(new JLabel(heartIcon));
+    // Scorriamo le 3 etichette che già esistono in memoria
+        for (int i = 0; i < MAX_LIVES; i++) {
+            if (i < currentLives) {
+                heartLabels[i].setForeground(Color.RED);       // Vita attiva
+            } else {
+                heartLabels[i].setForeground(Color.DARK_GRAY); // Vita persa
             }
-            livesContainer.revalidate();
-            livesContainer.repaint();
         }
-        this.lastLives = currentLives;
+    
+    // Poiché non abbiamo rimosso o aggiunto oggetti grafici, 
+    // NON serve più revalidate()! Basta un rapido repaint.
+        livesContainer.repaint();
     }
 
     // Metodo per aggiornare il punteggio al centro
