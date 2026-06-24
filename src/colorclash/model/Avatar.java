@@ -1,6 +1,7 @@
 package src.colorclash.model;
 import java.awt.Shape;
 import java.awt.Rectangle;
+import java.awt.geom.Path2D;
 
 public class Avatar {
     
@@ -13,6 +14,8 @@ public class Avatar {
     private long currentTime = 0;
     private final double SCALE_FACTOR = 0.7071; //lunghezza del vettore velocità (teorema di pitagora)
     private final long COLOR_COOLDOWN = 500;
+    // Dimensioni totali dell'ingombro
+    
     
     // Attributi di gioco
     private double speed;  // Lo speed rappresenta la lunghezza del passo quando si piagia il comando daje 
@@ -27,8 +30,8 @@ public class Avatar {
         this.y = startY;
         
         // Valori base (in futuro li sposteremo nella classe Config per comodità)
-        this.width = 50;
-        this.height = 50;
+        this.width = 70;
+        this.height = 80;
         this.speed = 2.5;
         this.colorId = startColorId; // Parte con il primo colore (es. 0 = Rosso)
         this.isInvulnerable = false;
@@ -119,8 +122,42 @@ public class Avatar {
     
     // --- GETTERS & SETTERS (Per far leggere i dati alla View e al GameModel) ---
     public Shape getHitbox() {
-        return new Rectangle((int)x, (int)y, width, height);
+        Path2D.Double navicella = new Path2D.Double();
 
+    // 1. LA PUNTA (Centro, in alto)
+        navicella.moveTo(this.x + (width * 0.5), this.y);
+
+    // 2. CORPO DESTRO (Si allarga leggermente verso il basso)
+        navicella.lineTo(this.x + (width * 0.6), this.y + (height * 0.3));
+
+    // 3. PUNTA DELL'ALA DESTRA (Estrema destra, verso il basso)
+        navicella.lineTo(this.x + width, this.y + (height * 0.8));
+
+    // 4. ATTACCO DELL'ALA DESTRA (Rientra verso il centro)
+        navicella.lineTo(this.x + (width * 0.7), this.y + (height * 0.8));
+
+    // 5. PROPULSORE DESTRO (Va dritto fino al fondo)
+        navicella.lineTo(this.x + (width * 0.7), this.y + height);
+
+    // 6. RIENTRANZA CENTRALE TRA I MOTORI (Lo scarico)
+        navicella.lineTo(this.x + (width * 0.5), this.y + (height * 0.85));
+
+    // 7. PROPULSORE SINISTRO (Fondo)
+        navicella.lineTo(this.x + (width * 0.3), this.y + height);
+
+    // 8. ATTACCO DELL'ALA SINISTRA
+        navicella.lineTo(this.x + (width * 0.3), this.y + (height * 0.8));
+
+    // 9. PUNTA DELL'ALA SINISTRA (Estrema sinistra)
+        navicella.lineTo(this.x, this.y + (height * 0.8));
+
+    // 10. CORPO SINISTRO (Torna verso la punta)
+        navicella.lineTo(this.x + (width * 0.4), this.y + (height * 0.3));
+
+    // Chiude il tracciato ricollegandosi alla PUNTA!
+        navicella.closePath();
+
+        return navicella;
     }
      
 
