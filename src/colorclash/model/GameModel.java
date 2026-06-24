@@ -25,8 +25,8 @@ public class GameModel {
     private static final int MAX_INVULN_FRAMES = 120; // 120 frame a 60fps = 2 secondi di pace
 
     //costanti
-    private final int START_X = 375;
-    private final int START_Y = 450;
+    private final int START_X = 350;
+    private final int START_Y = 550;
     private final int START_COLOR_ID = 0;
     private final int TICK_TIME = 8;
     private final int SCORE_DELAY = 1000; // in ms
@@ -166,6 +166,7 @@ public class GameModel {
             }
         }
     }
+
     private void invulnerabilityHandler(){
         if (isInvulnerable) {
             invulnTimer++; // Il tempo passa
@@ -232,8 +233,7 @@ public class GameModel {
     // Scegliamo quale classe concreta istanziare passando i TUOI parametri
         switch (randomShape) {
             case SINUSOIDAL:
-                randomX = random.nextInt(panelWidth - 50); 
-                newEnemy = new SinusoidalMadness(randomX, startY, fallSpeed, randomColorId, 50, 50);
+                newEnemy=SinusoidalMadness.creatSinusoidalMadness(panelWidth,startY,randomColorId);
                 break;
             
             case SPEED_RACER:
@@ -294,10 +294,6 @@ public class GameModel {
         resetInvulnerability();
     }
 
-    
-
-    
-        
     
     // --- GETTERS (Servono alla View per sapere cosa disegnare) ---
     public boolean isInvulnerable() {

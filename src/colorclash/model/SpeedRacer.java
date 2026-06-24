@@ -11,7 +11,7 @@ public class SpeedRacer extends Obstacle {
     public SpeedRacer(int startX, int startY, double speed, int colorId, int width, int height) {
         
         
-        super(startX, startY, speed, colorId, WIDTH, HEIGHT);
+        super(startX, startY, speed, colorId, width, height);
        
     }
 
@@ -19,12 +19,12 @@ public class SpeedRacer extends Obstacle {
     // Questo è l'unico punto di accesso per creare un ostacolo standard
     public static SpeedRacer createSpeedRacerObstacle(int panelWidth, int startY, double speed, int colorId) {
         // La classe decide le SUE dimensioni;
-        
         // La classe calcola la SUA posizione X sicura
         int randomX = random.nextInt(panelWidth - WIDTH);
         
         // Costruisce se stessa e si restituisce al mittente
         return new SpeedRacer(randomX, startY, speed, colorId, WIDTH, HEIGHT);
+        
     }
 
     

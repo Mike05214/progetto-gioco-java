@@ -29,11 +29,10 @@ public class GamePanel extends JPanel {
     private GameModel model;
     private Timer gameLoop;
     private  boolean spaceAlreadyPressed = false;
-    private MainFrame frame; //reso frame variabilie d'istanza per poterla passare ai metodi helper del costruttore
-    private JLabel scoreLabel;
-    private JLabel liveLabel;
+    private MainFrame frame; //reso frame variabilie d'istanza per poterla passare ai metodi helper del costruttoreth
     private GameSpace gameSpace;
     private JButton pauseButton;
+    private HudPanel hudPanel;
    
     
 
@@ -71,11 +70,14 @@ public class GamePanel extends JPanel {
             public void actionPerformed(ActionEvent e){
                 // 1. Il tempo scorre: facciamo muovere la logica
                 model.update(getGameSpaceWidth(), getGameSpaceHeight()); //i metodi nei parametri sono nativi di Java Swing a quanto dice gemini
-                scoreLabel.setText("SCORE: "+ model.getScore());
-                liveLabel.setText("LIVES: "+ model.getLives());
+                hudPanel.updateLivesView(model.getLives());
+                hudPanel.updateScoreText(model.getScore());
                 if(model.isGameOver()){
+                    hudPanel.getPauseButton().setEnabled(false);
                     gameSpace.restartButton.setVisible(true);
-                    pauseButton.setEnabled(false);
+
+                    // FONDAMENTALE: Spegniamo il motore del tempo!
+                    gameLoop.stop();
                 }
                 // 2. Ridisegniamo lo schermo con le nuove posizioni
                 repaint();
@@ -89,33 +91,17 @@ public class GamePanel extends JPanel {
         this.add(gameSpace, BorderLayout.CENTER);
     }
 
-    //la toolbar non è una classe specifica, è un altro JPanel creato su misura per contenere bottone back e punteggio, per evitare interferenze con l'area di gioco
-    public void initHudPanel(MainFrame frame){
-        JPanel hudPanel = new JPanel(new BorderLayout());
-        hudPanel.setBackground(Color.DARK_GRAY);
-        pauseButton = new JButton("PAUSE (ALT + X)");
-        pauseButton.setMnemonic(KeyEvent.VK_X);
-        pauseButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                frame.changeFrame("PAUSE");
-            }
-        });
-        hudPanel.add(pauseButton, BorderLayout.WEST);
+    /* private void initHudPanel(){
+        this.hudPanel = new HudPanel(frame);
+        this.add(hudPanel, BorderLayout.NORTH);
+    } */
 
-        scoreLabel = new JLabel("SCORE: ");
-        scoreLabel.setForeground(Color.WHITE);
-        scoreLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        scoreLabel.setHorizontalAlignment(SwingConstants.CENTER); //centra il testo nella sua area, SwingConstants è una interface
-        hudPanel.add(scoreLabel, BorderLayout.CENTER);
-        liveLabel = new JLabel("LIVES: ");
-        liveLabel.setForeground(Color.WHITE);
-        liveLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        liveLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        hudPanel.add(liveLabel, BorderLayout.EAST);
+     //la toolbar non è una classe specifica, è un altro JPanel creato su misura per contenere bottone back e punteggio, per evitare interferenze con l'area di gioco
+    public void initHudPanel(MainFrame frame){
+        this.hudPanel = new HudPanel(frame);
         this.add(hudPanel, BorderLayout.NORTH);
         
-    }
+    } 
 
     public void initSetupListeners(){
          this.addKeyListener(new KeyAdapter() { //listener della tastiera nella view come da programma
@@ -221,7 +207,7 @@ public class GamePanel extends JPanel {
                     frame.changeFrame("MENU");
                     model.resetGame();
                     restartButton.setVisible(false);
-                    pauseButton.setEnabled(true);
+                    hudPanel.getPauseButton().setEnabled(true);
                 }
             });
 
