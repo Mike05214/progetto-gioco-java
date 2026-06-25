@@ -26,6 +26,25 @@ public class HudPanel extends JPanel {
     private JLabel[] heartLabels = new JLabel[MAX_LIVES];
     private Icon iconaDiSalvataggio;
 
+    //static field
+    private static final int HUD_WIDTH = 0;
+    private static final int HUD_HEIGHT = 35;
+    private static final int PAUSE_BUTTON_WIDTH = 150;
+    private static final int PAUSE_BUTTON_FONT_SIZE = 14;
+    private static final int SCORE_LABEL_FONT_SIZE = 20;
+    private static final int LIVES_CONTAINER_WIDTH = 150;
+    private static final int LC_BORDER_TOP = 1;
+    private static final int LC_BORDER_LEFT = 0;
+    private static final int LC_BORDER_BOTTOM = 0;
+    private static final int LC_BORDER_RIGHT = 5;
+    private static final int HGAP = 0;
+    private static final int VGAP = 0;
+    private static final int H_LABELS_BORDER_TOP = 0;
+    private static final int H_LABELS_BORDER_LEFT = 8;
+    private static final int H_LABELS_BORDER_BOTTOM = 0;
+    private static final int H_LABELS_BORDER_RIGHT = 0;
+
+
     // Il costruttore riceve il modello, il frame e il pulsante pausa originale
     public HudPanel( MainFrame frame) {
         System.out.println("La radice del Classpath è qui: " + getClass().getResource("/"));
@@ -34,18 +53,18 @@ public class HudPanel extends JPanel {
         // Il vostro amato BorderLayout
         this.setLayout(new BorderLayout());
         this.setBackground(Color.DARK_GRAY);
-        this.setPreferredSize(new Dimension(0, 40));
+        this.setPreferredSize(new Dimension(HUD_WIDTH, HUD_HEIGHT));
        
         JPanel westernPanel = new JPanel(new GridBagLayout());
         // Pulsante "PAUSE" (si affianca allo score solo quando perdi)
         pauseButton = new JButton("PAUSE (ALT+X)");
         
         pauseButton.setMnemonic(KeyEvent.VK_X);
-        pauseButton.setFont(new Font("Arial", Font.BOLD, 14));
+        pauseButton.setFont(new Font("Arial", Font.BOLD, PAUSE_BUTTON_FONT_SIZE));
         pauseButton.addActionListener(e -> {
             frame.changeFrame("PAUSE");
         });
-        pauseButton.setPreferredSize(new Dimension(150, 40));
+        pauseButton.setPreferredSize(new Dimension(PAUSE_BUTTON_WIDTH, HUD_HEIGHT));
         westernPanel.add(pauseButton);
   
         JPanel centerPanel = new JPanel(new GridBagLayout());
@@ -53,7 +72,7 @@ public class HudPanel extends JPanel {
 
         scoreLabel = new JLabel("SCORE: 0");      
         scoreLabel.setForeground(Color.WHITE);
-        scoreLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        scoreLabel.setFont(new Font("Arial", Font.BOLD, SCORE_LABEL_FONT_SIZE));
         centerPanel.add(scoreLabel);
 
 
@@ -64,15 +83,16 @@ public class HudPanel extends JPanel {
        
 
         // Spinge i cuori contro il bordo destro
-        livesContainer = new JPanel(new GridBagLayout()); //allineamento laterale lasciando hgap
+        livesContainer = new JPanel(new FlowLayout(FlowLayout.RIGHT,HGAP,VGAP)); //allineamento laterale lasciando hgap
         livesContainer.setOpaque(false);
-        livesContainer.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 15));
-        livesContainer.setPreferredSize(new Dimension(150, 40));// serve a fissare le dimensioni del pannello in modo che la label dello score non si sposti a sinistra quando scompare un cuore
+        livesContainer.setBorder(BorderFactory.createEmptyBorder(LC_BORDER_TOP, LC_BORDER_LEFT, LC_BORDER_BOTTOM, LC_BORDER_RIGHT));
+        livesContainer.setPreferredSize(new Dimension(LIVES_CONTAINER_WIDTH, HUD_HEIGHT));// serve a fissare le dimensioni del pannello in modo che la label dello score non si sposti a sinistra quando scompare un cuore
         this.add(livesContainer, BorderLayout.EAST);
         
         // Creiamo i 3 cuori e li mettiamo nell'Array in modo da non perderli di vista
         for (int i = 0; i < MAX_LIVES; i++) {
             heartLabels[i] = loadImage("src/colorclash/resources/cuore.png");
+            heartLabels[i].setBorder(BorderFactory.createEmptyBorder(H_LABELS_BORDER_TOP, H_LABELS_BORDER_LEFT, H_LABELS_BORDER_BOTTOM, H_LABELS_BORDER_RIGHT)); //crea lo spazio tra un cuore e l'altro aggiungendo n pixel a sinistra di un cuore quando viene istanziato
             heartLabels[i].setPreferredSize(heartLabels[i].getPreferredSize()); // questa riga salva e congela la dimensione delle label dei cuori impedendogli di settarsi a 0 quando il cuore scompare, migliorando l'effetto grafico
     // Li aggiungiamo al pannello una volta per tutte
             livesContainer.add(heartLabels[i]); 
@@ -83,10 +103,12 @@ public class HudPanel extends JPanel {
     }//FINE COSTRUTTORE
 
     public void updateLivesView(int currentLives) {
-        // Scorriamo le 3 etichette che già esistono in memoria
+        
+        // Evita calcoli e refresh grafici inutili ogni 8ms
         if(currentLives == lastLives){
             return;
         }
+        // Scorriamo le 3 etichette che già esistono in memoria
         for (int i = 0; i < MAX_LIVES; i++) {
         heartLabels[i].setVisible(true);
     
