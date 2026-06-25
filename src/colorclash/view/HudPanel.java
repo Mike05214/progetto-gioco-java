@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import src.colorclash.model.GameModel;
 import java.awt.event.KeyEvent;
+import java.io.File;
 
 public class HudPanel extends JPanel {
     private GameModel model;
@@ -97,7 +98,7 @@ public class HudPanel extends JPanel {
         livesContainer.add(livesLabel);
         // Creiamo i 3 cuori e li mettiamo nell'Array in modo da non perderli di vista
     for (int i = 0; i < MAX_LIVES; i++) {
-        heartLabels[i] = new JLabel("♥");
+        heartLabels[i] = loadImage("cuore.png");
         heartLabels[i].setFont(new Font("Arial", Font.BOLD, 24));
         heartLabels[i].setForeground(Color.RED); // Tutti rossi all'inizio
     
@@ -138,6 +139,25 @@ public class HudPanel extends JPanel {
             this.lastScore = currentScore; 
         }
     }
+
+    public static JLabel loadImage(String filename){ //metodo da utilizzare quando capiremo come cazzo far funzionare il percorso dell'immagine
+        BufferedImage image;
+        JLabel imageContainer;
+        try{
+            image = ImageIO.read(new File(filename));//attualmente se il file cuore.png viene spostato fuori da tutte le altre cartelle viene caricato correttamente, se sta nella cartella resources dentro a src esplode e si carica il cuore a emoji provvisorio
+            imageContainer = new JLabel(new ImageIcon(image));
+            return imageContainer;
+        }
+        catch(Exception e){
+            System.out.println("Errore nel caricamento di " + filename + ": " + e);
+            System.out.println("Come misura di emergenza carico il cuore emoji");
+            // GIUBBOTTO ANTIPROIETTILE: Ritorna una Label con un cuore invece di null
+            JLabel errorLabel = new JLabel("❤️"); 
+            errorLabel.setForeground(Color.RED);
+            return errorLabel;
+        }
+    }
+
 
     // Getter per dare il controllo del bottone al GamePanel
     public JButton getPauseButton() {
