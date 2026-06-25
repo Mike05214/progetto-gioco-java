@@ -64,44 +64,39 @@ public class HudPanel extends JPanel {
         // --- 3. DESTRA (EAST): Il contenitore dei cuori pixelati ---
         try {
     // Ora che è dentro 'src', il percorso parte pulito dalla radice del Classpath
-    java.net.URL imgURL = getClass().getResource("/assets/cuore.png");
+            java.net.URL imgURL = getClass().getResource("/colorclash/resources/cuore.png");
     
-    if (imgURL != null) {
+            if (imgURL != null) {
         // Se VS Code ha fatto il suo dovere, entra qui e legge l'immagine
-        this.heartIcon = new ImageIcon(javax.imageio.ImageIO.read(imgURL));
-        System.out.println("[GODO] Cuore caricato correttamente dal Classpath!");
-    } else {
+                this.heartIcon = new ImageIcon(javax.imageio.ImageIO.read(imgURL));
+                System.out.println("[GODO] Cuore caricato correttamente dal Classpath!");
+            } else {
         // Se restituisce ancora null, significa che VS Code sta ancora "dormendo"
-        System.out.println("[ATTENZIONE] Il Classpath è giusto, ma VS Code non ha ancora aggiornato il bunker.");
+                System.out.println("[ATTENZIONE] Il Classpath è giusto, ma VS Code non ha ancora aggiornato il bunker.");
         
         // PIANO B DI EMERGENZA (Locale temporaneo per non far crashare il gioco)
-        java.io.File fileLocale = new java.io.File("src/assets/cuore.png");
-        if (fileLocale.exists()) {
-            this.heartIcon = new ImageIcon(javax.imageio.ImageIO.read(fileLocale));
-            System.out.println("[FALLBACK] Caricato da file fisico locale per questa volta.");
-        } else {
-            this.heartIcon = new ImageIcon(); // Icona vuota salvavita
+                java.io.File fileLocale = new java.io.File("/colorclash/resources/cuore.png");
+                if (fileLocale.exists()) {
+                    this.heartIcon = new ImageIcon(javax.imageio.ImageIO.read(fileLocale));
+                    System.out.println("[FALLBACK] Caricato da file fisico locale per questa volta.");
+                } else {
+                    this.heartIcon = new ImageIcon(); // Icona vuota salvavita
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("[ERRORE] Qualcosa è andato storto nel caricamento.");
+            this.heartIcon = new ImageIcon(); // Giubbotto antiproiettile finale
         }
-    }
-} catch (Exception e) {
-    System.out.println("[ERRORE] Qualcosa è andato storto nel caricamento.");
-    this.heartIcon = new ImageIcon(); // Giubbotto antiproiettile finale
-}
 
         // Spinge i cuori contro il bordo destro
         livesContainer = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0)); //allineamento laterale lasciando hgap
         livesContainer.setOpaque(false);
         this.add(livesContainer, BorderLayout.EAST);
-        livesLabel = new JLabel("LIVES:");
-        livesLabel.setForeground(Color.WHITE);
-        livesLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        livesContainer.add(livesLabel);
+        
         // Creiamo i 3 cuori e li mettiamo nell'Array in modo da non perderli di vista
     for (int i = 0; i < MAX_LIVES; i++) {
-        heartLabels[i] = loadImage("cuore.png");
+        heartLabels[i] = loadImage("src/colorclash/resources/cuore.png");
         heartLabels[i].setFont(new Font("Arial", Font.BOLD, 24));
-        heartLabels[i].setForeground(Color.RED); // Tutti rossi all'inizio
-    
     // Li aggiungiamo al pannello una volta per tutte
         livesContainer.add(heartLabels[i]); 
     }
@@ -111,10 +106,11 @@ public class HudPanel extends JPanel {
     public void updateLivesView(int currentLives) {
     // Scorriamo le 3 etichette che già esistono in memoria
         for (int i = 0; i < MAX_LIVES; i++) {
+            
             if (i < currentLives) {
-                heartLabels[i].setForeground(Color.RED);       // Vita attiva
+                heartLabels[i].setVisible(true);       // Vita attiva
             } else {
-                heartLabels[i].setForeground(Color.DARK_GRAY); // Vita persa
+                heartLabels[i].setVisible(false); // Vita persa
             }
         }
     
@@ -152,7 +148,7 @@ public class HudPanel extends JPanel {
             System.out.println("Errore nel caricamento di " + filename + ": " + e);
             System.out.println("Come misura di emergenza carico il cuore emoji");
             // GIUBBOTTO ANTIPROIETTILE: Ritorna una Label con un cuore invece di null
-            JLabel errorLabel = new JLabel("❤️"); 
+            JLabel errorLabel = new JLabel("♥"); 
             errorLabel.setForeground(Color.RED);
             return errorLabel;
         }
