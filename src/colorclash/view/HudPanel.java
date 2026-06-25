@@ -34,11 +34,9 @@ public class HudPanel extends JPanel {
         // Il vostro amato BorderLayout
         this.setLayout(new BorderLayout());
         this.setBackground(Color.DARK_GRAY);
-
-        // --- 2. CENTRO (CENTER): Score + Bottone Riavvio a scomparsa ---
-        JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
-        centerPanel.setOpaque(false);
-
+        this.setPreferredSize(new Dimension(0, 40));
+       
+        JPanel westernPanel = new JPanel(new GridBagLayout());
         // Pulsante "PAUSE" (si affianca allo score solo quando perdi)
         pauseButton = new JButton("PAUSE (ALT+X)");
         
@@ -47,29 +45,35 @@ public class HudPanel extends JPanel {
         pauseButton.addActionListener(e -> {
             frame.changeFrame("PAUSE");
         });
-        centerPanel.add(pauseButton);
-        JPanel scoreContainer = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 10));
-        scoreContainer.setOpaque(false);
+        pauseButton.setPreferredSize(new Dimension(150, 40));
+        westernPanel.add(pauseButton);
+  
+        JPanel centerPanel = new JPanel(new GridBagLayout());
+        centerPanel.setOpaque(false);
 
         scoreLabel = new JLabel("SCORE: 0");      
         scoreLabel.setForeground(Color.WHITE);
         scoreLabel.setFont(new Font("Arial", Font.BOLD, 20));
-        scoreContainer.add(scoreLabel);
+        centerPanel.add(scoreLabel);
 
-        this.add(centerPanel, BorderLayout.WEST);
-        this.add(scoreContainer, BorderLayout.CENTER);
+
+        this.add(centerPanel, BorderLayout.CENTER);
+        this.add(westernPanel, BorderLayout.WEST);
+
 
        
 
         // Spinge i cuori contro il bordo destro
-        livesContainer = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0)); //allineamento laterale lasciando hgap
+        livesContainer = new JPanel(new GridBagLayout()); //allineamento laterale lasciando hgap
         livesContainer.setOpaque(false);
+        livesContainer.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 15));
+        livesContainer.setPreferredSize(new Dimension(150, 40));// serve a fissare le dimensioni del pannello in modo che la label dello score non si sposti a sinistra quando scompare un cuore
         this.add(livesContainer, BorderLayout.EAST);
         
         // Creiamo i 3 cuori e li mettiamo nell'Array in modo da non perderli di vista
         for (int i = 0; i < MAX_LIVES; i++) {
             heartLabels[i] = loadImage("src/colorclash/resources/cuore.png");
-            heartLabels[i].setPreferredSize(new Dimension(50, 50));
+            heartLabels[i].setPreferredSize(heartLabels[i].getPreferredSize()); // questa riga salva e congela la dimensione delle label dei cuori impedendogli di settarsi a 0 quando il cuore scompare, migliorando l'effetto grafico
     // Li aggiungiamo al pannello una volta per tutte
             livesContainer.add(heartLabels[i]); 
         }
@@ -79,26 +83,36 @@ public class HudPanel extends JPanel {
     }//FINE COSTRUTTORE
 
     public void updateLivesView(int currentLives) {
-    // Scorriamo le 3 etichette che già esistono in memoria
+        // Scorriamo le 3 etichette che già esistono in memoria
+        if(currentLives == lastLives){
+            return;
+        }
         for (int i = 0; i < MAX_LIVES; i++) {
-            heartLabels[i].setVisible(true);
-            if (i < currentLives) {
+        heartLabels[i].setVisible(true);
+    
+            // Il trucco: la soglia si sposta da sinistra verso destra man mano che perdi vite
+            if (i >= (MAX_LIVES - currentLives)) {
+        
                 // VITA ATTIVA: Rimettiamo l'icona dalla nostra cassaforte
-                    heartLabels[i].setIcon(this.iconaDiSalvataggio); 
-                heartLabels[i].setForeground(Color.RED); // Nel caso in cui fosse un cuore testuale       // Vita attiva
-            } else {
+                heartLabels[i].setIcon(this.iconaDiSalvataggio); 
+                heartLabels[i].setForeground(Color.RED); // Nel caso in cui fosse un cuore testuale
+        
+            } 
+            else{
+        
                 // VITA PERSA: Svuotiamo l'immagine. 
-            // Grazie al setPreferredSize che abbiamo messo su, la scatola non si restringe!
+                // Grazie a heartLabels[i].setPreferredSize(heartLabels[i].getPreferredSize()) sopra la dimensione della label del cuore scomparso non si annulla mantenendo tutto in posizione
                 heartLabels[i].setIcon(null); 
-            
-            // Rendiamo trasparente l'eventuale cuore testuale del "Piano B"
-                heartLabels[i].setForeground(new Color(0, 0, 0, 0));
+        
+                // Rendiamo trasparente l'eventuale cuore testuale del "Piano B"
+                    heartLabels[i].setForeground(new Color(0, 0, 0, 0));
+        
             }
         }
-    
-    // Poiché non abbiamo rimosso o aggiunto oggetti grafici, 
-    // NON serve più revalidate()! Basta un rapido repaint.
+        // Poiché non abbiamo rimosso o aggiunto oggetti grafici, 
+        // NON serve più revalidate()! Basta un rapido repaint.
         livesContainer.repaint();
+        lastLives = currentLives;
     }
 
     // Metodo per aggiornare il punteggio al centro
