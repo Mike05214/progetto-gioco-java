@@ -158,7 +158,6 @@ public class GameModel {
                 }else{
                     if(!isInvulnerable){
                         decreaseLives();
-                        enemies.remove(i);
                         i--; 
                         isInvulnerable=true;
                     }
