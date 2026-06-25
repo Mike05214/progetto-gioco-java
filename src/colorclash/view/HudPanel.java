@@ -24,6 +24,7 @@ public class HudPanel extends JPanel {
     private int lastScore = -1;
     private final int MAX_LIVES = 3;
     private JLabel[] heartLabels = new JLabel[MAX_LIVES];
+    private Icon iconaDiSalvataggio;
 
     // Il costruttore riceve il modello, il frame e il pulsante pausa originale
     public HudPanel( MainFrame frame) {
@@ -35,58 +36,30 @@ public class HudPanel extends JPanel {
         this.setBackground(Color.DARK_GRAY);
 
         // --- 2. CENTRO (CENTER): Score + Bottone Riavvio a scomparsa ---
-        JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
         centerPanel.setOpaque(false);
 
         // Pulsante "PAUSE" (si affianca allo score solo quando perdi)
         pauseButton = new JButton("PAUSE (ALT+X)");
+        
         pauseButton.setMnemonic(KeyEvent.VK_X);
         pauseButton.setFont(new Font("Arial", Font.BOLD, 14));
         pauseButton.addActionListener(e -> {
             frame.changeFrame("PAUSE");
         });
         centerPanel.add(pauseButton);
-        JPanel scoreContainer = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 5));
+        JPanel scoreContainer = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 10));
         scoreContainer.setOpaque(false);
 
-        scoreLabel = new JLabel("SCORE: 0");
-        // Crea un bordo vuoto: (Alto, Sinistra, Basso, Destra)
-// Mettendo un valore a DESTRA (es. 50), crei un muro invisibile 
-// che spinge la scritta dello Score verso SINISTRA!
-        
+        scoreLabel = new JLabel("SCORE: 0");      
         scoreLabel.setForeground(Color.WHITE);
-        scoreLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        scoreLabel.setFont(new Font("Arial", Font.BOLD, 20));
         scoreContainer.add(scoreLabel);
 
         this.add(centerPanel, BorderLayout.WEST);
         this.add(scoreContainer, BorderLayout.CENTER);
 
-        // --- 3. DESTRA (EAST): Il contenitore dei cuori pixelati ---
-        try {
-    // Ora che è dentro 'src', il percorso parte pulito dalla radice del Classpath
-            java.net.URL imgURL = getClass().getResource("/colorclash/resources/cuore.png");
-    
-            if (imgURL != null) {
-        // Se VS Code ha fatto il suo dovere, entra qui e legge l'immagine
-                this.heartIcon = new ImageIcon(javax.imageio.ImageIO.read(imgURL));
-                System.out.println("[GODO] Cuore caricato correttamente dal Classpath!");
-            } else {
-        // Se restituisce ancora null, significa che VS Code sta ancora "dormendo"
-                System.out.println("[ATTENZIONE] Il Classpath è giusto, ma VS Code non ha ancora aggiornato il bunker.");
-        
-        // PIANO B DI EMERGENZA (Locale temporaneo per non far crashare il gioco)
-                java.io.File fileLocale = new java.io.File("/colorclash/resources/cuore.png");
-                if (fileLocale.exists()) {
-                    this.heartIcon = new ImageIcon(javax.imageio.ImageIO.read(fileLocale));
-                    System.out.println("[FALLBACK] Caricato da file fisico locale per questa volta.");
-                } else {
-                    this.heartIcon = new ImageIcon(); // Icona vuota salvavita
-                }
-            }
-        } catch (Exception e) {
-            System.out.println("[ERRORE] Qualcosa è andato storto nel caricamento.");
-            this.heartIcon = new ImageIcon(); // Giubbotto antiproiettile finale
-        }
+       
 
         // Spinge i cuori contro il bordo destro
         livesContainer = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0)); //allineamento laterale lasciando hgap
@@ -94,23 +67,32 @@ public class HudPanel extends JPanel {
         this.add(livesContainer, BorderLayout.EAST);
         
         // Creiamo i 3 cuori e li mettiamo nell'Array in modo da non perderli di vista
-    for (int i = 0; i < MAX_LIVES; i++) {
-        heartLabels[i] = loadImage("src/colorclash/resources/cuore.png");
-        heartLabels[i].setFont(new Font("Arial", Font.BOLD, 24));
+        for (int i = 0; i < MAX_LIVES; i++) {
+            heartLabels[i] = loadImage("src/colorclash/resources/cuore.png");
+            heartLabels[i].setPreferredSize(new Dimension(50, 50));
     // Li aggiungiamo al pannello una volta per tutte
-        livesContainer.add(heartLabels[i]); 
-    }
+            livesContainer.add(heartLabels[i]); 
+        }
+        // 3. Ci "rubiamo" l'icona dal primo cuore e la mettiamo in cassaforte per dopo
+        this.iconaDiSalvataggio = heartLabels[0].getIcon();
         
-}//FINE COSTRUTTORE
+    }//FINE COSTRUTTORE
 
     public void updateLivesView(int currentLives) {
     // Scorriamo le 3 etichette che già esistono in memoria
         for (int i = 0; i < MAX_LIVES; i++) {
-            
+            heartLabels[i].setVisible(true);
             if (i < currentLives) {
-                heartLabels[i].setVisible(true);       // Vita attiva
+                // VITA ATTIVA: Rimettiamo l'icona dalla nostra cassaforte
+                    heartLabels[i].setIcon(this.iconaDiSalvataggio); 
+                heartLabels[i].setForeground(Color.RED); // Nel caso in cui fosse un cuore testuale       // Vita attiva
             } else {
-                heartLabels[i].setVisible(false); // Vita persa
+                // VITA PERSA: Svuotiamo l'immagine. 
+            // Grazie al setPreferredSize che abbiamo messo su, la scatola non si restringe!
+                heartLabels[i].setIcon(null); 
+            
+            // Rendiamo trasparente l'eventuale cuore testuale del "Piano B"
+                heartLabels[i].setForeground(new Color(0, 0, 0, 0));
             }
         }
     
