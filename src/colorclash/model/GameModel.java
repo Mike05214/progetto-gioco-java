@@ -251,9 +251,6 @@ public class GameModel {
     // Fase 3: random.nextInt(4) -> colori 0, 1, 2, 3
     int randomColorId = random.nextInt(availableColorsCount); 
 
-    // 3. Velocità Dinamica: Prende la base impostata dal checkDifficultyProgression
-    double fallSpeed = currentFallSpeed; 
-
     // Dichiariamo il nemico generico (Padre)
     Obstacle newEnemy;
 
@@ -264,7 +261,7 @@ public class GameModel {
     switch (currentPhase) {
         case 1: //i numeri rappresentano la fase di gioco, le percentuali di spawn possono essere modificate in seguito
             // FASE 1: Punteggio basso. 100% Ostacoli Standard. Niente scherzi.
-            newEnemy = StandardObstacle.createStandardObstacle(panelWidth, startY, fallSpeed, randomColorId);
+            newEnemy = StandardObstacle.createStandardObstacle(panelWidth, startY, currentFallSpeed, randomColorId);
             break;
             
         case 2:
@@ -272,9 +269,9 @@ public class GameModel {
             // 30% di probabilità che sia uno Speed Racer, 70% Standard.
             if (chance < 30) {
                 // Notare il fallSpeed * 1.5 che avevi impostato tu
-                newEnemy = SpeedRacer.createSpeedRacerObstacle(panelWidth, startY, fallSpeed * 1.5, randomColorId);
+                newEnemy = SpeedRacer.createSpeedRacerObstacle(panelWidth, startY, currentFallSpeed * 1.5, randomColorId);
             } else {
-                newEnemy = StandardObstacle.createStandardObstacle(panelWidth, startY, fallSpeed, randomColorId);
+                newEnemy = StandardObstacle.createStandardObstacle(panelWidth, startY, currentFallSpeed, randomColorId);
             }
             break;
             
@@ -283,11 +280,11 @@ public class GameModel {
             // FASE 3: Punteggio alto. L'inferno. Tutti sbloccati.
             // 15% Sinusoidal, 25% Speed Racer, 60% Standard.
             if (chance < 15) {
-                newEnemy = SinusoidalMadness.creatSinusoidalMadness(panelWidth, startY, fallSpeed, randomColorId);
+                newEnemy = SinusoidalMadness.creatSinusoidalMadness(panelWidth, startY, currentFallSpeed, randomColorId);
             } else if (chance < 40) { // 15 + 25 = 40
-                newEnemy = SpeedRacer.createSpeedRacerObstacle(panelWidth, startY, fallSpeed * 1.5, randomColorId);
+                newEnemy = SpeedRacer.createSpeedRacerObstacle(panelWidth, startY, currentFallSpeed * 1.5, randomColorId);
             } else {
-                newEnemy = StandardObstacle.createStandardObstacle(panelWidth, startY, fallSpeed, randomColorId);
+                newEnemy = StandardObstacle.createStandardObstacle(panelWidth, startY, currentFallSpeed, randomColorId);
             }
             break;
     }
