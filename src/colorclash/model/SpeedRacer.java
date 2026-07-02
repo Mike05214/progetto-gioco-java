@@ -43,5 +43,9 @@ public class SpeedRacer extends Obstacle {
         
         return triangle;
     }
+    @Override
+    public int getPoints(){
+        return 200;
+    }
 
 }

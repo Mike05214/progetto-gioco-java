@@ -35,4 +35,7 @@ public class StandardObstacle extends Obstacle {
     public Shape getHitbox() {
         return new Rectangle((int)x, (int)y, width, height);
     }
+    public int getPoints(){
+        return 100;
+    }
 }

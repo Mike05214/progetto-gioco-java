@@ -2,6 +2,7 @@ package src.colorclash.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.Area;
@@ -30,11 +31,18 @@ public class GameModel {
     private final int START_COLOR_ID = 0;
     private final int TICK_TIME = 8;
     private final int SCORE_DELAY = 1000; // in ms
+    private final int SCORE_PHASE_2 = 2500;
+    private final int SCORE_PHASE_3 = 5000;
+    private final double SPEED_PHASE_MULTIPLIER = 1.20;
 
     // --- VARIABILI PER LO SPAWNER ---
     private Random random;
     private int frameCounter;
     private int spawnInterval; // Ogni quanti frame nasce un nemico
+    private double currentFallSpeed = 3.0;
+    private int currentPhase = 1;
+    private Color[] avaibleColors;
+    private int availableColorsCount = 2;
     
     // Costruttore: viene chiamato quando l'utente preme "Gioca"
     public GameModel() {
@@ -49,6 +57,12 @@ public class GameModel {
         // Posizioniamo l'Avatar in basso al centro (es. per una finestra 800x600)
         this.player = new Avatar(START_X, START_Y,START_COLOR_ID); 
         this.enemies = new ArrayList<>(); // Lista vuota all'inizio
+        //attualmente questo array di colori e tutte le sue istanze nel gamepanel sono 
+        //sostanzialmente inutili ai fini del semplice limitare la palette di colori nelle varie
+        //fasi di difficoltà, per quello basterebbe semplicemente manipolare la variabile
+        //avaibleColorsCount, però la bro gemini dice che ci servirà più avanti per gli effetti
+        //grafici delle esplosioni degli ostacoli/player quindi ce lo lasciamo
+        this.avaibleColors = new Color[]{Color.RED, Color.GREEN};
         
 
         this.updateCounter = 0;
@@ -95,10 +109,15 @@ public class GameModel {
 
         // Se l'accumulatore supera la soglia (es. 1 secondo), scatta il punto!
         if (this.stackedTime >= SCORE_DELAY) {
-            this.score+=100;
+            addScore(100);
             this.stackedTime -= SCORE_DELAY; // Scaliamo la soglia senza azzerare il resto, mantenendo la precisione
             System.out.println("Model: Secondo passato! Nuovo Score: " + this.score);
         }
+    }
+
+    public void addScore(int points){
+        this.score += points;
+        checkDifficultyProgression(this.score);
     }
 
     private void updateEnemies(int panelHeight ) {
@@ -152,7 +171,7 @@ public class GameModel {
             // --- GESTIONE DELLA LOGICA DI GIOCO ---
             
                 if(player.getColorId()==obs.getColorId()){
-                    score+=100;
+                    addScore(obs.getPoints());
                     enemies.remove(i);
                     i--; 
                 }else{
@@ -164,6 +183,26 @@ public class GameModel {
                 }
             }
         }
+    }
+
+    public void checkDifficultyProgression(int currentScore)
+    {
+       if(currentScore >= SCORE_PHASE_2 && currentPhase == 1){
+            currentPhase = 2;
+            currentFallSpeed *= SPEED_PHASE_MULTIPLIER;
+            avaibleColors = new Color[]{Color.CYAN, Color.GREEN, Color.RED};
+            availableColorsCount = 3;
+            System.out.println("FASE 2 COMINCIATA!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+       }
+       else if(currentScore >= SCORE_PHASE_3 && currentPhase == 2){
+            currentPhase = 3;
+            currentFallSpeed *= SPEED_PHASE_MULTIPLIER; // La velocità generale aumenta ancora
+        
+            // Sblocchiamo il 4° colore
+            avaibleColors = new Color[]{Color.CYAN, Color.GREEN, Color.RED, Color.ORANGE};
+            availableColorsCount = 4;
+            System.out.println("FASE 3 COMINCIATA!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+       }
     }
 
     private void invulnerabilityHandler(){
@@ -203,50 +242,59 @@ public class GameModel {
 
 // Crea fisicamente il nemico
     private void spawnRandomEnemy(int panelWidth) {
-        
-        
-    
-    // 1. Genera una coordinata X casuale dentro i limiti dello schermo
-    // Se lo schermo è 800, la X sarà tra 0 e 750 (per non uscire fuori col lato destro)
-        int randomX = 0;
-        
+        // 1. IL TRUCCO: La Y di partenza è -150!
+    int startY = -150;
 
-    
-    // 2. Sceglie un colore a caso (0 = Rosso, 1 = Verde, 2 = Blu)
-        int randomColorId = random.nextInt(3);
-    
-    // 3. Velocità di caduta (es. 5 pixel a frame)
-        double fallSpeed = 5;
-    
-    // IL TRUCCO: La Y di partenza è -50! (Così nasce FUORI dallo schermo in alto e "scivola" dentro)
-        int startY = -150;
+    // 2. Colore Dinamico: Invece di un fisso "3", usiamo la variabile che cresce col livello.
+    // Fase 1: random.nextInt(2) -> colori 0, 1
+    // Fase 2: random.nextInt(3) -> colori 0, 1, 2
+    // Fase 3: random.nextInt(4) -> colori 0, 1, 2, 3
+    int randomColorId = random.nextInt(availableColorsCount); 
 
-        
-    // Creiamo il nemico concreto e lo mettiamo nella lista
-        Obstacle.ObstacleShape[] shapes = Obstacle.ObstacleShape.values();
-        Obstacle.ObstacleShape randomShape = shapes[random.nextInt(shapes.length)];
+    // 3. Velocità Dinamica: Prende la base impostata dal checkDifficultyProgression
+    double fallSpeed = currentFallSpeed; 
 
     // Dichiariamo il nemico generico (Padre)
-        Obstacle newEnemy;
+    Obstacle newEnemy;
 
-    // Scegliamo quale classe concreta istanziare passando i TUOI parametri
-        switch (randomShape) {
-            case SINUSOIDAL:
-                newEnemy=SinusoidalMadness.creatSinusoidalMadness(panelWidth,startY,randomColorId);
-                break;
-            
-            case SPEED_RACER:
-                
-                newEnemy = SpeedRacer.createSpeedRacerObstacle(panelWidth,startY,fallSpeed*1.5,randomColorId);
-                break;
-            
-            case STANDARD:
-            default: //In Java, se dichiari una variabile (come Obstacle newEnemy;) e poi provi a usarla (come in enemies.add(newEnemy);), il compilatore pretende la certezza matematica che quella variabile abbia ricevuto un valore in qualsiasi scenario possibile.
+    // Generiamo una probabilità da 0 a 99 per scegliere il tipo di nemico
+    int chance = random.nextInt(100);
+
+    // Lo spawner decide in base alla FASE in cui si trova ColorClash
+    switch (currentPhase) {
+        case 1:
+            // FASE 1: Punteggio basso. 100% Ostacoli Standard. Niente scherzi.
             newEnemy = StandardObstacle.createStandardObstacle(panelWidth, startY, fallSpeed, randomColorId);
             break;
-        }
-        enemies.add(newEnemy);
-        debugEnemiesTemp();
+            
+        case 2:
+            // FASE 2: Punteggio medio. Si sblocca lo Speed Racer.
+            // 30% di probabilità che sia uno Speed Racer, 70% Standard.
+            if (chance < 30) {
+                // Notare il fallSpeed * 1.5 che avevi impostato tu
+                newEnemy = SpeedRacer.createSpeedRacerObstacle(panelWidth, startY, fallSpeed * 1.5, randomColorId);
+            } else {
+                newEnemy = StandardObstacle.createStandardObstacle(panelWidth, startY, fallSpeed, randomColorId);
+            }
+            break;
+            
+        case 3:
+        default:
+            // FASE 3: Punteggio alto. L'inferno. Tutti sbloccati.
+            // 15% Sinusoidal, 25% Speed Racer, 60% Standard.
+            if (chance < 15) {
+                newEnemy = SinusoidalMadness.creatSinusoidalMadness(panelWidth, startY, fallSpeed, randomColorId);
+            } else if (chance < 40) { // 15 + 25 = 40
+                newEnemy = SpeedRacer.createSpeedRacerObstacle(panelWidth, startY, fallSpeed * 1.5, randomColorId);
+            } else {
+                newEnemy = StandardObstacle.createStandardObstacle(panelWidth, startY, fallSpeed, randomColorId);
+            }
+            break;
+    }
+
+    // Aggiungiamo il nemico nato alla lista del Model
+    enemies.add(newEnemy);
+    debugEnemiesTemp();
     }
 
 
@@ -271,6 +319,13 @@ public class GameModel {
         debugEnemiesTemp();
     }
 
+    public void resetDifficulty(){
+        currentFallSpeed = 3.0;
+        currentPhase = 1;
+        avaibleColors = new Color[]{Color.RED, Color.GREEN}; //necessario per allineare lo stato reale allo stato logico
+        availableColorsCount = 2;
+    }
+
     public void resetGameover(){
         isGameOver=false;
     }
@@ -291,6 +346,7 @@ public class GameModel {
         resetGameover();
         resetLives();
         resetInvulnerability();
+        resetDifficulty();
     }
 
     
@@ -325,6 +381,9 @@ public class GameModel {
     }
     public int getStartColorId(){
         return this.START_COLOR_ID;
+    }
+    public int getAvailableColorsCount(){
+        return this.availableColorsCount;
     }
 
     public void debugEnemiesTemp(){

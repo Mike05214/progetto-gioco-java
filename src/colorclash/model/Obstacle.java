@@ -57,6 +57,7 @@ public abstract class Obstacle {
     public int getWidth() { return width; }
     public int getHeight() { return height; }
     public int getColorId() { return colorId; }
+    public int getPoints() { return 100; }
     public boolean isActive() { return isActive; }
 
     //METODO DI DEBUG DA TOGLIERE IN SEGUITO

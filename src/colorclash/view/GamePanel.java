@@ -43,7 +43,8 @@ public class GamePanel extends JPanel {
     private Color[] colorPalette = {
         Color.RED,   // ID 0
         Color.GREEN, // ID 1
-        Color.CYAN   // ID 2
+        Color.CYAN,   // ID 2
+        Color.ORANGE
     };
 
     public GamePanel(MainFrame frame) {  // al costruttore del pannello viene passata la nostra finestra principale 
@@ -158,7 +159,7 @@ public class GamePanel extends JPanel {
     
     public void spaceKeyLogic(){  //per farsì che il metodo colorcooldown non venga chiamato più volte se continui a tenr prenuto space, si serve a quello spaceAlreadyPressed
         if (!spaceAlreadyPressed){
-            model.getPlayer().colorCooldown();
+            model.getPlayer().colorCooldown(model.getAvailableColorsCount());
             spaceAlreadyPressed = true;
         }
         else{

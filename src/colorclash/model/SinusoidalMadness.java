@@ -63,7 +63,7 @@ public class SinusoidalMadness extends Obstacle {
     }
     }
     
-    public static SinusoidalMadness creatSinusoidalMadness(int panelWidth, int startY, int colorId){
+    public static SinusoidalMadness creatSinusoidalMadness(int panelWidth, int startY, double fallSpeed, int colorId){
         // 1. CALCOLO DELLA ZONA SICURA (SAFE ZONE)
         // Il punto più a sinistra in cui può spawnare senza uscire dallo schermo
         int safeMinX = AMPLITUDE; 
@@ -71,7 +71,8 @@ public class SinusoidalMadness extends Obstacle {
         // Il punto più a destra in cui può spawnare
         int safeMaxX = panelWidth - WIDTH - AMPLITUDE;
         int randomX = random.nextInt(safeMinX,safeMaxX);
-        return new SinusoidalMadness(randomX, startY, SPEED, colorId,WIDTH,HEIGHT);
+
+        return new SinusoidalMadness(randomX, startY, fallSpeed, colorId,WIDTH,HEIGHT);
         
 
     }
@@ -81,5 +82,9 @@ public class SinusoidalMadness extends Obstacle {
     public Shape getHitbox() {
         // Usiamo Ellipse2D.Double che accetta le coordinate e le dimensioni
         return new Ellipse2D.Double(x, y, width, height);
+    }
+    @Override
+    public int getPoints(){
+        return 300;
     }
 }

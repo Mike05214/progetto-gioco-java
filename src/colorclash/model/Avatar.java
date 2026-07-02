@@ -85,22 +85,24 @@ public class Avatar {
         }
     }
 
-    public void colorCooldown() {
-        this.currentTime = System.currentTimeMillis(); //metodo che restituisce il tempo del sistema operativo in millisecondi
-        if(currentTime - lastColorChange >= COLOR_COOLDOWN){ //se il tempo passato dall'ultimo cambio colore è maggiore o uguale al cooldown che è una costante, sarà di nuovo possibile cambiare colore
-            switchColor();
-        }
-        else{
+    public void colorCooldown(int availableColorsCount) {
+        this.currentTime = System.currentTimeMillis(); 
+    
+        if (currentTime - lastColorChange >= COLOR_COOLDOWN) { 
+            // Passiamo il limite al metodo che fa il cambio effettivo
+            switchColor(availableColorsCount);
+        } else {
             System.out.println("Cooldown attivo!");
         }
     }
 
-    public void switchColor(){
-        this.colorId++;
-            if(this.colorId > 2){
-                colorId = 0;
-            }
-            lastColorChange = currentTime;
+    public void switchColor(int availableColorsCount){
+        // Il Modulo fa il ciclo perfetto: 
+        // Se hai 2 colori: 0 -> 1 -> 0
+        // Se hai 4 colori: 0 -> 1 -> 2 -> 3 -> 0
+        this.colorId = (this.colorId + 1) % availableColorsCount;
+    
+        lastColorChange = currentTime;
     }
 
     public void resetToInitialSettings(int startX, int startY, int startColorId){
