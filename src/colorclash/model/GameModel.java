@@ -262,7 +262,7 @@ public class GameModel {
 
     // Lo spawner decide in base alla FASE in cui si trova ColorClash
     switch (currentPhase) {
-        case 1:
+        case 1: //i numeri rappresentano la fase di gioco, le percentuali di spawn possono essere modificate in seguito
             // FASE 1: Punteggio basso. 100% Ostacoli Standard. Niente scherzi.
             newEnemy = StandardObstacle.createStandardObstacle(panelWidth, startY, fallSpeed, randomColorId);
             break;
