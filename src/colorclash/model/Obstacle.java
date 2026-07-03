@@ -2,81 +2,55 @@ package src.colorclash.model;
 import java.awt.Shape;
 
 public abstract class Obstacle {
-    
-    // Variabili "protected" così le classi figlie(le sotto-classi) (es. SpeedRacer) potranno leggerle
+    //variabili d'istanza ereditabili
     protected int x;
     protected int y;
     protected int width;
     protected int height;
-    
     protected double fallSpeed;
     protected int colorId;
-    protected boolean isActive; // Ci serve per sapere quando eliminarlo dallo schermo
+    protected boolean isActive;
+
+    //costanti
+    private final int DEFAULT_OBSTACLE_POINTS = 100;
     
-    // Costruttore: ogni ostacolo nasce con coordinate, velocità e colore specifici
     public Obstacle(int startX, int startY, double speed, int colorId,int width,int height) {
         this.x = startX;
         this.y = startY;
-        this.width = width;  // Dimensione standard
-        this.height = height; // Dimensione standard
-        
+        this.width = width;  
+        this.height = height;
         this.fallSpeed = speed;
         this.colorId = colorId;
-        this.isActive = true; // Appena nasce, è ovviamente "vivo"
-    }
+        this.isActive = true;
+    }//fine costruttore
     
-    // --- METODI DI AZIONE ---
-    
-    // Il movimento base: cadere verso il basso
     public void fall() {
         this.y += fallSpeed;
-    }
-    
-    // --- METODI HELPER LOGICI ---
-    
-    // Il GameModel chiamerà questo metodo per capire se l'ostacolo è uscito dallo schermo
+    }//fine fall
+
     public void checkOffScreen(int screenHeight) {
+        
         if (this.y > screenHeight) {
-            this.isActive = false; // "Muore" di vecchiaia uscendo dallo schermo
+            this.isActive = false; 
         }
-    }
-    
-    // Se viene distrutto dall'Avatar, chiamiamo questo metodo
+    }//fine checkOffScreen
+
     public void destroy() {
         this.isActive = false;
-    }
+    }//fine destroy
+
+    //setters di Obstacle
     public void setColorId(int colorId) {
-    this.colorId = colorId;
+        this.colorId = colorId;
     }
     
-    // --- GETTERS ---
-    // Ogni ostacolo, non importa che forma abbia, DEVE saper restituire la sua Hitbox
+    //getters di Obstacle
     public abstract Shape getHitbox();
     public int getX() { return x; }
     public int getY() { return y; }
     public int getWidth() { return width; }
     public int getHeight() { return height; }
     public int getColorId() { return colorId; }
-    public int getPoints() { return 100; }
+    public int getPoints() { return DEFAULT_OBSTACLE_POINTS; }
     public boolean isActive() { return isActive; }
-
-    //METODO DI DEBUG DA TOGLIERE IN SEGUITO
-    @Override
-    public String toString() {
-    return "Ostacolo [" +
-           "X=" + this.x + 
-           ", Y=" + this.y + 
-           ", ColoreID=" + this.colorId + 
-           ", Velocità=" + this.fallSpeed + 
-           "]";
-
-    
-}
-
-    public enum ObstacleShape{ //parole chiave per distinguere i vari tipi di ostacoli
-        STANDARD,
-        SINUSOIDAL,
-        SPEED_RACER
-    }
-
-}
+}//fine classe astratta Obstacle

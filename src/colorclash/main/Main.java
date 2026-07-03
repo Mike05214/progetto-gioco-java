@@ -1,5 +1,4 @@
 package src.colorclash.main;
-
 import src.colorclash.view.MainFrame;
 
 public class Main {
@@ -14,5 +13,5 @@ public class Main {
             } 
         });
  
-    }
-}
+    }//fine main
+}//fine classe Main
