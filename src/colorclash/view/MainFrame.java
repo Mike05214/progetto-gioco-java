@@ -11,6 +11,9 @@ public class MainFrame extends JFrame {
     //variabili d'istanza
     private CardLayout cardLayout;
     private JPanel mainPanel;
+    private GamePanel gamePanel;
+    private MenuPanel menuPanel;
+    private PausePanel pausePanel;
 
     //costanti
     private final int FRAME_WIDTH = 700;
@@ -42,9 +45,9 @@ public class MainFrame extends JFrame {
         Container contPane = this.getContentPane();
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
-        MenuPanel menuPanel = new MenuPanel(this);
-        GamePanel gamePanel = new GamePanel(this);
-        PausePanel pausePanel = new PausePanel(this, gamePanel.getModel());
+        this.menuPanel = new MenuPanel(this);
+        this.gamePanel = new GamePanel(this);
+        this.pausePanel = new PausePanel(this, gamePanel.getModel());
         contPane.add(mainPanel, BorderLayout.CENTER);
         mainPanel.add(menuPanel, "MENU");
         mainPanel.add(gamePanel, "GAME");
@@ -53,4 +56,8 @@ public class MainFrame extends JFrame {
         contPane.add(mainPanel);
         cardLayout.show(mainPanel, "MENU");
     }//fine frameStructureBuilder
+
+    public GamePanel getGamePanel(){
+        return this.gamePanel;
+    }
 }

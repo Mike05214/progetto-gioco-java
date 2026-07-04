@@ -50,6 +50,7 @@ public class PausePanel extends BaseMenuPanel{
             @Override
             public void actionPerformed(ActionEvent e) {
                 frame.changeFrame("GAME");
+                frame.getGamePanel().resumeCountdown();
             }
         });
         return resume;

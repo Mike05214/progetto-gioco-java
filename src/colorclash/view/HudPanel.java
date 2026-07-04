@@ -16,20 +16,16 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
-import src.colorclash.model.GameModel;
 
 import java.io.File;
 
 public class HudPanel extends JPanel {
 
     //variabili d'istanza
-    private GameModel model;
     private MainFrame frame;
-    private JLabel livesLabel; 
     private JButton pauseButton;
     private JLabel scoreLabel;
     private JPanel livesContainer; 
-    private ImageIcon heartIcon;
     private int lastLives = -1;
     private int lastScore = -1;
     private final int MAX_LIVES = 3;
@@ -158,6 +154,13 @@ public class HudPanel extends JPanel {
             return errorLabel;
         }
     }//fine loadImage
+
+    public void showCountdown(int secondsLeft){
+        this.scoreLabel.setText("IL GIOCO RIPARTE TRA: "+secondsLeft);
+    }//fine showCountdown
+    public void restoreScoreLabel(int currentScore){
+        scoreLabel.setText("SCORE: " + currentScore);
+    }//fine restoreScoreLabel
 
     //getters di HudPanel
     public JButton getPauseButton() {

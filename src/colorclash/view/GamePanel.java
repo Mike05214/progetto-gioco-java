@@ -24,6 +24,8 @@ public class GamePanel extends JPanel {
 
     //costanti
     private final int DELAY = 8;
+    private final int RESUME_COOLDOWN_DELAY = 1000;
+    private final int SECONDS_LEFT = 3;
     
     public GamePanel(MainFrame frame) {  
         this.model = new GameModel();
@@ -151,6 +153,30 @@ public class GamePanel extends JPanel {
             }
         }
     }//fine setVisible
+
+    public void resumeCountdown(){
+        gameLoop.stop();
+        hudPanel.getPauseButton().setEnabled(false);
+        hudPanel.showCountdown(SECONDS_LEFT);
+        Timer countdown = new Timer(RESUME_COOLDOWN_DELAY,new ActionListener(){ //timer NON dura 1000 ms ma SCATTA ogni 1000 ms
+            int count = 3;
+            @Override
+            public void actionPerformed(ActionEvent e){
+                count--;
+                if(count > 0){
+                    hudPanel.showCountdown(count);
+                }
+                else{
+                    ((Timer) e.getSource()).stop();// e è l'actionEvent, getSource restituisce sempre Object di default e col cast a Timer diventa Timer su cui può essere chiamato il metodo stop()
+                    hudPanel.restoreScoreLabel(model.getScore());
+                    hudPanel.getPauseButton().setEnabled(true);
+                    gameLoop.start();
+                }
+            }
+        });
+        countdown.setInitialDelay(RESUME_COOLDOWN_DELAY);
+        countdown.start();
+    }//fine resumeCountdown
     
     
 
