@@ -35,11 +35,11 @@ public class Avatar {
     }//fine costruttore
     
     public void move(){
-        boolean diagonalMovement = (movingLeft ^ movingRight) && (movingUp ^ movingDown); // ^ è l'operatore logico XOR, diagonal movement è true solo se si stanno premento un tasto laterale e uno verticale allo stesso tempo
+        boolean diagonalMovement = (movingLeft ^ movingRight) && (movingUp ^ movingDown);
         double speedVector = 0;
 
         if(diagonalMovement){
-            speedVector = speed*SCALE_FACTOR; //si divide il vettore velocità diagonale per la sua lunghezza, normalizzandolo
+            speedVector = speed*SCALE_FACTOR;
         }
         else{
             speedVector = speed;
@@ -128,7 +128,8 @@ public class Avatar {
         navicella.lineTo(this.x, this.y + (height * 0.8));
         navicella.lineTo(this.x + (width * 0.4), this.y + (height * 0.3));
         navicella.closePath();
-
+        //fine costruzione della forma dell'avatar
+        
         return navicella;
     }// fine getHitbox
      

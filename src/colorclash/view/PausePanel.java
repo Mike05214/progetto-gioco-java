@@ -1,27 +1,25 @@
 package src.colorclash.view;
-
-import src.colorclash.model.Avatar;
 import src.colorclash.model.GameModel;
-import src.colorclash.model.Obstacle;
-import java.awt.BorderLayout;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.Font;
 
 import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
-import javax.swing.JLabel;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-import java.awt.Font; // Importante per la grandezza del testo!
+
 
 public class PausePanel extends BaseMenuPanel{
 
+    //variabili d'istanza
     private GameModel model;
+    private JButton backToMenuButton;
+    private JButton saveAndExitButton;
+    private JButton resumeButton;
+
+    //costanti
     private final int ROW_0 = 0;
     private final int ROW_1 = 1;
     private final int ROW_2 = 2;
@@ -32,6 +30,18 @@ public class PausePanel extends BaseMenuPanel{
         this.model = model; // è quello del gamePanel
         setBackground(Color.BLACK);
         initTitleLabel("PAUSE", Color.ORANGE);
+
+        this.resumeButton = initResumeButton(frame);
+        this.backToMenuButton = initBackToMenuButton(frame);
+        this.saveAndExitButton = initSaveAndExitButton(frame);
+
+        
+        addComponentToCenter(resumeButton, ROW_0, true);
+        addComponentToCenter(backToMenuButton, ROW_1, true);
+        addComponentToCenter(saveAndExitButton, ROW_2, true);
+    }//fine costruttore
+
+    private JButton initResumeButton(MainFrame frame){
         JButton resume = new JButton("RESUME");
         resume.setFont(new Font("Arial", Font.BOLD, BUTTON_TEXT_SIZE));
         resume.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
@@ -39,11 +49,13 @@ public class PausePanel extends BaseMenuPanel{
         resume.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                frame.changeFrame("GAME"); // il gioco esce dallo stato di pausa e ricomincia da dove interrotto grazie al metodo setVisibleTrue nel gamePanel
+                frame.changeFrame("GAME");
             }
         });
-        
+        return resume;
+    }//fine initResumeButton
 
+    private JButton initBackToMenuButton(MainFrame frame){
         JButton backToMenu = new JButton("BACK TO MENU");
         backToMenu.setFont(new Font("Arial", Font.BOLD, BUTTON_TEXT_SIZE));
         backToMenu.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
@@ -54,22 +66,22 @@ public class PausePanel extends BaseMenuPanel{
                 model.resetGame();
             }
         });
+        return backToMenu;
+    }//fine initBackToMenuButton
 
-        JButton saveAndExitButton = new JButton("SAVE AND EXIT");
-        saveAndExitButton.setFont(new Font("Arial", Font.BOLD, BUTTON_TEXT_SIZE));
-        saveAndExitButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
-        saveAndExitButton.addActionListener(new ActionListener() {
+    private JButton initSaveAndExitButton(MainFrame frame){
+        JButton saveAndExit = new JButton("SAVE AND EXIT");
+        saveAndExit.setFont(new Font("Arial", Font.BOLD, BUTTON_TEXT_SIZE));
+        saveAndExit.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+        saveAndExit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 frame.changeFrame("GAME");
                
             }
         });
-        //metodi ereditati dalla superclasse BaseMenuPanel che servono ad aggiungere i bottoni al PausePanel secondo la logica della BaseMenuPanel
-        addComponentToCenter(resume, ROW_0, true);
-        addComponentToCenter(backToMenu, ROW_1, true);
-        addComponentToCenter(saveAndExitButton, ROW_2, true);
-    }
+        return saveAndExit;
+    }//fine initSaveAndExitButton
 
     
-}
+}//fine classe PausePanel

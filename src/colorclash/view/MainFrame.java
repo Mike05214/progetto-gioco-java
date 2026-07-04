@@ -1,26 +1,44 @@
 package src.colorclash.view;
 
-import java.awt.CardLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import java.awt.CardLayout;
 import java.awt.Container;
 import java.awt.BorderLayout;
 
 public class MainFrame extends JFrame {
-    
+    //variabili d'istanza
     private CardLayout cardLayout;
     private JPanel mainPanel;
+
+    //costanti
     private final int FRAME_WIDTH = 700;
     private final int FRAME_HEIGHT = 900;
 
     
     public MainFrame() {
+        initialSettings();
+        frameStructureBuilder();
+    }//fine costruttore
+    
+    public void changeFrame(String panelName) {
+        cardLayout.show(mainPanel, panelName);
+        if(panelName.equals("GAME")) {
+            mainPanel.getComponent(1).requestFocusInWindow();
+        }
+        
+    }//fine changeFrame
+
+    private void initialSettings(){
         setTitle("Color Clash");
         setSize(FRAME_WIDTH, FRAME_HEIGHT);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setResizable(false); // Da RIVEDERE
-        setLocationRelativeTo(null); // Centra la finestra DA RIVEDERE ANCHE QUESTO
+        setResizable(false); 
+        setLocationRelativeTo(null);
+    }//fine initialSettings
+
+    private void frameStructureBuilder(){
         Container contPane = this.getContentPane();
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
@@ -33,16 +51,6 @@ public class MainFrame extends JFrame {
         mainPanel.add(pausePanel, "PAUSE");
         
         contPane.add(mainPanel);
-        cardLayout.show(mainPanel, "MENU"); // questo metodo per ogni pannello nel cardLayout chiama il metodo setVisible e lo imposta a true per il pannello nel secondo argomento, per gli altri li mette a false
-        
-    }
-    
-    
-    public void changeFrame(String panelName) {
-        cardLayout.show(mainPanel, panelName);
-        if(panelName.equals("GAME")) {
-            mainPanel.getComponent(1).requestFocusInWindow(); // imposta il focus sulla schermata del gioco
-        }
-        
-    }
+        cardLayout.show(mainPanel, "MENU");
+    }//fine frameStructureBuilder
 }
