@@ -42,7 +42,7 @@ public class GameSpace extends JPanel {
         private final int LEGEND_STROKE_RESIZE = 4;
 
 
-        public GameSpace(MainFrame frame, GameModel model, HudPanel hudPanel) {
+        public GameSpace(MainFrame frame, GameModel model, HudPanel hudPanel, GamePanel gamePanel) {
             setBackground(Color.BLACK);
             this.setLayout(new GridBagLayout());
             this.model = model;
@@ -55,6 +55,7 @@ public class GameSpace extends JPanel {
                 public void actionPerformed(ActionEvent e) {
                     frame.changeFrame("MENU");
                     model.resetGame();
+                    gamePanel.resetGamePanel();
                     restartButton.setVisible(false);
                     hudPanel.getPauseButton().setEnabled(true);
                 }

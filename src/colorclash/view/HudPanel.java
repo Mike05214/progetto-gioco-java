@@ -50,7 +50,7 @@ public class HudPanel extends JPanel {
     private final int H_LABELS_BORDER_BOTTOM = 0;
     private final int H_LABELS_BORDER_RIGHT = 0;
 
-    public HudPanel( MainFrame frame) {
+    public HudPanel(MainFrame frame) {
         this.frame = frame;
         this.setLayout(new BorderLayout());
         this.setBackground(Color.DARK_GRAY);
@@ -69,6 +69,7 @@ public class HudPanel extends JPanel {
         pauseButton.setFont(new Font("Arial", Font.BOLD, PAUSE_BUTTON_FONT_SIZE));
         pauseButton.addActionListener(e -> {
             frame.changeFrame("PAUSE");
+            frame.getGamePanel().stopBlinking();
         });
         pauseButton.setPreferredSize(new Dimension(PAUSE_BUTTON_WIDTH, HUD_HEIGHT));
         westernPanel.add(pauseButton);

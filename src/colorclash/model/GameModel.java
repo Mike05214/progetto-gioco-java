@@ -38,7 +38,7 @@ public class GameModel {
     private final int TICK_TIME = 8;
     private final int SCORE_DELAY = 1000; // in ms
     private final int SCORE_PHASE_2 = 500; //points
-    private final int SCORE_PHASE_3 = 5000; //points
+    private final int SCORE_PHASE_3 = 1200; //points
     private final double SPEED_PHASE_MULTIPLIER = 1.20;
     private final double SPEEDRACER_MULTIPLIER = 1.5;
     private final int MAX_INVULN_FRAMES = 120; // 120 frame a 60fps = 2 secondi invulerabile

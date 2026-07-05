@@ -24,6 +24,8 @@ public class GamePanel extends JPanel {
     private boolean isResuming;
     private boolean isScoreUpdateBlocked;
     private int lastPhase;
+    private int currentPhase;
+    private Timer alertTimer;
 
     //costanti
     private final int DELAY = 8;
@@ -35,7 +37,6 @@ public class GamePanel extends JPanel {
         this.model = new GameModel();
         this.frame = frame;
         this.lastPhase = model.getPhase();
-        setBackground(Color.BLACK);
         setLayout(new BorderLayout());
         initGameLoop();
         initHudPanel(frame);
@@ -57,7 +58,7 @@ public class GamePanel extends JPanel {
                 }
                 
 
-                int currentPhase = model.getPhase();
+                currentPhase = model.getPhase();
                 if(currentPhase > lastPhase){
                     lastPhase = currentPhase;
                     newColorUnlockedCountdown();
@@ -74,7 +75,7 @@ public class GamePanel extends JPanel {
     }//fine initGameLoop
 
     private void initGameSpace(){
-        this.gameSpace = new GameSpace(frame,model,hudPanel);
+        this.gameSpace = new GameSpace(frame,model,hudPanel, this);
         this.add(gameSpace, BorderLayout.CENTER);
     }//fine initGameSpace
 
@@ -176,7 +177,7 @@ public class GamePanel extends JPanel {
 
     public void resumeCountdown(){
         isResuming = true;
-        gameLoop.stop();
+        gameLoop.stop(); //per colpa del setVisible
         hudPanel.getPauseButton().setEnabled(false);
         hudPanel.showCountdown(SECONDS_LEFT);
         Timer countdown = new Timer(RESUME_COOLDOWN_DELAY,new ActionListener(){ //timer NON dura 1000 ms ma SCATTA ogni 1000 ms
@@ -189,11 +190,15 @@ public class GamePanel extends JPanel {
                 }
                 else{
                     ((Timer) e.getSource()).stop();// e è l'actionEvent, getSource restituisce sempre Object di default e col cast a Timer diventa Timer su cui può essere chiamato il metodo stop()
-                    hudPanel.restoreScoreLabel(model.getScore());
+                    if(isScoreUpdateBlocked && alertTimer != null ){
+                        alertTimer.start();
+                    }
+                    else{
+                        hudPanel.restoreScoreLabel(model.getScore());
+                    }
+                    gameLoop.start();
                     hudPanel.getPauseButton().setEnabled(true);
                     isResuming = false;
-                    gameLoop.start();
-                    
                 }
             }
         });
@@ -203,7 +208,7 @@ public class GamePanel extends JPanel {
     
     public void newColorUnlockedCountdown(){
         isScoreUpdateBlocked = true;
-        Timer alertTimer = new Timer(NEW_COLOR_LABEL_VISIBLE_DELAY, new ActionListener() {
+        this.alertTimer = new Timer(NEW_COLOR_LABEL_VISIBLE_DELAY, new ActionListener() {
             int tickCount = 0;
             boolean visible = false;
             @Override
@@ -228,6 +233,18 @@ public class GamePanel extends JPanel {
         alertTimer.start();
     }
 
+    public void resetGamePanel(){
+        this.lastPhase = model.getPhase();
+        this.isScoreUpdateBlocked = false;
+        stopBlinking();
+        hudPanel.restoreScoreLabel(model.getScore());
+    }
+
+    public void stopBlinking(){
+        if(alertTimer != null && alertTimer.isRunning()){
+            alertTimer.stop();
+        }
+    }
     
     
     //getters del GamePanel
@@ -240,5 +257,8 @@ public class GamePanel extends JPanel {
     }
     public int getGameSpaceHeight(){
         return this.gameSpace.getHeight();
+    }
+    public Timer getNewColorTimer(){
+        return this.alertTimer;
     }
 }//fine classe GamePanel

@@ -65,6 +65,7 @@ public class PausePanel extends BaseMenuPanel{
             public void actionPerformed(ActionEvent e) {
                 frame.changeFrame("MENU");
                 model.resetGame();
+                frame.getGamePanel().resetGamePanel();
             }
         });
         return backToMenu;
