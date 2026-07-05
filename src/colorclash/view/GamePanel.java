@@ -17,19 +17,24 @@ public class GamePanel extends JPanel {
     //variabili d'istanza
     private GameModel model;
     private Timer gameLoop;
-    private  boolean spaceAlreadyPressed = false;
+    private boolean spaceAlreadyPressed = false;
     private MainFrame frame;
     private GameSpace gameSpace;
     private HudPanel hudPanel;
+    private boolean isResuming;
+    private boolean isScoreUpdateBlocked;
+    private int lastPhase;
 
     //costanti
     private final int DELAY = 8;
     private final int RESUME_COOLDOWN_DELAY = 1000;
     private final int SECONDS_LEFT = 3;
+    private final int NEW_COLOR_LABEL_VISIBLE_DELAY = 500;
     
     public GamePanel(MainFrame frame) {  
         this.model = new GameModel();
         this.frame = frame;
+        this.lastPhase = model.getPhase();
         setBackground(Color.BLACK);
         setLayout(new BorderLayout());
         initGameLoop();
@@ -47,7 +52,16 @@ public class GamePanel extends JPanel {
             public void actionPerformed(ActionEvent e){
                 model.update(getGameSpaceWidth(), getGameSpaceHeight());
                 hudPanel.updateLivesView(model.getLives());
-                hudPanel.updateScoreText(model.getScore());
+                if(!isScoreUpdateBlocked){
+                    hudPanel.updateScoreText(model.getScore());
+                }
+                
+
+                int currentPhase = model.getPhase();
+                if(currentPhase > lastPhase){
+                    lastPhase = currentPhase;
+                    newColorUnlockedCountdown();
+                }
 
                 if(model.isGameOver()){
                     hudPanel.getPauseButton().setEnabled(false);
@@ -74,6 +88,9 @@ public class GamePanel extends JPanel {
         this.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
+                if(isResuming){
+                    return;
+                }
                 int key = e.getKeyCode();
 
                 if (key == KeyEvent.VK_W || key == KeyEvent.VK_UP) {
@@ -100,6 +117,9 @@ public class GamePanel extends JPanel {
 
             @Override
             public void keyReleased(KeyEvent e) {
+                if(isResuming){
+                    return;
+                }
                 int key = e.getKeyCode();
         
                 if (key == KeyEvent.VK_W || key == KeyEvent.VK_UP) {
@@ -155,6 +175,7 @@ public class GamePanel extends JPanel {
     }//fine setVisible
 
     public void resumeCountdown(){
+        isResuming = true;
         gameLoop.stop();
         hudPanel.getPauseButton().setEnabled(false);
         hudPanel.showCountdown(SECONDS_LEFT);
@@ -170,7 +191,9 @@ public class GamePanel extends JPanel {
                     ((Timer) e.getSource()).stop();// e è l'actionEvent, getSource restituisce sempre Object di default e col cast a Timer diventa Timer su cui può essere chiamato il metodo stop()
                     hudPanel.restoreScoreLabel(model.getScore());
                     hudPanel.getPauseButton().setEnabled(true);
+                    isResuming = false;
                     gameLoop.start();
+                    
                 }
             }
         });
@@ -178,7 +201,32 @@ public class GamePanel extends JPanel {
         countdown.start();
     }//fine resumeCountdown
     
-    
+    public void newColorUnlockedCountdown(){
+        isScoreUpdateBlocked = true;
+        Timer alertTimer = new Timer(NEW_COLOR_LABEL_VISIBLE_DELAY, new ActionListener() {
+            int tickCount = 0;
+            boolean visible = false;
+            @Override
+            public void actionPerformed(ActionEvent e){
+                tickCount++;
+                visible = !visible;
+                if(visible){
+                    hudPanel.showNewColorUnlocked();
+                }
+                else{
+                    hudPanel.emptyScoreLable();
+                }
+
+                if(tickCount >= 8){
+                    ((Timer) e.getSource()).stop(); 
+                    isScoreUpdateBlocked = false; 
+                    hudPanel.restoreScoreLabel(model.getScore());
+                }
+                
+            }
+        });
+        alertTimer.start();
+    }
 
     
     

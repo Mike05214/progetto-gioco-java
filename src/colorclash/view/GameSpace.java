@@ -11,6 +11,7 @@ import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Font;
+import java.awt.BasicStroke;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -36,6 +37,10 @@ public class GameSpace extends JPanel {
         private final int GAME_OVER_COLOR_B = 0;
         private final int GAME_OVER_OPACITY = 150;
         private final int GAME_OVER_FONT_SIZE = 100;
+        private final int LEGEND_STROKE_WIDTH = 3;
+        private final int LEGEND_STROKE_NEW_START = 2;
+        private final int LEGEND_STROKE_RESIZE = 4;
+
 
         public GameSpace(MainFrame frame, GameModel model, HudPanel hudPanel) {
             setBackground(Color.BLACK);
@@ -61,16 +66,16 @@ public class GameSpace extends JPanel {
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
             Graphics2D g2d = (Graphics2D) g;
-            playerBlinkingHandler(g2d);
+            showLegend(g2d);
+            drawPlayer(g2d);
             drawObstacles(g2d);
-
             if (model.isGameOver()) {
                 showGameOver(g2d);
             }
 
         }//fine paintComponent
 
-        private void playerBlinkingHandler(Graphics2D g2d) {
+        private void drawPlayer(Graphics2D g2d) {
             boolean drawPlayer = true;
             if (model.isInvulnerable()) {
 
@@ -103,6 +108,31 @@ public class GameSpace extends JPanel {
             g2d.setFont(new Font("Monospaced", Font.PLAIN, 25));
             g2d.drawString("SCORE: " + model.getScore(), getWidth() / 2 - 100, getHeight() / 2 - 35);
         }//fine showGameOver
+
+        public void showLegend(Graphics2D g2d){
+            int elementSize = 20;
+            int elementDistance = 10;      
+            int marginX = 20;      
+            int marginY = 20;
+            int currentPhaseColors = model.getAvailableColorsCount();
+            int currentColorId = model.getPlayer().getColorId();
+            int totalWidth = (currentPhaseColors * elementSize) + (elementDistance * (currentPhaseColors-1));
+            int startX = getWidth() - totalWidth - marginX;
+            int startY = getHeight() - elementSize - marginY;
+
+            for(int i = 0; i < currentPhaseColors; i++){
+                int x = startX + (i * (elementSize + elementDistance));
+                int y = startY;
+                g2d.setColor(colorPalette[i]);
+                g2d.fillRect(x, y, elementSize, elementSize);
+
+                if(i == currentColorId){
+                    g2d.setColor(Color.WHITE);
+                    g2d.setStroke(new BasicStroke(LEGEND_STROKE_WIDTH));
+                    g2d.drawRect(x - LEGEND_STROKE_NEW_START, y - LEGEND_STROKE_NEW_START, elementSize + LEGEND_STROKE_RESIZE, elementSize + LEGEND_STROKE_RESIZE); //ridimensiona il rettangolo evidenziato
+                }
+            }
+        }
 
         //getters di GameSpace
         public JButton getRestarButton(){

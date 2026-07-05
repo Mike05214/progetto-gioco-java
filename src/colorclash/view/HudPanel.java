@@ -156,11 +156,19 @@ public class HudPanel extends JPanel {
     }//fine loadImage
 
     public void showCountdown(int secondsLeft){
-        this.scoreLabel.setText("IL GIOCO RIPARTE TRA: "+secondsLeft);
+        this.scoreLabel.setText("GAME RESTARTS IN: "+secondsLeft);
     }//fine showCountdown
+
+    public void showNewColorUnlocked(){
+        this.scoreLabel.setText("NEW COLOR UNLOCKED!");
+    }
     public void restoreScoreLabel(int currentScore){
         scoreLabel.setText("SCORE: " + currentScore);
     }//fine restoreScoreLabel
+    public void emptyScoreLable()
+    {
+        this.scoreLabel.setText("");
+    }
 
     //getters di HudPanel
     public JButton getPauseButton() {

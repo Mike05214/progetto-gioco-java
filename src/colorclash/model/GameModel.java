@@ -37,8 +37,8 @@ public class GameModel {
     private final int START_COLOR_ID = 0;
     private final int TICK_TIME = 8;
     private final int SCORE_DELAY = 1000; // in ms
-    private final int SCORE_PHASE_2 = 2500;
-    private final int SCORE_PHASE_3 = 5000;
+    private final int SCORE_PHASE_2 = 500; //points
+    private final int SCORE_PHASE_3 = 5000; //points
     private final double SPEED_PHASE_MULTIPLIER = 1.20;
     private final double SPEEDRACER_MULTIPLIER = 1.5;
     private final int MAX_INVULN_FRAMES = 120; // 120 frame a 60fps = 2 secondi invulerabile
@@ -203,6 +203,7 @@ public class GameModel {
             currentFallSpeed *= SPEED_PHASE_MULTIPLIER;
             avaibleColors = new Color[]{Color.CYAN, Color.GREEN, Color.RED};
             availableColorsCount = 3;
+            
        }
 
        else if(currentScore >= SCORE_PHASE_3 && currentPhase == 2){
@@ -302,5 +303,8 @@ public class GameModel {
     }
     public int getAvailableColorsCount(){
         return this.availableColorsCount;
+    }
+    public int getPhase(){
+        return this.currentPhase;
     }
 }//fine classe GameModel
