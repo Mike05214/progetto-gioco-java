@@ -166,7 +166,7 @@ public class HudPanel extends JPanel {
     public void restoreScoreLabel(int currentScore){
         scoreLabel.setText("SCORE: " + currentScore);
     }//fine restoreScoreLabel
-    public void emptyScoreLable()
+    public void hideNewColorUnlocked()
     {
         this.scoreLabel.setText("");
     }

@@ -219,7 +219,7 @@ public class GamePanel extends JPanel {
                     hudPanel.showNewColorUnlocked();
                 }
                 else{
-                    hudPanel.emptyScoreLable();
+                    hudPanel.hideNewColorUnlocked();
                 }
 
                 if(tickCount >= 8){
