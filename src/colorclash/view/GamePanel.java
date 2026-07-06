@@ -75,12 +75,26 @@ public class GamePanel extends JPanel {
     }//fine initGameLoop
 
     private void initGameSpace(){
-        this.gameSpace = new GameSpace(frame,model,hudPanel, this);
+        this.gameSpace = new GameSpace(frame, model);
+        gameSpace.getRestarButton().addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    frame.changeFrame("MENU");
+                    model.resetGame();
+                    resetGamePanel();
+                    gameSpace.getRestarButton().setVisible(false);
+                    hudPanel.getPauseButton().setEnabled(true);
+                }
+            });
         this.add(gameSpace, BorderLayout.CENTER);
     }//fine initGameSpace
 
     private void initHudPanel(MainFrame frame){
         this.hudPanel = new HudPanel(frame);
+        hudPanel.getPauseButton().addActionListener(e -> {
+            frame.changeFrame("PAUSE");
+            stopBlinking();
+        });
         this.add(hudPanel, BorderLayout.NORTH);
         
     }//fine initHudPanel

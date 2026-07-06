@@ -67,10 +67,6 @@ public class HudPanel extends JPanel {
         
         pauseButton.setMnemonic(KeyEvent.VK_X);
         pauseButton.setFont(new Font("Arial", Font.BOLD, PAUSE_BUTTON_FONT_SIZE));
-        pauseButton.addActionListener(e -> {
-            frame.changeFrame("PAUSE");
-            frame.getGamePanel().stopBlinking();
-        });
         pauseButton.setPreferredSize(new Dimension(PAUSE_BUTTON_WIDTH, HUD_HEIGHT));
         westernPanel.add(pauseButton);
         this.add(westernPanel, BorderLayout.WEST);

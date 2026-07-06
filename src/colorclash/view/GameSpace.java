@@ -8,8 +8,6 @@ import java.awt.Dimension;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.Font;
 import java.awt.BasicStroke;
 
@@ -21,6 +19,7 @@ public class GameSpace extends JPanel {
         //variabili d'istanza
         private JButton restartButton;
         private GameModel model;
+        private MainFrame frame;
         private Color[] colorPalette = {
         Color.RED,   // ID 0
         Color.GREEN, // ID 1
@@ -42,24 +41,15 @@ public class GameSpace extends JPanel {
         private final int LEGEND_STROKE_RESIZE = 4;
 
 
-        public GameSpace(MainFrame frame, GameModel model, HudPanel hudPanel, GamePanel gamePanel) {
+        public GameSpace(MainFrame frame, GameModel model) {
             setBackground(Color.BLACK);
-            this.setLayout(new GridBagLayout());
             this.model = model;
+            this.frame = frame;
+            this.setLayout(new GridBagLayout());
             restartButton = new JButton("BACK TO MENU");
             restartButton.setFont(new Font("Arial", Font.BOLD, RESTART_BUTTON_FONT_SIZE));
             restartButton.setPreferredSize(new Dimension(RESTART_BUTTON_WIDTH, RESTART_BUTTON_HEIGHT));
             restartButton.setVisible(false);
-            this.restartButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    frame.changeFrame("MENU");
-                    model.resetGame();
-                    gamePanel.resetGamePanel();
-                    restartButton.setVisible(false);
-                    hudPanel.getPauseButton().setEnabled(true);
-                }
-            });
             this.add(restartButton);
         }//fine costruttore
 
