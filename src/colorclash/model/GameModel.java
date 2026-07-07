@@ -26,6 +26,7 @@ public class GameModel {
     private double currentFallSpeed = 3.0;
     private int currentPhase = 1;
     private Color[] avaibleColors;
+    private List<Particle> particles = new ArrayList<>();
     private int availableColorsCount = 2;
 
     //costanti
@@ -180,6 +181,7 @@ public class GameModel {
             if (!playerArea.isEmpty()) {
 
                 if(player.getColorId()==obs.getColorId()){
+                    createExplosion(obs.getX(), obs.getY() - 20, obs.getColorId());
                     addScore(obs.getPoints());
                     enemies.remove(i);
                     i--; 
@@ -213,6 +215,20 @@ public class GameModel {
             availableColorsCount = 4;
        }
     }//fine checkDifficultyProgression
+
+    public void createExplosion(int x, int y, int colorId){
+        int particlesNumber = random.nextInt(5, 12+1);
+        for(int i = 0; i < particlesNumber; i++){
+            particles.add(new Particle(x, y, colorId));
+        }
+    }
+
+    public void updateParticles(){
+        for(Particle p : particles){
+            p.update();
+        }
+        particles.removeIf(Particle::isDead);
+    }
 
     public void decreaseLives() {
 
@@ -306,5 +322,8 @@ public class GameModel {
     }
     public int getPhase(){
         return this.currentPhase;
+    }
+    public List<Particle> getParticles(){
+        return particles;
     }
 }//fine classe GameModel

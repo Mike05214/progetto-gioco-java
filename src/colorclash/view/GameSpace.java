@@ -1,6 +1,7 @@
 package src.colorclash.view;
 import src.colorclash.model.GameModel;
 import src.colorclash.model.Obstacle;
+import src.colorclash.model.Particle;
 import src.colorclash.model.Avatar;
 
 import java.awt.GridBagLayout;
@@ -62,6 +63,16 @@ public class GameSpace extends JPanel {
             drawObstacles(g2d);
             if (model.isGameOver()) {
                 showGameOver(g2d);
+            }
+            // Dentro paintComponent(Graphics g):
+            for (Particle p : model.getParticles()) {
+                // Ricrea il colore originale ma con il canale Alpha (trasparenza) in base alla
+                // "vita"
+                int colorId = p.getColorId();
+                g2d.setColor(colorPalette[colorId]);
+
+                // Disegna il frammento
+                g2d.fillRect(p.getX(), p.getY(), p.getSize(), p.getSize());
             }
 
         }//fine paintComponent

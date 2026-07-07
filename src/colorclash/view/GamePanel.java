@@ -52,6 +52,7 @@ public class GamePanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e){
                 model.update(getGameSpaceWidth(), getGameSpaceHeight());
+                model.updateParticles();
                 hudPanel.updateLivesView(model.getLives());
                 if(!isScoreUpdateBlocked){
                     hudPanel.updateScoreText(model.getScore());
