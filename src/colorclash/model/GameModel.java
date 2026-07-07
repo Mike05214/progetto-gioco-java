@@ -251,6 +251,7 @@ public class GameModel {
     public void resetObstacles(){
         System.out.println("lista prima del reset: ");
         this.enemies.clear();
+        this.particles.clear();
         System.out.println("lista dopo il reset: ");
 
     }//fine resetObstacles
