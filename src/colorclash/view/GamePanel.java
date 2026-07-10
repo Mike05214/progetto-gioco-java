@@ -232,13 +232,16 @@ public class GamePanel extends JPanel {
                 visible = !visible;
                 if(visible){
                     hudPanel.showNewColorUnlocked();
+                    gameSpace.createBorder(model.getPhase());
                 }
                 else{
                     hudPanel.hideNewColorUnlocked();
+                    gameSpace.deleteBorder();
                 }
 
                 if(tickCount >= 8){
-                    ((Timer) e.getSource()).stop(); 
+                    ((Timer) e.getSource()).stop();
+                    gameSpace.deleteBorder();
                     isScoreUpdateBlocked = false; 
                     hudPanel.restoreScoreLabel(model.getScore());
                 }
@@ -248,11 +251,14 @@ public class GamePanel extends JPanel {
         alertTimer.start();
     }
 
+    
+
     public void resetGamePanel(){
         this.lastPhase = model.getPhase();
         this.isScoreUpdateBlocked = false;
         stopBlinking();
         hudPanel.restoreScoreLabel(model.getScore());
+        gameSpace.deleteBorder();
     }
 
     public void stopBlinking(){

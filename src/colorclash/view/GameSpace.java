@@ -1,4 +1,5 @@
 package src.colorclash.view;
+
 import src.colorclash.model.GameModel;
 import src.colorclash.model.Obstacle;
 import src.colorclash.model.Particle;
@@ -12,132 +13,143 @@ import java.awt.Graphics2D;
 import java.awt.Font;
 import java.awt.BasicStroke;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
 public class GameSpace extends JPanel {
 
-        //variabili d'istanza
-        private JButton restartButton;
-        private GameModel model;
-        private MainFrame frame;
-        private Color[] colorPalette = {
-        Color.RED,   // ID 0
-        Color.GREEN, // ID 1
-        Color.CYAN,   // ID 2
-        Color.ORANGE
+    // variabili d'istanza
+    private JButton restartButton;
+    private GameModel model;
+    private MainFrame frame;
+    private Color[] colorPalette = {
+            Color.RED, // ID 0
+            Color.GREEN, // ID 1
+            Color.CYAN, // ID 2
+            Color.ORANGE
     };
 
-        //costanti
-        private final int RESTART_BUTTON_FONT_SIZE = 20;
-        private final int RESTART_BUTTON_WIDTH = 200;
-        private final int RESTART_BUTTON_HEIGHT = 40;
-        private final int GAME_OVER_COLOR_R = 0;
-        private final int GAME_OVER_COLOR_G = 0;
-        private final int GAME_OVER_COLOR_B = 0;
-        private final int GAME_OVER_OPACITY = 150;
-        private final int GAME_OVER_FONT_SIZE = 100;
-        private final int LEGEND_STROKE_WIDTH = 3;
-        private final int LEGEND_STROKE_NEW_START = 2;
-        private final int LEGEND_STROKE_RESIZE = 4;
+    // costanti
+    private final int RESTART_BUTTON_FONT_SIZE = 20;
+    private final int RESTART_BUTTON_WIDTH = 200;
+    private final int RESTART_BUTTON_HEIGHT = 40;
+    private final int GAME_OVER_COLOR_R = 0;
+    private final int GAME_OVER_COLOR_G = 0;
+    private final int GAME_OVER_COLOR_B = 0;
+    private final int GAME_OVER_OPACITY = 150;
+    private final int GAME_OVER_FONT_SIZE = 100;
+    private final int LEGEND_STROKE_WIDTH = 3;
+    private final int LEGEND_STROKE_NEW_START = 2;
+    private final int LEGEND_STROKE_RESIZE = 4;
 
+    public GameSpace(MainFrame frame, GameModel model) {
+        setBackground(Color.BLACK);
+        this.model = model;
+        this.frame = frame;
+        this.setLayout(new GridBagLayout());
+        restartButton = new JButton("BACK TO MENU");
+        restartButton.setFont(new Font("Arial", Font.BOLD, RESTART_BUTTON_FONT_SIZE));
+        restartButton.setPreferredSize(new Dimension(RESTART_BUTTON_WIDTH, RESTART_BUTTON_HEIGHT));
+        restartButton.setVisible(false);
+        this.add(restartButton);
+    }// fine costruttore
 
-        public GameSpace(MainFrame frame, GameModel model) {
-            setBackground(Color.BLACK);
-            this.model = model;
-            this.frame = frame;
-            this.setLayout(new GridBagLayout());
-            restartButton = new JButton("BACK TO MENU");
-            restartButton.setFont(new Font("Arial", Font.BOLD, RESTART_BUTTON_FONT_SIZE));
-            restartButton.setPreferredSize(new Dimension(RESTART_BUTTON_WIDTH, RESTART_BUTTON_HEIGHT));
-            restartButton.setVisible(false);
-            this.add(restartButton);
-        }//fine costruttore
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g;
+        showLegend(g2d);
+        drawPlayer(g2d);
+        drawObstacles(g2d);
+        if (model.isGameOver()) {
+            showGameOver(g2d);
+        }
+        // Dentro paintComponent(Graphics g):
+        for (Particle p : model.getParticles()) {
+            // Ricrea il colore originale ma con il canale Alpha (trasparenza) in base alla
+            // "vita"
+            int colorId = p.getColorId();
+            g2d.setColor(colorPalette[colorId]);
 
-        @Override
-        public void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            Graphics2D g2d = (Graphics2D) g;
-            showLegend(g2d);
-            drawPlayer(g2d);
-            drawObstacles(g2d);
-            if (model.isGameOver()) {
-                showGameOver(g2d);
-            }
-            // Dentro paintComponent(Graphics g):
-            for (Particle p : model.getParticles()) {
-                // Ricrea il colore originale ma con il canale Alpha (trasparenza) in base alla
-                // "vita"
-                int colorId = p.getColorId();
-                g2d.setColor(colorPalette[colorId]);
+            // Disegna il frammento
+            g2d.fillRect(p.getX(), p.getY(), p.getSize(), p.getSize());
+        }
 
-                // Disegna il frammento
-                g2d.fillRect(p.getX(), p.getY(), p.getSize(), p.getSize());
-            }
+    }// fine paintComponent
 
-        }//fine paintComponent
+    private void drawPlayer(Graphics2D g2d) {
+        boolean drawPlayer = true;
+        if (model.isInvulnerable()) {
 
-        private void drawPlayer(Graphics2D g2d) {
-            boolean drawPlayer = true;
-            if (model.isInvulnerable()) {
-
-                if (model.getInvulnTimer() % 20 < 10) {
-                    drawPlayer = false;
-                }
-            }
-
-            if (drawPlayer) {
-                Avatar player = model.getPlayer();
-                g2d.setColor(colorPalette[player.getColorId()]);
-                g2d.fill(player.getHitbox());
-            }
-        }//fine playerBlinkingHandler
-
-        private void drawObstacles(Graphics2D g2d) {
-            for (Obstacle obs : model.getEnemies()) {
-                g2d.setColor(colorPalette[obs.getColorId()]);
-                g2d.fill(obs.getHitbox());
-            }
-        }//fine drawObstacles
-
-        private void showGameOver(Graphics2D g2d) {
-            g2d.setColor(new Color(GAME_OVER_COLOR_R, GAME_OVER_COLOR_G, GAME_OVER_COLOR_B, GAME_OVER_OPACITY));
-            g2d.fillRect(0, 0, getWidth(), getHeight());
-            g2d.setColor(Color.WHITE);
-            g2d.setFont(new Font("Monospaced", Font.BOLD, GAME_OVER_FONT_SIZE));
-            String gameOverText = "GAME OVER";
-            g2d.drawString(gameOverText, getWidth() / 2 - 265, getHeight() / 2 - 80);
-            g2d.setFont(new Font("Monospaced", Font.PLAIN, 25));
-            g2d.drawString("SCORE: " + model.getScore(), getWidth() / 2 - 100, getHeight() / 2 - 35);
-        }//fine showGameOver
-
-        public void showLegend(Graphics2D g2d){
-            int elementSize = 20;
-            int elementDistance = 10;      
-            int marginX = 20;      
-            int marginY = 20;
-            int currentPhaseColors = model.getAvailableColorsCount();
-            int currentColorId = model.getPlayer().getColorId();
-            int totalWidth = (currentPhaseColors * elementSize) + (elementDistance * (currentPhaseColors-1));
-            int startX = getWidth() - totalWidth - marginX;
-            int startY = getHeight() - elementSize - marginY;
-
-            for(int i = 0; i < currentPhaseColors; i++){
-                int x = startX + (i * (elementSize + elementDistance));
-                int y = startY;
-                g2d.setColor(colorPalette[i]);
-                g2d.fillRect(x, y, elementSize, elementSize);
-
-                if(i == currentColorId){
-                    g2d.setColor(Color.WHITE);
-                    g2d.setStroke(new BasicStroke(LEGEND_STROKE_WIDTH));
-                    g2d.drawRect(x - LEGEND_STROKE_NEW_START, y - LEGEND_STROKE_NEW_START, elementSize + LEGEND_STROKE_RESIZE, elementSize + LEGEND_STROKE_RESIZE); //ridimensiona il rettangolo evidenziato
-                }
+            if (model.getInvulnTimer() % 20 < 10) {
+                drawPlayer = false;
             }
         }
 
-        //getters di GameSpace
-        public JButton getRestarButton(){
-            return this.restartButton;
+        if (drawPlayer) {
+            Avatar player = model.getPlayer();
+            g2d.setColor(colorPalette[player.getColorId()]);
+            g2d.fill(player.getHitbox());
         }
-    }//fine classe GameSpace
+    }// fine playerBlinkingHandler
+
+    private void drawObstacles(Graphics2D g2d) {
+        for (Obstacle obs : model.getEnemies()) {
+            g2d.setColor(colorPalette[obs.getColorId()]);
+            g2d.fill(obs.getHitbox());
+        }
+    }// fine drawObstacles
+
+    private void showGameOver(Graphics2D g2d) {
+        g2d.setColor(new Color(GAME_OVER_COLOR_R, GAME_OVER_COLOR_G, GAME_OVER_COLOR_B, GAME_OVER_OPACITY));
+        g2d.fillRect(0, 0, getWidth(), getHeight());
+        g2d.setColor(Color.WHITE);
+        g2d.setFont(new Font("Monospaced", Font.BOLD, GAME_OVER_FONT_SIZE));
+        String gameOverText = "GAME OVER";
+        g2d.drawString(gameOverText, getWidth() / 2 - 265, getHeight() / 2 - 80);
+        g2d.setFont(new Font("Monospaced", Font.PLAIN, 25));
+        g2d.drawString("SCORE: " + model.getScore(), getWidth() / 2 - 100, getHeight() / 2 - 35);
+    }// fine showGameOver
+
+    public void showLegend(Graphics2D g2d) {
+        int elementSize = 20;
+        int elementDistance = 10;
+        int marginX = 20;
+        int marginY = 20;
+        int currentPhaseColors = model.getAvailableColorsCount();
+        int currentColorId = model.getPlayer().getColorId();
+        int totalWidth = (currentPhaseColors * elementSize) + (elementDistance * (currentPhaseColors - 1));
+        int startX = getWidth() - totalWidth - marginX;
+        int startY = getHeight() - elementSize - marginY;
+
+        for (int i = 0; i < currentPhaseColors; i++) {
+            int x = startX + (i * (elementSize + elementDistance));
+            int y = startY;
+            g2d.setColor(colorPalette[i]);
+            g2d.fillRect(x, y, elementSize, elementSize);
+
+            if (i == currentColorId) {
+                g2d.setColor(Color.WHITE);
+                g2d.setStroke(new BasicStroke(LEGEND_STROKE_WIDTH));
+                g2d.drawRect(x - LEGEND_STROKE_NEW_START, y - LEGEND_STROKE_NEW_START,
+                        elementSize + LEGEND_STROKE_RESIZE, elementSize + LEGEND_STROKE_RESIZE); // ridimensiona il
+                                                                                                 // rettangolo
+                                                                                                 // evidenziato
+            }
+        }
+    }// fine showLegend
+
+    public void createBorder(int newColorId) {
+        this.setBorder(BorderFactory.createLineBorder(colorPalette[newColorId], 5));
+    }
+
+    public void deleteBorder() {
+        this.setBorder(null);
+    }
+
+    // getters di GameSpace
+    public JButton getRestarButton() {
+        return this.restartButton;
+    }
+}// fine classe GameSpace

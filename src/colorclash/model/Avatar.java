@@ -13,7 +13,7 @@ public class Avatar {
     private long lastColorChange = 0;
     private long currentTime = 0;
     private final double SCALE_FACTOR = 0.7071; 
-    private final long COLOR_COOLDOWN = 500;
+    private final long COLOR_COOLDOWN = 20;
     
     
     // Attributi di gioco dell'avatar
