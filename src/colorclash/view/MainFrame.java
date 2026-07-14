@@ -8,40 +8,38 @@ import java.awt.Container;
 import java.awt.BorderLayout;
 
 public class MainFrame extends JFrame {
-    //variabili d'istanza
+    // variabili d'istanza
     private CardLayout cardLayout;
     private JPanel mainPanel;
     private GamePanel gamePanel;
     private MenuPanel menuPanel;
     private PausePanel pausePanel;
 
-    //costanti
+    // costanti
     private final int FRAME_WIDTH = 700;
     private final int FRAME_HEIGHT = 900;
 
-    
     public MainFrame() {
         initialSettings();
         frameStructureBuilder();
-    }//fine costruttore
-    
+    }// fine costruttore
+
     public void changeFrame(String panelName) {
         cardLayout.show(mainPanel, panelName);
-        if(panelName.equals("GAME")) {
+        if (panelName.equals("GAME")) {
             mainPanel.getComponent(1).requestFocusInWindow();
         }
-        
-    }//fine changeFrame
+    }// fine changeFrame
 
-    private void initialSettings(){
+    private void initialSettings() {
         setTitle("Color Clash");
         setSize(FRAME_WIDTH, FRAME_HEIGHT);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setResizable(false); 
+        setResizable(false);
         setLocationRelativeTo(null);
-    }//fine initialSettings
+    }// fine initialSettings
 
-    private void frameStructureBuilder(){
+    private void frameStructureBuilder() {
         Container contPane = this.getContentPane();
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
@@ -52,12 +50,12 @@ public class MainFrame extends JFrame {
         mainPanel.add(menuPanel, "MENU");
         mainPanel.add(gamePanel, "GAME");
         mainPanel.add(pausePanel, "PAUSE");
-        
+
         contPane.add(mainPanel);
         cardLayout.show(mainPanel, "MENU");
-    }//fine frameStructureBuilder
+    }// fine frameStructureBuilder
 
-    public GamePanel getGamePanel(){
+    public GamePanel getGamePanel() {
         return this.gamePanel;
     }
 }
