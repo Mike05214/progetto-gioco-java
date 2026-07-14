@@ -130,6 +130,7 @@ public class Avatar {
     }// fine getHitbox
 
     // metodi getters per l'avatar
+
     public int getX() {
         return (int) x;
     } // cast esplicito a int, il metodo fillRect nella view si aspetta delle

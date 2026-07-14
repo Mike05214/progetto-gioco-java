@@ -17,12 +17,12 @@ public class GamePanel extends JPanel {
     // variabili d'istanza
     private GameModel model;
     private Timer gameLoop;
-    private boolean spaceAlreadyPressed = false;
     private MainFrame frame;
     private GameSpace gameSpace;
     private HudPanel hudPanel;
     private boolean isResuming;
     private boolean isScoreUpdateBlocked;
+    private boolean spaceAlreadyPressed =false;
     private int lastPhase;
     private int currentPhase;
     private Timer alertTimer;
@@ -105,7 +105,8 @@ public class GamePanel extends JPanel {
                     return;
                 }
                 int key = e.getKeyCode();
-
+                
+ 
                 if (key == KeyEvent.VK_W || key == KeyEvent.VK_UP) {
                     model.getPlayer().setMovingUp(true);
                 }
@@ -124,6 +125,7 @@ public class GamePanel extends JPanel {
 
                 if (key == KeyEvent.VK_SPACE) {
                     spaceKeyLogic();
+                
                 }
 
             }
@@ -134,6 +136,7 @@ public class GamePanel extends JPanel {
                     return;
                 }
                 int key = e.getKeyCode();
+                
 
                 if (key == KeyEvent.VK_W || key == KeyEvent.VK_UP) {
                     model.getPlayer().setMovingUp(false);
@@ -152,22 +155,25 @@ public class GamePanel extends JPanel {
                 }
 
                 if (key == KeyEvent.VK_SPACE) {
-                    spaceKeyLogic();
+                    resetKeyLogic();
                 }
+
             }
         });
 
     }// fine initSetupListeners
 
     private void spaceKeyLogic() {
-        if (!spaceAlreadyPressed) {
+        if(!spaceAlreadyPressed){
             model.getPlayer().colorCooldown(model.getAvailableColorsCount());
-            spaceAlreadyPressed = true;
-        } else {
-            spaceAlreadyPressed = false;
+            spaceAlreadyPressed=true;
         }
 
     }// fine spaceKeyLogic
+
+    private void resetKeyLogic(){
+        spaceAlreadyPressed=false;
+    }// fine resetKeyLogic
 
     // metodi pubblici
     @Override
