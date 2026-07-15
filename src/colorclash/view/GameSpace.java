@@ -62,21 +62,23 @@ public class GameSpace extends JPanel {
         showLegend(g2d);
         drawPlayer(g2d);
         drawObstacles(g2d);
+        drawParticles(g2d);
         if (model.isGameOver()) {
             showGameOver(g2d);
         }
-        // Dentro paintComponent(Graphics g):
+        
+    }// fine paintComponent
+
+    private void drawParticles(Graphics2D g2d){
         for (Particle p : model.getParticles()) {
-            // Ricrea il colore originale ma con il canale Alpha (trasparenza) in base alla
-            // "vita"
+            
             int colorId = p.getColorId();
             g2d.setColor(colorPalette[colorId]);
 
             // Disegna il frammento
             g2d.fillRect(p.getX(), p.getY(), p.getSize(), p.getSize());
         }
-
-    }// fine paintComponent
+    }
 
     private void drawPlayer(Graphics2D g2d) {
         boolean drawPlayer = true;
@@ -133,9 +135,7 @@ public class GameSpace extends JPanel {
                 g2d.setColor(Color.WHITE);
                 g2d.setStroke(new BasicStroke(LEGEND_STROKE_WIDTH));
                 g2d.drawRect(x - LEGEND_STROKE_NEW_START, y - LEGEND_STROKE_NEW_START,
-                        elementSize + LEGEND_STROKE_RESIZE, elementSize + LEGEND_STROKE_RESIZE); // ridimensiona il
-                                                                                                 // rettangolo
-                                                                                                 // evidenziato
+                            elementSize + LEGEND_STROKE_RESIZE, elementSize + LEGEND_STROKE_RESIZE); // ridimensiona il rettangolo evindenziato
             }
         }
     }// fine showLegend

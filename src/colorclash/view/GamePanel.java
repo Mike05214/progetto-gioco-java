@@ -194,10 +194,8 @@ public class GamePanel extends JPanel {
         gameLoop.stop(); // per colpa del setVisible
         hudPanel.getPauseButton().setEnabled(false);
         hudPanel.showCountdown(SECONDS_LEFT);
-        Timer countdown = new Timer(RESUME_COOLDOWN_DELAY, new ActionListener() { // timer NON dura 1000 ms ma SCATTA
-                                                                                  // ogni 1000 ms
+        Timer countdown = new Timer(RESUME_COOLDOWN_DELAY, new ActionListener() { 
             int count = 3;
-
             @Override
             public void actionPerformed(ActionEvent e) {
                 count--;
@@ -252,6 +250,12 @@ public class GamePanel extends JPanel {
         alertTimer.start();
     }
 
+    public void stopBlinking() {
+        if (alertTimer != null && alertTimer.isRunning()) {
+            alertTimer.stop();
+        }
+    }
+
     public void resetGamePanel() {
         this.lastPhase = model.getPhase();
         this.isScoreUpdateBlocked = false;
@@ -260,11 +264,7 @@ public class GamePanel extends JPanel {
         gameSpace.deleteBorder();
     }
 
-    public void stopBlinking() {
-        if (alertTimer != null && alertTimer.isRunning()) {
-            alertTimer.stop();
-        }
-    }
+    
 
     // getters del GamePanel
     public GameModel getModel() {

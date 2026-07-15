@@ -31,7 +31,7 @@ public class GameModel {
     private int availableColorsCount = 2;
 
     // costanti
-    private final int START_X = 350;
+    private final int START_X = 325;
     private final int START_Y = 550;
     private final int MIN_X = 0;
     private final int MIN_Y = 0;
@@ -39,8 +39,8 @@ public class GameModel {
     private final int START_COLOR_ID = 0;
     private final int TICK_TIME = 8;
     private final int SCORE_DELAY = 1000; // in ms
-    private final int SCORE_PHASE_2 = 4500; // points
-    private final int SCORE_PHASE_3 = 7500; // points
+    private final int SCORE_PHASE_2 = 5000; // points
+    private final int SCORE_PHASE_3 = 10000; // points
     private final double SPEED_PHASE_MULTIPLIER = 1.35;
     private final double SPEEDRACER_MULTIPLIER = 1.5;
     private final int MAX_INVULN_FRAMES = 125; // 125 frame a 125fps = 1 secondi invulerabile
