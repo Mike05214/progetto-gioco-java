@@ -22,7 +22,7 @@ public class GamePanel extends JPanel {
     private HudPanel hudPanel;
     private boolean isResuming;
     private boolean isScoreUpdateBlocked;
-    private boolean spaceAlreadyPressed =false;
+    private boolean spaceAlreadyPressed = false;
     private int lastPhase;
     private int currentPhase;
     private Timer alertTimer;
@@ -89,12 +89,14 @@ public class GamePanel extends JPanel {
 
     private void initHudPanel(MainFrame frame) {
         this.hudPanel = new HudPanel(frame);
-        hudPanel.getPauseButton().addActionListener(e -> {
-            frame.changeFrame("PAUSE");
-            stopBlinking();
+        hudPanel.getPauseButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.changeFrame("PAUSE");
+                stopBlinking();
+            }
         });
         this.add(hudPanel, BorderLayout.NORTH);
-
     }// fine initHudPanel
 
     private void initSetupListeners() {
@@ -105,8 +107,7 @@ public class GamePanel extends JPanel {
                     return;
                 }
                 int key = e.getKeyCode();
-                
- 
+
                 if (key == KeyEvent.VK_W || key == KeyEvent.VK_UP) {
                     model.getPlayer().setMovingUp(true);
                 }
@@ -125,7 +126,7 @@ public class GamePanel extends JPanel {
 
                 if (key == KeyEvent.VK_SPACE) {
                     spaceKeyLogic();
-                
+
                 }
 
             }
@@ -136,7 +137,6 @@ public class GamePanel extends JPanel {
                     return;
                 }
                 int key = e.getKeyCode();
-                
 
                 if (key == KeyEvent.VK_W || key == KeyEvent.VK_UP) {
                     model.getPlayer().setMovingUp(false);
@@ -164,15 +164,15 @@ public class GamePanel extends JPanel {
     }// fine initSetupListeners
 
     private void spaceKeyLogic() {
-        if(!spaceAlreadyPressed){
+        if (!spaceAlreadyPressed) {
             model.getPlayer().colorCooldown(model.getAvailableColorsCount());
-            spaceAlreadyPressed=true;
+            spaceAlreadyPressed = true;
         }
 
     }// fine spaceKeyLogic
 
-    private void resetKeyLogic(){
-        spaceAlreadyPressed=false;
+    private void resetKeyLogic() {
+        spaceAlreadyPressed = false;
     }// fine resetKeyLogic
 
     // metodi pubblici

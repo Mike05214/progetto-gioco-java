@@ -3,6 +3,7 @@ package src.colorclash.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.Shape;
@@ -14,7 +15,6 @@ public class GameModel {
     private List<Obstacle> enemies;
 
     // Variabili di stato del gioco
-    private int updateCounter;
     private int lives;
     private boolean isGameOver;
     private int score;
@@ -22,8 +22,8 @@ public class GameModel {
     private boolean isInvulnerable = false;
     private int invulnTimer = 0;
     private Random random;
-    private int frameCounter;
-    private int spawnInterval; // Ogni quanti frame nasce un nemico
+    private int frameCounter = 0;
+    private int spawnInterval= 62; // 125 frame = 2 secondo (se il timer è a 8ms)
     private double currentFallSpeed = 3.0;
     private int currentPhase = 1;
     private Color[] avaibleColors;
@@ -39,11 +39,11 @@ public class GameModel {
     private final int START_COLOR_ID = 0;
     private final int TICK_TIME = 8;
     private final int SCORE_DELAY = 1000; // in ms
-    private final int SCORE_PHASE_2 = 2500; // points
-    private final int SCORE_PHASE_3 = 5000; // points
-    private final double SPEED_PHASE_MULTIPLIER = 1.20;
+    private final int SCORE_PHASE_2 = 4500; // points
+    private final int SCORE_PHASE_3 = 7500; // points
+    private final double SPEED_PHASE_MULTIPLIER = 1.35;
     private final double SPEEDRACER_MULTIPLIER = 1.5;
-    private final int MAX_INVULN_FRAMES = 120; // 120 frame a 60fps = 2 secondi invulerabile
+    private final int MAX_INVULN_FRAMES = 125; // 125 frame a 125fps = 1 secondi invulerabile
     private final int DEFAULT_GAIN = 100;
     private final int MAX_CHANCE = 100;
     private final int SPEEDRACER_CHANCE_PHASE_2 = 30;
@@ -60,12 +60,9 @@ public class GameModel {
         this.player = new Avatar(START_X, START_Y, START_COLOR_ID);
         this.enemies = new ArrayList<>();
         this.avaibleColors = new Color[] { Color.RED, Color.GREEN };
-        this.updateCounter = 0;
         this.lives = 3;
         this.isGameOver = false;
         this.random = new Random();
-        this.frameCounter = 0;
-        this.spawnInterval = 62; // 125 frame = 1 secondo (se il timer è a 8ms)
     }// fine initGame
 
     public void update(int panelWidth, int panelHeight) {
@@ -81,7 +78,7 @@ public class GameModel {
         updateEnemies(panelHeight);
         updateParticles();
         checkCollisions();
-        scoreHandler();
+        updateSurvivalScore();
 
     }// fine update
 
@@ -180,7 +177,7 @@ public class GameModel {
         }
     }// fine checkDifficultyProgression
 
-    private void scoreHandler() {
+    private void updateSurvivalScore() {
         this.stackedTime += TICK_TIME;
 
         if (this.stackedTime >= SCORE_DELAY) {
@@ -236,7 +233,6 @@ public class GameModel {
 
                     if (!isInvulnerable) {
                         decreaseLives();
-                        i--;
                         isInvulnerable = true;
                     }
                 }
