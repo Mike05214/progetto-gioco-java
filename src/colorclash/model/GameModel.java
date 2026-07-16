@@ -23,10 +23,11 @@ public class GameModel {
     private int invulnTimer = 0;
     private Random random;
     private int frameCounter = 0;
-    private int spawnInterval= 62; // 125 frame = 2 secondo (se il timer è a 8ms)
+    private int spawnInterval = 62; // 125 frame = 2 secondo (se il timer è a 8ms)
     private double currentFallSpeed = 3.0;
     private int currentPhase = 1;
     private List<Particle> particles = new ArrayList<>();
+    private List<FloatingScore> floatingScores = new ArrayList<>();
     private int availableColorsCount = 2;
 
     // costanti
@@ -78,6 +79,7 @@ public class GameModel {
         spawningHandler(panelWidth);
         updateEnemies(panelHeight);
         updateParticles();
+        updateFloatingScore();
         checkCollisions();
         updateSurvivalScore();
 
@@ -97,7 +99,14 @@ public class GameModel {
             p.update();
         }
         particles.removeIf(Particle::isDead);
-    }
+    }// fine updateParticles
+
+    private void updateFloatingScore() {
+        for (FloatingScore fs : floatingScores) {
+            fs.update();
+        }
+        floatingScores.removeIf(FloatingScore::isDead);
+    }// fine updateFloatingScore
 
     private void invulnerabilityHandler() {
 
@@ -225,6 +234,7 @@ public class GameModel {
 
                 if (player.getColorId() == obs.getColorId()) {
                     createExplosion(obs.getX(), obs.getY() - EXPLOSION_OFFSET, obs.getColorId());
+                    floatingScores.add(new FloatingScore(obs.getX(), obs.getY(), obs.getPoints()));
                     addScore(obs.getPoints());
                     enemies.remove(i);
                     i--;
@@ -238,7 +248,7 @@ public class GameModel {
             }
         }
     }// fine checkCollisions
-    
+
     private void resetScore() {
         this.score = 0;
         this.stackedTime = 0;
@@ -332,5 +342,9 @@ public class GameModel {
 
     public List<Particle> getParticles() {
         return particles;
+    }
+
+    public List<FloatingScore> getFloatingScores() {
+        return this.floatingScores; 
     }
 }// fine classe GameModel

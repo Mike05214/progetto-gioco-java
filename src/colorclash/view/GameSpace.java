@@ -4,6 +4,7 @@ import src.colorclash.model.GameModel;
 import src.colorclash.model.Obstacle;
 import src.colorclash.model.Particle;
 import src.colorclash.model.Avatar;
+import src.colorclash.model.FloatingScore;
 
 import java.awt.GridBagLayout;
 import java.awt.Dimension;
@@ -63,20 +64,34 @@ public class GameSpace extends JPanel {
         drawPlayer(g2d);
         drawObstacles(g2d);
         drawParticles(g2d);
+        drawFloatingScore(g2d);
         if (model.isGameOver()) {
             showGameOver(g2d);
         }
-        
+
     }// fine paintComponent
 
-    private void drawParticles(Graphics2D g2d){
+    private void drawParticles(Graphics2D g2d) {
         for (Particle p : model.getParticles()) {
-            
+
             int colorId = p.getColorId();
             g2d.setColor(colorPalette[colorId]);
 
             // Disegna il frammento
             g2d.fillRect(p.getX(), p.getY(), p.getSize(), p.getSize());
+        }
+    }
+
+    private void drawFloatingScore(Graphics2D g2d) {
+        for (FloatingScore fs : model.getFloatingScores()) {
+            // Imposta il colore con il livello di trasparenza attuale
+            g2d.setColor(new Color(255, 255, 255, fs.getAlpha()));
+
+            // Imposta stile e grandezza del testo
+            g2d.setFont(new Font("Arial", Font.BOLD, 20));
+
+            // Disegna la stringa a schermo
+            g2d.drawString(fs.getText(), (int) fs.getX(), (int) fs.getY());
         }
     }
 
@@ -135,7 +150,9 @@ public class GameSpace extends JPanel {
                 g2d.setColor(Color.WHITE);
                 g2d.setStroke(new BasicStroke(LEGEND_STROKE_WIDTH));
                 g2d.drawRect(x - LEGEND_STROKE_NEW_START, y - LEGEND_STROKE_NEW_START,
-                            elementSize + LEGEND_STROKE_RESIZE, elementSize + LEGEND_STROKE_RESIZE); // ridimensiona il rettangolo evindenziato
+                        elementSize + LEGEND_STROKE_RESIZE, elementSize + LEGEND_STROKE_RESIZE); // ridimensiona il
+                                                                                                 // rettangolo
+                                                                                                 // evindenziato
             }
         }
     }// fine showLegend
