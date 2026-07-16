@@ -21,7 +21,7 @@ public class GamePanel extends JPanel {
     private HudPanel hudPanel;
     private boolean isResuming;
     private boolean isScoreUpdateBlocked;
-    private boolean spaceAlreadyPressed = false;
+    private boolean colorSwitchLocked = false;
     private int lastPhase;
     private int currentPhase;
     private Timer alertTimer;
@@ -164,18 +164,14 @@ public class GamePanel extends JPanel {
     }// fine initSetupListeners
 
     private void spaceKeyLogic(boolean forward) {
-        if (!spaceAlreadyPressed) {
-            if(forward){
-                model.getPlayer().colorCooldown(model.getAvailableColorsCount(),true);
-            }else{
-                model.getPlayer().colorCooldown(model.getAvailableColorsCount(),false);
-            }
-            spaceAlreadyPressed = true;
+        if (!colorSwitchLocked) {
+            model.getPlayer().colorCooldown(model.getAvailableColorsCount(), forward);
+            colorSwitchLocked = true;
         }
     }// fine spaceKeyLogic
 
     private void resetKeyLogic() {
-        spaceAlreadyPressed = false;
+        colorSwitchLocked = false;
     }// fine resetKeyLogic
 
     // metodi pubblici
