@@ -1,7 +1,6 @@
 package src.colorclash.model;
 
 import java.awt.Shape;
-import java.awt.Rectangle;
 import java.awt.geom.Path2D;
 
 public class Avatar {
@@ -80,21 +79,21 @@ public class Avatar {
         }
     }// fine constrainY
 
-    public void colorCooldown(int availableColorsCount) {
+    public void colorCooldown(int availableColorsCount, boolean forward) {
         this.currentTime = System.currentTimeMillis();
-
         if (currentTime - lastColorChange >= COLOR_COOLDOWN) {
-            switchColor(availableColorsCount);
+            switchColor(availableColorsCount, forward);
         }
     }// fine colorCoolDown
 
-    public void switchColor(int availableColorsCount) {
-        // cambio colore controllato dalla quantità di colori disponibili tramite
-        // operatore %
+    public void switchColor(int availableColorsCount, boolean forward) {
+    if (forward) {
         this.colorId = (this.colorId + 1) % availableColorsCount;
-
-        lastColorChange = currentTime;
-    }// fine switchColor
+    } else {
+        this.colorId = (this.colorId - 1 + availableColorsCount) % availableColorsCount;
+    }
+    lastColorChange = currentTime;
+} // fine switchColor
 
     public void resetToInitialSettings(int startX, int startY, int startColorId) {
         this.x = startX;
@@ -111,7 +110,6 @@ public class Avatar {
 
     public Shape getHitbox() {
         Path2D.Double navicella = new Path2D.Double();
-
         // costruzione della forma dell'avatar
         navicella.moveTo(this.x + (width * 0.5), this.y);
         navicella.lineTo(this.x + (width * 0.6), this.y + (height * 0.3));
@@ -125,7 +123,6 @@ public class Avatar {
         navicella.lineTo(this.x + (width * 0.4), this.y + (height * 0.3));
         navicella.closePath();
         // fine costruzione della forma dell'avatar
-
         return navicella;
     }// fine getHitbox
 

@@ -3,7 +3,6 @@ package src.colorclash.view;
 import src.colorclash.model.GameModel;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -108,25 +107,27 @@ public class GamePanel extends JPanel {
                 }
                 int key = e.getKeyCode();
 
-                if (key == KeyEvent.VK_W || key == KeyEvent.VK_UP) {
+                if (key == KeyEvent.VK_W) {
                     model.getPlayer().setMovingUp(true);
                 }
 
-                if (key == KeyEvent.VK_S || key == KeyEvent.VK_DOWN) {
+                if (key == KeyEvent.VK_S) {
                     model.getPlayer().setMovingDown(true);
                 }
 
-                if (key == KeyEvent.VK_A || key == KeyEvent.VK_LEFT) {
+                if (key == KeyEvent.VK_A) {
                     model.getPlayer().setMovingLeft(true);
                 }
 
-                if (key == KeyEvent.VK_D || key == KeyEvent.VK_RIGHT) {
+                if (key == KeyEvent.VK_D) {
                     model.getPlayer().setMovingRight(true);
                 }
 
-                if (key == KeyEvent.VK_SPACE) {
-                    spaceKeyLogic();
-
+                if (key == KeyEvent.VK_SPACE || key == KeyEvent.VK_RIGHT) {
+                    spaceKeyLogic(true);
+                }
+                if (key == KeyEvent.VK_LEFT) {
+                    spaceKeyLogic(false);
                 }
 
             }
@@ -138,37 +139,39 @@ public class GamePanel extends JPanel {
                 }
                 int key = e.getKeyCode();
 
-                if (key == KeyEvent.VK_W || key == KeyEvent.VK_UP) {
+                if (key == KeyEvent.VK_W) {
                     model.getPlayer().setMovingUp(false);
                 }
 
-                if (key == KeyEvent.VK_S || key == KeyEvent.VK_DOWN) {
+                if (key == KeyEvent.VK_S) {
                     model.getPlayer().setMovingDown(false);
                 }
 
-                if (key == KeyEvent.VK_A || key == KeyEvent.VK_LEFT) {
+                if (key == KeyEvent.VK_A) {
                     model.getPlayer().setMovingLeft(false);
                 }
 
-                if (key == KeyEvent.VK_D || key == KeyEvent.VK_RIGHT) {
+                if (key == KeyEvent.VK_D) {
                     model.getPlayer().setMovingRight(false);
                 }
 
-                if (key == KeyEvent.VK_SPACE) {
+                if (key == KeyEvent.VK_SPACE || key == KeyEvent.VK_RIGHT || key == KeyEvent.VK_LEFT ) {
                     resetKeyLogic();
                 }
-
             }
         });
 
     }// fine initSetupListeners
 
-    private void spaceKeyLogic() {
+    private void spaceKeyLogic(boolean forward) {
         if (!spaceAlreadyPressed) {
-            model.getPlayer().colorCooldown(model.getAvailableColorsCount());
+            if(forward){
+                model.getPlayer().colorCooldown(model.getAvailableColorsCount(),true);
+            }else{
+                model.getPlayer().colorCooldown(model.getAvailableColorsCount(),false);
+            }
             spaceAlreadyPressed = true;
         }
-
     }// fine spaceKeyLogic
 
     private void resetKeyLogic() {

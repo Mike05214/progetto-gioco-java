@@ -26,7 +26,6 @@ public class GameModel {
     private int spawnInterval= 62; // 125 frame = 2 secondo (se il timer è a 8ms)
     private double currentFallSpeed = 3.0;
     private int currentPhase = 1;
-    private Color[] avaibleColors;
     private List<Particle> particles = new ArrayList<>();
     private int availableColorsCount = 2;
 
@@ -49,6 +48,9 @@ public class GameModel {
     private final int SPEEDRACER_CHANCE_PHASE_2 = 30;
     private final int SPEEDRACER_CHANCE_PHASE_3 = 40;
     private final int SINUSOIDALMADNESS_CHANCE = 15;
+    private final int MIN_PARTICLES = 5;
+    private final int MAX_PARTICLES = 12;
+    private final int EXPLOSION_OFFSET = 20;
 
     // METODI PRIVATI
 
@@ -59,7 +61,6 @@ public class GameModel {
     private void initGame() {
         this.player = new Avatar(START_X, START_Y, START_COLOR_ID);
         this.enemies = new ArrayList<>();
-        this.avaibleColors = new Color[] { Color.RED, Color.GREEN };
         this.lives = 3;
         this.isGameOver = false;
         this.random = new Random();
@@ -164,7 +165,6 @@ public class GameModel {
         if (currentScore >= SCORE_PHASE_2 && currentPhase == 1) {
             currentPhase = 2;
             currentFallSpeed *= SPEED_PHASE_MULTIPLIER;
-            avaibleColors = new Color[] { Color.CYAN, Color.GREEN, Color.RED };
             availableColorsCount = 3;
 
         }
@@ -172,7 +172,6 @@ public class GameModel {
         else if (currentScore >= SCORE_PHASE_3 && currentPhase == 2) {
             currentPhase = 3;
             currentFallSpeed *= SPEED_PHASE_MULTIPLIER;
-            avaibleColors = new Color[] { Color.CYAN, Color.GREEN, Color.RED, Color.ORANGE };
             availableColorsCount = 4;
         }
     }// fine checkDifficultyProgression
@@ -201,7 +200,7 @@ public class GameModel {
     }// fine decreaseLives
 
     private void createExplosion(int x, int y, int colorId) {
-        int particlesNumber = random.nextInt(5, 12 + 1);
+        int particlesNumber = random.nextInt(MIN_PARTICLES, MAX_PARTICLES + 1);
         for (int i = 0; i < particlesNumber; i++) {
             particles.add(new Particle(x, y, colorId));
         }
@@ -225,7 +224,7 @@ public class GameModel {
             if (!playerArea.isEmpty()) {
 
                 if (player.getColorId() == obs.getColorId()) {
-                    createExplosion(obs.getX(), obs.getY() - 20, obs.getColorId());
+                    createExplosion(obs.getX(), obs.getY() - EXPLOSION_OFFSET, obs.getColorId());
                     addScore(obs.getPoints());
                     enemies.remove(i);
                     i--;
@@ -239,7 +238,7 @@ public class GameModel {
             }
         }
     }// fine checkCollisions
-
+    
     private void resetScore() {
         this.score = 0;
         this.stackedTime = 0;
@@ -253,7 +252,6 @@ public class GameModel {
     private void resetDifficulty() {
         currentFallSpeed = 3.0;
         currentPhase = 1;
-        avaibleColors = new Color[] { Color.RED, Color.GREEN };
         availableColorsCount = 2;
     }// fine resetDifficulty
 
