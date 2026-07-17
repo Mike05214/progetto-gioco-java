@@ -61,6 +61,4 @@ public class MenuPanel extends BaseMenuPanel {
         resumeButton.setEnabled(false);
     }// fine initButtons
 
-
-
 }// fine classe MenuPanel
