@@ -91,7 +91,6 @@ public class GameModel {
         if (isGameOver) {
             if (score > saveManager.getHighscore()) {
                 saveManager.writeHighscore(score);
-                System.out.println("Record salvato con successo: " + saveManager.getHighscore());
             }
         }
     }// fine update
