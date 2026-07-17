@@ -14,7 +14,7 @@ import javax.swing.Timer;
 public class GamePanel extends JPanel {
 
     // variabili d'istanza
-    private GameModel model;
+    
     private Timer gameLoop;
     private MainFrame frame;
     private GameSpace gameSpace;
@@ -25,6 +25,7 @@ public class GamePanel extends JPanel {
     private int lastPhase;
     private int currentPhase;
     private Timer alertTimer;
+    private GameModel model;
 
     // costanti
     private final int DELAY = 8;
@@ -32,7 +33,7 @@ public class GamePanel extends JPanel {
     private final int SECONDS_LEFT = 3;
     private final int NEW_COLOR_LABEL_VISIBLE_DELAY = 500;
 
-    public GamePanel(MainFrame frame) {
+    public GamePanel(MainFrame frame,GameModel model) {
         this.model = new GameModel();
         this.frame = frame;
         this.lastPhase = model.getPhase();
@@ -72,11 +73,12 @@ public class GamePanel extends JPanel {
     }// fine initGameLoop
 
     private void initGameSpace() {
-        this.gameSpace = new GameSpace(frame, model);
+        this.gameSpace = new GameSpace(this.frame, this.model);
         gameSpace.getRestarButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 frame.changeFrame("MENU");
+                frame.getMenuPanel().updateHighScoreDisplay();
                 model.resetGame();
                 resetGamePanel();
                 gameSpace.getRestarButton().setVisible(false);

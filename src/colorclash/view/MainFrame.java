@@ -2,6 +2,7 @@ package src.colorclash.view;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import src.colorclash.model.GameModel;
 
 import java.awt.CardLayout;
 import java.awt.Container;
@@ -14,12 +15,14 @@ public class MainFrame extends JFrame {
     private GamePanel gamePanel;
     private MenuPanel menuPanel;
     private PausePanel pausePanel;
+    private GameModel model;
 
     // costanti
     private final int FRAME_WIDTH = 700;
     private final int FRAME_HEIGHT = 900;
 
     public MainFrame() {
+        this.model = new GameModel();
         initialSettings();
         frameStructureBuilder();
     }// fine costruttore
@@ -43,8 +46,8 @@ public class MainFrame extends JFrame {
         Container contPane = this.getContentPane();
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
-        this.menuPanel = new MenuPanel(this);
-        this.gamePanel = new GamePanel(this);
+        this.menuPanel = new MenuPanel(this,this.model);
+        this.gamePanel = new GamePanel(this,this.model);
         this.pausePanel = new PausePanel(this, gamePanel.getModel());
         contPane.add(mainPanel, BorderLayout.CENTER);
         mainPanel.add(menuPanel, "MENU");
@@ -57,5 +60,9 @@ public class MainFrame extends JFrame {
 
     public GamePanel getGamePanel() {
         return this.gamePanel;
+    }
+
+    public MenuPanel getMenuPanel() {
+        return this.menuPanel;
     }
 }

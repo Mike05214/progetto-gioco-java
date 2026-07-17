@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import src.colorclash.utils.SaveManager;
+
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.Shape;
@@ -29,6 +31,7 @@ public class GameModel {
     private List<Particle> particles = new ArrayList<>();
     private List<FloatingScore> floatingScores = new ArrayList<>();
     private int availableColorsCount = 2;
+    private SaveManager saveManager;
 
     // costanti
     private final int START_X = 325;
@@ -65,6 +68,9 @@ public class GameModel {
         this.lives = 3;
         this.isGameOver = false;
         this.random = new Random();
+        this.saveManager = new SaveManager();
+        
+
     }// fine initGame
 
     public void update(int panelWidth, int panelHeight) {
@@ -82,7 +88,12 @@ public class GameModel {
         updateFloatingScore();
         checkCollisions();
         updateSurvivalScore();
-
+        if (isGameOver) {
+            if (score > saveManager.getHighscore()) {
+                saveManager.writeHighscore(score);
+                System.out.println("Record salvato con successo: " + saveManager.getHighscore());
+            }
+        }
     }// fine update
 
     private void updateEnemies(int panelHeight) {
@@ -345,6 +356,10 @@ public class GameModel {
     }
 
     public List<FloatingScore> getFloatingScores() {
-        return this.floatingScores; 
+        return this.floatingScores;
+    }
+
+    public int getHighscore() {
+        return saveManager.getHighscore();
     }
 }// fine classe GameModel

@@ -63,6 +63,7 @@ public class PausePanel extends BaseMenuPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 frame.changeFrame("MENU");
+                frame.getMenuPanel().updateHighScoreDisplay();
                 model.resetGame();
                 frame.getGamePanel().resetGamePanel();
             }
