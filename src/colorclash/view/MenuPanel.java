@@ -66,7 +66,7 @@ public class MenuPanel extends BaseMenuPanel {
             public void actionPerformed(ActionEvent e) {
                 model.getSaveManager().loadGameState(model);
                 frame.changeFrame("GAME");
-                
+                frame.getGamePanel().resumeCountdown();
             }
         });
     }// fine initButtons
