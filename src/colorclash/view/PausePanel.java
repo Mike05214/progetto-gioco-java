@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.awt.Font;
 
 import javax.swing.JButton;
@@ -78,8 +79,12 @@ public class PausePanel extends BaseMenuPanel {
         saveAndExit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                frame.changeFrame("GAME");
-
+                frame.changeFrame("MENU");
+                model.getSaveManager().writeGameState(model.getScore(), model.getLives(), model.getPhase(),
+                        model.getPlayer(), model.getEnemies());
+                model.resetGame();
+                frame.getMenuPanel().refreshResumeButton();
+                
             }
         });
         return saveAndExit;

@@ -12,6 +12,8 @@ import javax.swing.JLabel;
 import src.colorclash.model.GameModel;
 import src.colorclash.utils.SaveManager;
 
+import java.io.File;
+
 public class MenuPanel extends BaseMenuPanel {
     // variabili d'istanza
     private JLabel highScoreLabel;
@@ -26,7 +28,7 @@ public class MenuPanel extends BaseMenuPanel {
     private final int ROW_1 = 1;
     private final int ROW_2 = 2;
 
-    public MenuPanel(MainFrame frame,GameModel model) {
+    public MenuPanel(MainFrame frame, GameModel model) {
         super();
         this.model = model;
         setBackground(Color.DARK_GRAY);
@@ -58,7 +60,20 @@ public class MenuPanel extends BaseMenuPanel {
         resumeButton = new JButton("RESUME");
         resumeButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
         resumeButton.setFont(new Font("Arial", Font.BOLD, BUTTON_TEXT_SIZE));
-        resumeButton.setEnabled(false);
+        refreshResumeButton();
+        resumeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                model.getSaveManager().loadGameState(model);
+                frame.changeFrame("GAME");
+                
+            }
+        });
     }// fine initButtons
+
+    public void refreshResumeButton(){
+        File saveFile = new File("saves/gamestate.txt");
+        resumeButton.setEnabled(saveFile.exists());
+    }
 
 }// fine classe MenuPanel

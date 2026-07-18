@@ -69,7 +69,6 @@ public class GameModel {
         this.isGameOver = false;
         this.random = new Random();
         this.saveManager = new SaveManager();
-        
 
     }// fine initGame
 
@@ -259,6 +258,14 @@ public class GameModel {
         }
     }// fine checkCollisions
 
+    public void autoSave() {
+        // Salviamo lo stato solo se il giocatore è in partita e non ha già perso.
+        // (Non ha senso salvare una partita in stato di Game Over)
+        if (!this.isGameOver) {
+            saveManager.writeGameState(this.score, this.lives, this.currentPhase, this.player, this.enemies);
+        }
+    }
+
     private void resetScore() {
         this.score = 0;
         this.stackedTime = 0;
@@ -361,4 +368,23 @@ public class GameModel {
     public int getHighscore() {
         return saveManager.getHighscore();
     }
+
+    public SaveManager getSaveManager() {
+        return this.saveManager;
+    }
+
+    // setters gameModel
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public void setLives(int lives) {
+        this.lives = lives;
+    }
+
+    public void setPhase(int phase) {
+        this.currentPhase = phase;
+    }
+
 }// fine classe GameModel

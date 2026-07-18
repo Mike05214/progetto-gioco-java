@@ -75,4 +75,8 @@ public abstract class Obstacle {
     public boolean isActive() {
         return isActive;
     }
+
+    public double getFallSpeed(){
+        return fallSpeed;
+    }
 }// fine classe astratta Obstacle

@@ -34,7 +34,7 @@ public class GamePanel extends JPanel {
     private final int NEW_COLOR_LABEL_VISIBLE_DELAY = 500;
 
     public GamePanel(MainFrame frame,GameModel model) {
-        this.model = new GameModel();
+        this.model = model;
         this.frame = frame;
         this.lastPhase = model.getPhase();
         setLayout(new BorderLayout());
@@ -268,9 +268,6 @@ public class GamePanel extends JPanel {
     
 
     // getters del GamePanel
-    public GameModel getModel() {
-        return this.model;
-    }
 
     public int getGameSpaceWidth() {
         return this.gameSpace.getWidth();
