@@ -54,6 +54,8 @@ public class MenuPanel extends BaseMenuPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 frame.changeFrame("GAME");
+                model.resetGame();
+                frame.getGamePanel().resetGamePanel();
             }
         });
 
