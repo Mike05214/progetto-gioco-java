@@ -11,7 +11,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.List;
 
-import src.colorclash.model.Avatar;
+import src.colorclash.model.Player;
 import src.colorclash.model.GameModel;
 import src.colorclash.model.Obstacle;
 import src.colorclash.model.SinusoidalMadness;
@@ -97,7 +97,7 @@ public class SaveManager {
         }
     }
 
-    public void writeGameState(int score, int lives, int phase, double speed, int avaibleColors, Avatar player, List<Obstacle> enemies) {
+    public void writeGameState(int score, int lives, int phase, double speed, int avaibleColors, Player player, List<Obstacle> enemies) {
         String gameStatePath = "saves/gamestate.txt";
         PrintWriter printWriter = null;
 

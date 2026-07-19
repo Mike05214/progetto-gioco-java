@@ -3,31 +3,29 @@ package src.colorclash.model;
 import java.awt.Shape;
 import java.awt.geom.Path2D;
 
-public class Avatar {
+import src.colorclash.utils.Config;
+
+public class Player {
 
     // Coordinate e dimensioni
     private double x;
     private double y;
-    private int width;
-    private int height;
     private long lastColorChange = 0;
     private long currentTime = 0;
     private final double SCALE_FACTOR = 0.7071;
     private final long COLOR_COOLDOWN = 20;
+    private final double PLAYER_SPEED = Config.getInstance().getDoubleProperty("player_speed"); 
+    private final int PLAYER_WIDTH = Config.getInstance().getIntProperty("player_width");
+    private final int PLAYER_HEIGHT = Config.getInstance().getIntProperty("player_height");
 
     // Attributi di gioco dell'avatar
-    private double speed;
     private int colorId;
     private boolean isInvulnerable;
     private boolean movingUp, movingDown, movingLeft, movingRight;
 
-    public Avatar(int startX, int startY, int startColorId) {
+    public Player(int startX, int startY, int startColorId) {
         this.x = startX;
         this.y = startY;
-
-        this.width = 70;
-        this.height = 80;
-        this.speed = 2.5;
         this.colorId = startColorId;
         this.isInvulnerable = false;
     }// fine costruttore
@@ -37,9 +35,9 @@ public class Avatar {
         double speedVector = 0;
 
         if (diagonalMovement) {
-            speedVector = speed * SCALE_FACTOR;
+            speedVector = PLAYER_SPEED * SCALE_FACTOR;
         } else {
-            speedVector = speed;
+            speedVector = PLAYER_SPEED;
         }
 
         if (movingUp && !movingDown) {
@@ -64,8 +62,8 @@ public class Avatar {
             this.x = minX;
         }
 
-        if (this.x + this.width > maxX) {
-            this.x = maxX - this.width;
+        if (this.x + PLAYER_WIDTH > maxX) {
+            this.x = maxX - PLAYER_WIDTH;
         }
     }// fine constrainX
 
@@ -74,8 +72,8 @@ public class Avatar {
             this.y = minY;
         }
 
-        if (this.y + this.height > maxY) {
-            this.y = maxY - this.height;
+        if (this.y + PLAYER_HEIGHT > maxY) {
+            this.y = maxY - PLAYER_HEIGHT;
         }
     }// fine constrainY
 
@@ -111,16 +109,16 @@ public class Avatar {
     public Shape getHitbox() {
         Path2D.Double navicella = new Path2D.Double();
         // costruzione della forma dell'avatar
-        navicella.moveTo(this.x + (width * 0.5), this.y);
-        navicella.lineTo(this.x + (width * 0.6), this.y + (height * 0.3));
-        navicella.lineTo(this.x + width, this.y + (height * 0.8));
-        navicella.lineTo(this.x + (width * 0.7), this.y + (height * 0.8));
-        navicella.lineTo(this.x + (width * 0.7), this.y + height);
-        navicella.lineTo(this.x + (width * 0.5), this.y + (height * 0.85));
-        navicella.lineTo(this.x + (width * 0.3), this.y + height);
-        navicella.lineTo(this.x + (width * 0.3), this.y + (height * 0.8));
-        navicella.lineTo(this.x, this.y + (height * 0.8));
-        navicella.lineTo(this.x + (width * 0.4), this.y + (height * 0.3));
+        navicella.moveTo(this.x + (PLAYER_WIDTH * 0.5), this.y);
+        navicella.lineTo(this.x + (PLAYER_WIDTH * 0.6), this.y + (PLAYER_HEIGHT * 0.3));
+        navicella.lineTo(this.x + PLAYER_WIDTH, this.y + (PLAYER_HEIGHT * 0.8));
+        navicella.lineTo(this.x + (PLAYER_WIDTH * 0.7), this.y + (PLAYER_HEIGHT * 0.8));
+        navicella.lineTo(this.x + (PLAYER_WIDTH * 0.7), this.y + PLAYER_HEIGHT);
+        navicella.lineTo(this.x + (PLAYER_WIDTH * 0.5), this.y + (PLAYER_HEIGHT * 0.85));
+        navicella.lineTo(this.x + (PLAYER_WIDTH * 0.3), this.y + PLAYER_HEIGHT);
+        navicella.lineTo(this.x + (PLAYER_WIDTH * 0.3), this.y + (PLAYER_HEIGHT * 0.8));
+        navicella.lineTo(this.x, this.y + (PLAYER_HEIGHT * 0.8));
+        navicella.lineTo(this.x + (PLAYER_WIDTH * 0.4), this.y + (PLAYER_HEIGHT * 0.3));
         navicella.closePath();
         // fine costruzione della forma dell'avatar
         return navicella;
@@ -138,11 +136,11 @@ public class Avatar {
     }
 
     public int getWidth() {
-        return width;
+        return PLAYER_WIDTH;
     }
 
     public int getHeight() {
-        return height;
+        return PLAYER_HEIGHT;
     }
 
     public int getColorId() {

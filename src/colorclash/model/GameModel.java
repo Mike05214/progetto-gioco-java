@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import src.colorclash.utils.SaveManager;
+import src.colorclash.utils.Config;
 
 import java.awt.Color;
 import java.awt.Rectangle;
@@ -13,7 +14,7 @@ import java.awt.geom.Area;
 
 public class GameModel {
 
-    private Avatar player;
+    private Player player;
     private List<Obstacle> enemies;
 
     // Variabili di stato del gioco
@@ -34,8 +35,8 @@ public class GameModel {
     private SaveManager saveManager;
 
     // costanti
-    private final int START_X = 325;
-    private final int START_Y = 550;
+    private final int START_X = Config.getInstance().getIntProperty("player_start_x"); 
+    private final int START_Y = Config.getInstance().getIntProperty("player_start_y"); 
     private final int MIN_X = 0;
     private final int MIN_Y = 0;
     private final int OBSTACLE_START_Y = -150;
@@ -55,6 +56,7 @@ public class GameModel {
     private final int MIN_PARTICLES = 5;
     private final int MAX_PARTICLES = 12;
     private final int EXPLOSION_OFFSET = 20;
+    private final int MAX_LIVES = 3; 
 
     // METODI PRIVATI
 
@@ -63,9 +65,9 @@ public class GameModel {
     }// fine costruttore
 
     private void initGame() {
-        this.player = new Avatar(START_X, START_Y, START_COLOR_ID);
+        this.player = new Player(START_X, START_Y, START_COLOR_ID);
         this.enemies = new ArrayList<>();
-        this.lives = 3;
+        this.lives = MAX_LIVES; 
         this.isGameOver = false;
         this.random = new Random();
         this.saveManager = new SaveManager();
@@ -317,7 +319,7 @@ public class GameModel {
         return invulnTimer;
     }
 
-    public Avatar getPlayer() {
+    public Player getPlayer() {
         return player;
     }
 

@@ -57,7 +57,7 @@ public class Config {
 
     // METODI PRIVATI
     private String getConfigFileFullPath() {
-        String fileName = Config.class.getResource("config.txt").toString();
+        String fileName = Config.class.getResource("/conf/config.txt").toString();
         
         if (fileName.contains("//"))
             fileName = fileName.substring("file:/".length()); // Versione Windows
@@ -71,6 +71,29 @@ public class Config {
     // METODI ISTANZA (Esempio per leggere un parametro)
     public String getBackgroundColor() {
         return this.properties.getProperty("backgroundColor");
+    }
+
+    public String getStringProperty(String key) {
+        // Restituisce il valore associato alla chiave, oppure null se non esiste
+        return properties.getProperty(key);
+    }
+    
+    // (Opzionale) Metodo helper per prendere direttamente gli interi e non dover fare 
+    // Integer.parseInt(...) ogni singola volta in giro per le altre classi
+    public int getIntProperty(String key) {
+        String value = properties.getProperty(key);
+        if (value != null) {
+            return Integer.parseInt(value.trim()); // trim() toglie eventuali spazi vuoti
+        }
+        return 0; // Valore di default se la chiave non esiste
+    }
+
+    public Double getDoubleProperty(String key) {
+        String value = properties.getProperty(key);
+        if (value != null) {
+            return Double.parseDouble(value.trim()); // trim() toglie eventuali spazi vuoti
+        }
+        return 0.0; // Valore di default se la chiave non esiste
     }
 
     // METODI STATICI

@@ -3,7 +3,7 @@ package src.colorclash.view;
 import src.colorclash.model.GameModel;
 import src.colorclash.model.Obstacle;
 import src.colorclash.model.Particle;
-import src.colorclash.model.Avatar;
+import src.colorclash.model.Player;
 import src.colorclash.model.FloatingScore;
 
 import java.awt.GridBagLayout;
@@ -105,7 +105,7 @@ public class GameSpace extends JPanel {
         }
 
         if (drawPlayer) {
-            Avatar player = model.getPlayer();
+            Player player = model.getPlayer();
             g2d.setColor(colorPalette[player.getColorId()]);
             g2d.fill(player.getHitbox());
         }

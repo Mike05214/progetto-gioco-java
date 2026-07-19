@@ -1,14 +1,17 @@
 package src.colorclash.view;
+import src.colorclash.utils.Config;
+import src.colorclash.model.GameModel;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import src.colorclash.model.GameModel;
+
 
 import java.awt.CardLayout;
 import java.awt.Container;
 import java.awt.BorderLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
 
 public class MainFrame extends JFrame {
     // variabili d'istanza
@@ -20,8 +23,8 @@ public class MainFrame extends JFrame {
     private GameModel model;
 
     // costanti
-    private final int FRAME_WIDTH = 700;
-    private final int FRAME_HEIGHT = 900;
+    private final int FRAME_WIDTH = Config.getInstance().getIntProperty("frame_width");
+    private final int FRAME_HEIGHT = Config.getInstance().getIntProperty("frame_height");
 
     public MainFrame() {
         this.model = new GameModel();

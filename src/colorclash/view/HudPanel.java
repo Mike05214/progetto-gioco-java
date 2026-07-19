@@ -1,5 +1,7 @@
 package src.colorclash.view;
 
+import src.colorclash.utils.Config;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -29,7 +31,7 @@ public class HudPanel extends JPanel {
     private JPanel livesContainer;
     private int lastLives = -1;
     private int lastScore = -1;
-    private final int MAX_LIVES = 3;
+    private final int MAX_LIVES = 3; 
     private JLabel[] heartLabels = new JLabel[MAX_LIVES];
     private Icon iconaDiSalvataggio;
 
