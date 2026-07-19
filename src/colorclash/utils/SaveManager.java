@@ -97,7 +97,7 @@ public class SaveManager {
         }
     }
 
-    public void writeGameState(int score, int lives, int phase, double speed, Avatar player, List<Obstacle> enemies) {
+    public void writeGameState(int score, int lives, int phase, double speed, int avaibleColors, Avatar player, List<Obstacle> enemies) {
         String gameStatePath = "saves/gamestate.txt";
         PrintWriter printWriter = null;
 
@@ -114,6 +114,7 @@ public class SaveManager {
             printWriter.println("LIVES:" + lives);
             printWriter.println("PHASE:" + phase);
             printWriter.println("CURRENT_SPEED:" + speed);
+            printWriter.println("AVAIBLE_COLORS:" + avaibleColors);
 
             // 2. Salviamo il Player (X, Y, ID Colore)
             printWriter.println("PLAYER:" + player.getX() + "," + player.getY() + "," + player.getColorId());
@@ -184,6 +185,10 @@ public class SaveManager {
                     double savedSpeed = Double.parseDouble(line.split(":")[1]);
                     model.setCurrentSpeed(savedSpeed);
 
+                } else if (line.startsWith("AVAIBLE_COLORS:")){
+                    int savedColors = Integer.parseInt(line.split(":")[1]);
+                    model.setAvaibleColors(savedColors);
+                    
                 } else if (line.startsWith("PLAYER:")) {
                     String[] dati = line.split(":")[1].split(",");
                     model.getPlayer().setX(Integer.parseInt(dati[0]));

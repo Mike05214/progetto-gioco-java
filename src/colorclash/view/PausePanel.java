@@ -80,7 +80,7 @@ public class PausePanel extends BaseMenuPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 frame.changeFrame("MENU");
-                model.getSaveManager().writeGameState(model.getScore(), model.getLives(), model.getPhase(), model.getCurrentSpeed(),
+                model.getSaveManager().writeGameState(model.getScore(), model.getLives(), model.getPhase(), model.getCurrentSpeed(), model.getAvailableColorsCount(),
                         model.getPlayer(), model.getEnemies());
                 model.resetGame();
                 frame.getMenuPanel().refreshResumeButton();
