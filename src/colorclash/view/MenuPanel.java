@@ -19,6 +19,7 @@ public class MenuPanel extends BaseMenuPanel {
     private JLabel highScoreLabel;
     private JButton resumeButton;
     private JButton playButton;
+    private JButton deleteSaveButton;
     private GameModel model; 
    
 
@@ -27,6 +28,7 @@ public class MenuPanel extends BaseMenuPanel {
     private final int ROW_0 = 0;
     private final int ROW_1 = 1;
     private final int ROW_2 = 2;
+    private final int ROW_3 = 3;
 
     public MenuPanel(MainFrame frame, GameModel model) {
         super();
@@ -36,7 +38,8 @@ public class MenuPanel extends BaseMenuPanel {
         initTitleLabel("COLOR CLASH", Color.YELLOW);
         addComponentToCenter(playButton, ROW_0, true);
         addComponentToCenter(resumeButton, ROW_1, true);
-        addComponentToCenter(highScoreLabel, ROW_2, true);
+        addComponentToCenter(deleteSaveButton, ROW_2, true);
+        addComponentToCenter(highScoreLabel, ROW_3, true);
     }// fine costruttore
 
     public void updateHighScoreDisplay() {
@@ -57,10 +60,11 @@ public class MenuPanel extends BaseMenuPanel {
         highScoreLabel = new JLabel("High Score:" + model.getHighscore());
         highScoreLabel.setFont(new Font("Arial", Font.PLAIN, HI_LABEL_SIZE));
         highScoreLabel.setForeground(Color.WHITE);
+
         resumeButton = new JButton("RESUME");
         resumeButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
         resumeButton.setFont(new Font("Arial", Font.BOLD, BUTTON_TEXT_SIZE));
-        refreshResumeButton();
+       
         resumeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -69,11 +73,26 @@ public class MenuPanel extends BaseMenuPanel {
                 frame.getGamePanel().resumeCountdown();
             }
         });
+
+        deleteSaveButton = new JButton("DELETE SAVE");
+        deleteSaveButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+        deleteSaveButton.setFont(new Font("Arial", Font.BOLD, BUTTON_TEXT_SIZE));
+        deleteSaveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                File saveFile = new File("saves/gamestate.txt");
+                saveFile.delete();
+                deleteSaveButton.setEnabled(false);
+                resumeButton.setEnabled(false);
+            }
+        }); 
+        refreshResumeButton();
     }// fine initButtons
 
     public void refreshResumeButton(){
         File saveFile = new File("saves/gamestate.txt");
         resumeButton.setEnabled(saveFile.exists());
+        deleteSaveButton.setEnabled(saveFile.exists());
     }
 
 }// fine classe MenuPanel

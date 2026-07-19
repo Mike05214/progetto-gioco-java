@@ -97,7 +97,7 @@ public class SaveManager {
         }
     }
 
-    public void writeGameState(int score, int lives, int phase, Avatar player, List<Obstacle> enemies) {
+    public void writeGameState(int score, int lives, int phase, double speed, Avatar player, List<Obstacle> enemies) {
         String gameStatePath = "saves/gamestate.txt";
         PrintWriter printWriter = null;
 
@@ -113,6 +113,7 @@ public class SaveManager {
             printWriter.println("SCORE:" + score);
             printWriter.println("LIVES:" + lives);
             printWriter.println("PHASE:" + phase);
+            printWriter.println("CURRENT_SPEED:" + speed);
 
             // 2. Salviamo il Player (X, Y, ID Colore)
             printWriter.println("PLAYER:" + player.getX() + "," + player.getY() + "," + player.getColorId());
@@ -177,6 +178,11 @@ public class SaveManager {
                     int savedPhase = Integer.parseInt(line.split(":")[1]);// legge i valori trasformando le stringhe in
                                                                           // int
                     model.setPhase(savedPhase); // Devi creare questo setter nel GameModel
+
+                } else if(line.startsWith("CURRENT_SPEED:")){
+                    
+                    double savedSpeed = Double.parseDouble(line.split(":")[1]);
+                    model.setCurrentSpeed(savedSpeed);
 
                 } else if (line.startsWith("PLAYER:")) {
                     String[] dati = line.split(":")[1].split(",");

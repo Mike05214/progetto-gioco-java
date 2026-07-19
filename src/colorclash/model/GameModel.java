@@ -42,8 +42,8 @@ public class GameModel {
     private final int START_COLOR_ID = 0;
     private final int TICK_TIME = 8;
     private final int SCORE_DELAY = 1000; // in ms
-    private final int SCORE_PHASE_2 = 5000; // points
-    private final int SCORE_PHASE_3 = 10000; // points
+    private final int SCORE_PHASE_2 = 200; // points
+    private final int SCORE_PHASE_3 = 800; // points
     private final double SPEED_PHASE_MULTIPLIER = 1.35;
     private final double SPEEDRACER_MULTIPLIER = 1.5;
     private final int MAX_INVULN_FRAMES = 125; // 125 frame a 125fps = 1 secondi invulerabile
@@ -262,7 +262,7 @@ public class GameModel {
         // Salviamo lo stato solo se il giocatore è in partita e non ha già perso.
         // (Non ha senso salvare una partita in stato di Game Over)
         if (!this.isGameOver) {
-            saveManager.writeGameState(this.score, this.lives, this.currentPhase, this.player, this.enemies);
+            saveManager.writeGameState(this.score, this.lives, this.currentPhase, this.currentFallSpeed, this.player, this.enemies);
         }
     }
 
@@ -357,6 +357,10 @@ public class GameModel {
         return this.currentPhase;
     }
 
+    public double getCurrentSpeed(){
+        return this.currentFallSpeed;
+    }
+
     public List<Particle> getParticles() {
         return particles;
     }
@@ -385,6 +389,10 @@ public class GameModel {
 
     public void setPhase(int phase) {
         this.currentPhase = phase;
+    }
+
+    public void setCurrentSpeed(double currentSpeed){
+        this.currentFallSpeed = currentSpeed;
     }
 
 }// fine classe GameModel
