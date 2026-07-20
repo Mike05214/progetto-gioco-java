@@ -22,6 +22,14 @@ public class SaveManager {
 
     private String highscoreFilePath = "saves/highscore.txt";
     private String charset = "UTF-8";
+    private static SaveManager saveManager = null;
+
+    public static SaveManager getInstance() {
+        if (saveManager == null) {
+            saveManager = new SaveManager();
+        }
+        return saveManager;
+    }
 
     public SaveManager() {
         // 1. Crea la cartella e il file vuoto al primo avvio

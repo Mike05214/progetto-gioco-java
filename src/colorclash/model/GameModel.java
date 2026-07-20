@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Random;
 
 import src.colorclash.utils.SaveManager;
+import src.colorclash.utils.AudioManager;
 import src.colorclash.utils.Config;
+import src.colorclash.utils.AudioManager;
 
 import java.awt.Color;
 import java.awt.Rectangle;
@@ -81,7 +83,7 @@ public class GameModel {
         this.lives = MAX_LIVES;
         this.isGameOver = false;
         this.random = new Random();
-        this.saveManager = new SaveManager();
+        this.saveManager = SaveManager.getInstance();
 
     }// fine initGame
 
@@ -255,6 +257,7 @@ public class GameModel {
             if (!playerArea.isEmpty()) {
 
                 if (player.getColorId() == obs.getColorId()) {
+                    AudioManager.getInstance().playSoundEffect("baseball_hit.wav");
                     createExplosion(obs.getX(), obs.getY() - EXPLOSION_OFFSET, obs.getColorId());
                     floatingScores.add(new FloatingScore(obs.getX(), obs.getY(), obs.getPoints()));
                     addScore(obs.getPoints());

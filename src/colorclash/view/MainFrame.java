@@ -1,6 +1,8 @@
 package src.colorclash.view;
+import src.colorclash.utils.AudioManager;
 import src.colorclash.utils.Config;
 import src.colorclash.model.GameModel;
+import src.colorclash.utils.AudioManager;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -39,6 +41,10 @@ public class MainFrame extends JFrame {
 
         if (panelName.equals("GAME")) {
             mainPanel.getComponent(1).requestFocusInWindow();
+            AudioManager.getInstance().playBackgroundMusic("sample-15s.wav");
+        }
+        if (panelName.equals("MENU")) {
+            AudioManager.getInstance().stopBackgroundMusic();
         }
     }
 
