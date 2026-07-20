@@ -4,6 +4,7 @@ import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 
 import java.util.Random;
+import src.colorclash.utils.Config;
 
 public class SinusoidalMadness extends Obstacle {
 
@@ -11,13 +12,13 @@ public class SinusoidalMadness extends Obstacle {
     private static final int WIDTH = 70;
     private static final int HEIGHT = 70;
     private static final Random random = new Random();
-    private static final int AMPLITUDE = 80;
-    private static final int COLOR_CHANGE_INTERVAL = 60;
+    private static final int AMPLITUDE = Config.getInstance().getIntProperty("sinusoidal_madness_amplitude");
+    private static final int COLOR_CHANGE_INTERVAL = Config.getInstance().getIntProperty("sinusoidal_madness_color_change_interval");
     private static final int CURRENT_MAX_COLORS = 4;
 
     // costanti
     private final double WAWE_SPEED = 0.05;
-    private final int SINUSOIDALMADNESS_POINTS = 300;
+    private final int SINUSOIDALMADNESS_POINTS = Config.getInstance().getIntProperty("sinusoidal_madness_points");
 
     // variabili d'istanza
     private int startX;

@@ -17,39 +17,35 @@ public class Config {
 
     // CAMPI ISTANZA
     private Properties properties;
-    
+
     // Costruttore privato (Design Pattern Singleton)
     private Config() {
         BufferedReader buffRead = null;
         try {
             // Caricamento del file tramite percorso calcolato a run-time
             buffRead = new BufferedReader(
-                new InputStreamReader(
-                    new FileInputStream(getConfigFileFullPath()), "ISO-8859-1"));
-            
+                    new InputStreamReader(
+                            new FileInputStream(getConfigFileFullPath()), "ISO-8859-1"));
+
             this.properties = new Properties();
             this.properties.load(buffRead);
-        }
-        catch(FileNotFoundException fnfe) {
+        } catch (FileNotFoundException fnfe) {
             JOptionPane.showMessageDialog(null,
-                        "Configuration file not found, the program will be closed.",
-                        "Serious ERROR",
-                        JOptionPane.ERROR_MESSAGE);
+                    "Configuration file not found, the program will be closed.",
+                    "Serious ERROR",
+                    JOptionPane.ERROR_MESSAGE);
             System.exit(-1);
-        }
-        catch(IOException ioe) {
+        } catch (IOException ioe) {
             JOptionPane.showMessageDialog(null,
-                        "Unable to read the configuration file, the program will be closed.",
-                        "Serious ERROR",
-                        JOptionPane.ERROR_MESSAGE);
+                    "Unable to read the configuration file, the program will be closed.",
+                    "Serious ERROR",
+                    JOptionPane.ERROR_MESSAGE);
             System.exit(-1);
-        }
-        finally {
+        } finally {
             try {
                 if (buffRead != null)
                     buffRead.close();
-            }
-            catch(IOException ioe) {
+            } catch (IOException ioe) {
                 ioe.printStackTrace();
             }
         } // end finally
@@ -58,12 +54,12 @@ public class Config {
     // METODI PRIVATI
     private String getConfigFileFullPath() {
         String fileName = Config.class.getResource("/conf/config.txt").toString();
-        
+
         if (fileName.contains("//"))
             fileName = fileName.substring("file:/".length()); // Versione Windows
         else if (fileName.contains("/"))
             fileName = fileName.substring("file:".length()); // Versione Linux
-        
+
         fileName = fileName.replaceAll("%20", " ");
         return fileName;
     }
@@ -77,8 +73,9 @@ public class Config {
         // Restituisce il valore associato alla chiave, oppure null se non esiste
         return properties.getProperty(key);
     }
-    
-    // (Opzionale) Metodo helper per prendere direttamente gli interi e non dover fare 
+
+    // (Opzionale) Metodo helper per prendere direttamente gli interi e non dover
+    // fare
     // Integer.parseInt(...) ogni singola volta in giro per le altre classi
     public int getIntProperty(String key) {
         String value = properties.getProperty(key);
@@ -98,8 +95,9 @@ public class Config {
 
     // METODI STATICI
     public static Config getInstance() {
-        if (config == null)
+        if (config == null) {
             config = new Config();
+        }
         return config;
     }
 

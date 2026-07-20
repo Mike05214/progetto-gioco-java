@@ -27,7 +27,7 @@ public class MainFrame extends JFrame {
     private final int FRAME_HEIGHT = Config.getInstance().getIntProperty("frame_height");
 
     public MainFrame() {
-        this.model = new GameModel();
+        this.model = GameModel.getInstance();
         initialSettings();
         frameStructureBuilder();
     }// fine costruttore
@@ -70,9 +70,9 @@ public class MainFrame extends JFrame {
         Container contPane = this.getContentPane();
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
-        this.menuPanel = new MenuPanel(this, this.model);
-        this.gamePanel = new GamePanel(this, this.model);
-        this.pausePanel = new PausePanel(this, this.model);
+        this.menuPanel = new MenuPanel(this);
+        this.gamePanel = new GamePanel(this);
+        this.pausePanel = new PausePanel(this);
         contPane.add(mainPanel, BorderLayout.CENTER);
         mainPanel.add(menuPanel, "MENU");
         mainPanel.add(gamePanel, "GAME");

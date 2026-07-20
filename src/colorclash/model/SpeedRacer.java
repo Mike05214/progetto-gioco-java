@@ -4,6 +4,7 @@ import java.awt.Polygon;
 import java.awt.Shape;
 
 import java.util.Random;
+import src.colorclash.utils.Config;
 
 public class SpeedRacer extends Obstacle {
 
@@ -13,7 +14,7 @@ public class SpeedRacer extends Obstacle {
     private static final Random random = new Random();
 
     // costanti
-    private final int SPEEDRACER_POINTS = 200;
+    private final int SPEEDRACER_POINTS = Config.getInstance().getIntProperty("speed_racer_points");
 
     public SpeedRacer(int startX, int startY, double speed, int colorId, int width, int height) {
         super(startX, startY, speed, colorId, width, height);

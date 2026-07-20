@@ -23,7 +23,6 @@ public class GameSpace extends JPanel {
     // variabili d'istanza
     private JButton restartButton;
     private GameModel model;
-    private MainFrame frame;
     private Color[] colorPalette = {
             Color.RED, // ID 0
             Color.GREEN, // ID 1
@@ -44,10 +43,9 @@ public class GameSpace extends JPanel {
     private final int LEGEND_STROKE_NEW_START = 2;
     private final int LEGEND_STROKE_RESIZE = 4;
 
-    public GameSpace(MainFrame frame, GameModel model) {
+    public GameSpace() {
         setBackground(Color.BLACK);
-        this.model = model;
-        this.frame = frame;
+        this.model = GameModel.getInstance();
         this.setLayout(new GridBagLayout());
         restartButton = new JButton("BACK TO MENU");
         restartButton.setFont(new Font("Arial", Font.BOLD, RESTART_BUTTON_FONT_SIZE));

@@ -33,13 +33,13 @@ public class GamePanel extends JPanel {
     private final int SECONDS_LEFT = 3;
     private final int NEW_COLOR_LABEL_VISIBLE_DELAY = 500;
 
-    public GamePanel(MainFrame frame,GameModel model) {
-        this.model = model;
+    public GamePanel(MainFrame frame) {
+        this.model = GameModel.getInstance();
         this.frame = frame;
         this.lastPhase = model.getPhase();
         setLayout(new BorderLayout());
         initGameLoop();
-        initHudPanel(frame);
+        initHudPanel();
         initGameSpace();
         initSetupListeners();
 
@@ -73,7 +73,7 @@ public class GamePanel extends JPanel {
     }// fine initGameLoop
 
     private void initGameSpace() {
-        this.gameSpace = new GameSpace(this.frame, this.model);
+        this.gameSpace = new GameSpace();
         gameSpace.getRestarButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -88,8 +88,8 @@ public class GamePanel extends JPanel {
         this.add(gameSpace, BorderLayout.CENTER);
     }// fine initGameSpace
 
-    private void initHudPanel(MainFrame frame) {
-        this.hudPanel = new HudPanel(frame);
+    private void initHudPanel() {
+        this.hudPanel = new HudPanel();
         hudPanel.getPauseButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

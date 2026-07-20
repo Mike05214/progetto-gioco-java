@@ -1,7 +1,6 @@
 #WINDOW
 frame_width=700
 frame_height=900
-scale_factor=0.7071
 color_cooldown=20
 
 #PLAYER
@@ -11,17 +10,19 @@ player_speed=2.5
 player_width=70
 player_height=80
 
-
 #OBSTACLES
 obstacle_base_speed=3.0
-standard_obstacle_points=100
+default_obstacle_points=100
 speed_racer_multiplier=2.0
-sinusoidal_amplitude=50
+speed_racer_points=200
+sinusoidal_madness_amplitude=80
+sinusoidal_madness_color_change_interval=62 
+sinusoidal_madness_points=300
 
 #DIFFICULTY_PROGRESSION
 obstacle_spawn_rate_ms=62
-phase_2_score_threshold=5000
-phase_3_score_threshold=10000
+phase_2_score_threshold=200
+phase_3_score_threshold=400
 score_delay=1000
 score_default_gain=100
 speed_phase_multiplier=1.35

@@ -1,6 +1,7 @@
 package src.colorclash.model;
 
 import java.awt.Shape;
+import src.colorclash.utils.Config;
 
 public abstract class Obstacle {
     // variabili d'istanza ereditabili
@@ -13,7 +14,7 @@ public abstract class Obstacle {
     protected boolean isActive;
 
     // costanti
-    private final int DEFAULT_OBSTACLE_POINTS = 100;
+    private final int DEFAULT_OBSTACLE_POINTS = Config.getInstance().getIntProperty("default_obstacle_points");
 
     public Obstacle(int startX, int startY, double speed, int colorId, int width, int height) {
         this.x = startX;

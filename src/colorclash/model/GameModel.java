@@ -26,17 +26,20 @@ public class GameModel {
     private int invulnTimer = 0;
     private Random random;
     private int frameCounter = 0;
-    private int spawnInterval = Config.getInstance().getIntProperty("obstacle_spawn_rate_ms"); // 125 frame = 2 secondo (se il timer è a 8ms)
+    private int spawnInterval = Config.getInstance().getIntProperty("obstacle_spawn_rate_ms"); // 125 frame = 2 secondo
+                                                                                               // (se il timer è a 8ms)
     private double currentFallSpeed = Config.getInstance().getDoubleProperty("obstacle_base_speed");
     private int currentPhase = 1;
     private List<Particle> particles = new ArrayList<>();
     private List<FloatingScore> floatingScores = new ArrayList<>();
     private int availableColorsCount = 2;
     private SaveManager saveManager;
+    private Config config;
+    private static GameModel model = null;
 
     // costanti
-    private final int START_X = Config.getInstance().getIntProperty("player_start_x"); 
-    private final int START_Y = Config.getInstance().getIntProperty("player_start_y"); 
+    private final int START_X = Config.getInstance().getIntProperty("player_start_x");
+    private final int START_Y = Config.getInstance().getIntProperty("player_start_y");
     private final int MIN_X = 0;
     private final int MIN_Y = 0;
     private final int OBSTACLE_START_Y = -150;
@@ -56,7 +59,15 @@ public class GameModel {
     private final int MIN_PARTICLES = 5;
     private final int MAX_PARTICLES = 12;
     private final int EXPLOSION_OFFSET = 20;
-    private final int MAX_LIVES = 3; 
+    private final int MAX_LIVES = 3;
+
+    // METODI STATICI
+    public static GameModel getInstance() {
+        if (model == null) {
+            model = new GameModel();
+        }
+        return model;
+    }
 
     // METODI PRIVATI
 
@@ -67,7 +78,7 @@ public class GameModel {
     private void initGame() {
         this.player = new Player(START_X, START_Y, START_COLOR_ID);
         this.enemies = new ArrayList<>();
-        this.lives = MAX_LIVES; 
+        this.lives = MAX_LIVES;
         this.isGameOver = false;
         this.random = new Random();
         this.saveManager = new SaveManager();
@@ -264,7 +275,8 @@ public class GameModel {
         // Salviamo lo stato solo se il giocatore è in partita e non ha già perso.
         // (Non ha senso salvare una partita in stato di Game Over)
         if (!this.isGameOver) {
-            saveManager.writeGameState(this.score, this.lives, this.currentPhase, this.currentFallSpeed, this.availableColorsCount, this.player, this.enemies);
+            saveManager.writeGameState(this.score, this.lives, this.currentPhase, this.currentFallSpeed,
+                    this.availableColorsCount, this.player, this.enemies);
         }
     }
 
@@ -359,7 +371,7 @@ public class GameModel {
         return this.currentPhase;
     }
 
-    public double getCurrentSpeed(){
+    public double getCurrentSpeed() {
         return this.currentFallSpeed;
     }
 
@@ -393,11 +405,11 @@ public class GameModel {
         this.currentPhase = phase;
     }
 
-    public void setCurrentSpeed(double currentSpeed){
+    public void setCurrentSpeed(double currentSpeed) {
         this.currentFallSpeed = currentSpeed;
     }
 
-    public void setAvaibleColors(int avaibleColors){
+    public void setAvaibleColors(int avaibleColors) {
         this.availableColorsCount = avaibleColors;
     }
 

@@ -1,6 +1,7 @@
 package src.colorclash.view;
 
 import src.colorclash.model.GameModel;
+import src.colorclash.view.MainFrame;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -19,29 +20,31 @@ public class PausePanel extends BaseMenuPanel {
     private JButton backToMenuButton;
     private JButton saveAndExitButton;
     private JButton resumeButton;
+    private MainFrame frame;
 
     // costanti
     private final int ROW_0 = 0;
     private final int ROW_1 = 1;
     private final int ROW_2 = 2;
 
-    public PausePanel(MainFrame frame, GameModel model) { // il model da resettare è quello del gamePanel che infatti
+    public PausePanel(MainFrame frame) { // il model da resettare è quello del gamePanel che infatti
                                                           // gli viene passato come parametro
         super();
-        this.model = model; // è quello del gamePanel
+        this.model = GameModel.getInstance(); // è quello del gamePanel
+        this.frame = frame;
         setBackground(Color.BLACK);
         initTitleLabel("PAUSE", Color.ORANGE);
 
-        this.resumeButton = initResumeButton(frame);
-        this.backToMenuButton = initBackToMenuButton(frame);
-        this.saveAndExitButton = initSaveAndExitButton(frame);
+        this.resumeButton = initResumeButton();
+        this.backToMenuButton = initBackToMenuButton();
+        this.saveAndExitButton = initSaveAndExitButton();
 
         addComponentToCenter(resumeButton, ROW_0, true);
         addComponentToCenter(backToMenuButton, ROW_1, true);
         addComponentToCenter(saveAndExitButton, ROW_2, true);
     }// fine costruttore
 
-    private JButton initResumeButton(MainFrame frame) {
+    private JButton initResumeButton() {
         JButton resume = new JButton("RESUME");
         resume.setFont(new Font("Arial", Font.BOLD, BUTTON_TEXT_SIZE));
         resume.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
@@ -56,7 +59,7 @@ public class PausePanel extends BaseMenuPanel {
         return resume;
     }// fine initResumeButton
 
-    private JButton initBackToMenuButton(MainFrame frame) {
+    private JButton initBackToMenuButton() {
         JButton backToMenu = new JButton("BACK TO MENU");
         backToMenu.setFont(new Font("Arial", Font.BOLD, BUTTON_TEXT_SIZE));
         backToMenu.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
@@ -72,7 +75,7 @@ public class PausePanel extends BaseMenuPanel {
         return backToMenu;
     }// fine initBackToMenuButton
 
-    private JButton initSaveAndExitButton(MainFrame frame) {
+    private JButton initSaveAndExitButton() {
         JButton saveAndExit = new JButton("SAVE AND EXIT");
         saveAndExit.setFont(new Font("Arial", Font.BOLD, BUTTON_TEXT_SIZE));
         saveAndExit.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));

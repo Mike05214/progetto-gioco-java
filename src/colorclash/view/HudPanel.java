@@ -25,7 +25,6 @@ import java.io.File;
 public class HudPanel extends JPanel {
 
     // variabili d'istanza
-    private MainFrame frame;
     private JButton pauseButton;
     private JLabel scoreLabel;
     private JPanel livesContainer;
@@ -53,8 +52,7 @@ public class HudPanel extends JPanel {
     private final int H_LABELS_BORDER_BOTTOM = 0;
     private final int H_LABELS_BORDER_RIGHT = 0;
 
-    public HudPanel(MainFrame frame) {
-        this.frame = frame;
+    public HudPanel() {
         this.setLayout(new BorderLayout());
         this.setBackground(Color.DARK_GRAY);
         this.setPreferredSize(new Dimension(HUD_WIDTH, HUD_HEIGHT));

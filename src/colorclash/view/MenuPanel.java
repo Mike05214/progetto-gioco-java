@@ -20,7 +20,8 @@ public class MenuPanel extends BaseMenuPanel {
     private JButton resumeButton;
     private JButton playButton;
     private JButton deleteSaveButton;
-    private GameModel model; 
+    private GameModel model;
+    private MainFrame frame; 
    
 
     // costanti
@@ -30,11 +31,12 @@ public class MenuPanel extends BaseMenuPanel {
     private final int ROW_2 = 2;
     private final int ROW_3 = 3;
 
-    public MenuPanel(MainFrame frame, GameModel model) {
+    public MenuPanel(MainFrame frame) {
         super();
-        this.model = model;
+        this.model = GameModel.getInstance();
+        this.frame= frame;
         setBackground(Color.DARK_GRAY);
-        initButtons(frame);
+        initButtons();
         initTitleLabel("COLOR CLASH", Color.YELLOW);
         addComponentToCenter(playButton, ROW_0, true);
         addComponentToCenter(resumeButton, ROW_1, true);
@@ -46,7 +48,7 @@ public class MenuPanel extends BaseMenuPanel {
         highScoreLabel.setText("High Score: " + model.getHighscore());
     }// fine updateHighScoreDisplay
 
-    public void initButtons(MainFrame frame) {
+    public void initButtons() {
         playButton = new JButton("PLAY");
         playButton.setFont(new Font("Arial", Font.BOLD, BUTTON_TEXT_SIZE));
         playButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
