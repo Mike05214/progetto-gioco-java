@@ -7,7 +7,7 @@ color_cooldown=20
 #PLAYER
 player_start_x=325
 player_start_y=550
-player_speed=3
+player_speed=2.5
 player_width=70
 player_height=80
 
