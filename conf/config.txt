@@ -13,14 +13,14 @@ player_height=80
 
 
 #OBSTACLES
-obstacle_base_speed=
+obstacle_base_speed=3.0
 standard_obstacle_points=100
 speed_racer_multiplier=2.0
 sinusoidal_amplitude=50
 
 #DIFFICULTY_PROGRESSION
-obstacle_spawn_rate_ms=
-phase_2_score_threshold=500
+obstacle_spawn_rate_ms=62
+phase_2_score_threshold=5000
 phase_3_score_threshold=10000
 score_delay=1000
 score_default_gain=100

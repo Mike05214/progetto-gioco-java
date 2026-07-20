@@ -12,8 +12,8 @@ public class Player {
     private double y;
     private long lastColorChange = 0;
     private long currentTime = 0;
-    private final double SCALE_FACTOR = 0.7071;
-    private final long COLOR_COOLDOWN = 20;
+    private final double SCALE_FACTOR = Config.getInstance().getDoubleProperty("scale_factor");
+    private final long COLOR_COOLDOWN = Config.getInstance().getIntProperty("color_cooldown");
     private final double PLAYER_SPEED = Config.getInstance().getDoubleProperty("player_speed"); 
     private final int PLAYER_WIDTH = Config.getInstance().getIntProperty("player_width");
     private final int PLAYER_HEIGHT = Config.getInstance().getIntProperty("player_height");

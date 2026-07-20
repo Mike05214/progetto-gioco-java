@@ -26,8 +26,8 @@ public class GameModel {
     private int invulnTimer = 0;
     private Random random;
     private int frameCounter = 0;
-    private int spawnInterval = 62; // 125 frame = 2 secondo (se il timer è a 8ms)
-    private double currentFallSpeed = 3.0;
+    private int spawnInterval = Config.getInstance().getIntProperty("obstacle_spawn_rate_ms"); // 125 frame = 2 secondo (se il timer è a 8ms)
+    private double currentFallSpeed = Config.getInstance().getDoubleProperty("obstacle_base_speed");
     private int currentPhase = 1;
     private List<Particle> particles = new ArrayList<>();
     private List<FloatingScore> floatingScores = new ArrayList<>();
@@ -42,11 +42,11 @@ public class GameModel {
     private final int OBSTACLE_START_Y = -150;
     private final int START_COLOR_ID = 0;
     private final int TICK_TIME = 8;
-    private final int SCORE_DELAY = 1000; // in ms
-    private final int SCORE_PHASE_2 = 5000; // points
-    private final int SCORE_PHASE_3 = 10000; // points
-    private final double SPEED_PHASE_MULTIPLIER = 1.35;
-    private final double SPEEDRACER_MULTIPLIER = 1.5;
+    private final int SCORE_DELAY = Config.getInstance().getIntProperty("score_delay");
+    private final int SCORE_PHASE_2 = Config.getInstance().getIntProperty("phase_2_score_threshold");
+    private final int SCORE_PHASE_3 = Config.getInstance().getIntProperty("phase_3_score_threshold");
+    private final double SPEED_PHASE_MULTIPLIER = Config.getInstance().getDoubleProperty("speed_phase_multiplier");
+    private final double SPEEDRACER_MULTIPLIER = Config.getInstance().getDoubleProperty("speed_racer_multiplier");
     private final int MAX_INVULN_FRAMES = 125; // 125 frame a 125fps = 1 secondi invulerabile
     private final int DEFAULT_GAIN = 100;
     private final int MAX_CHANCE = 100;
