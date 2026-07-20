@@ -10,7 +10,9 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 
 import src.colorclash.model.GameModel;
+import src.colorclash.utils.AudioManager;
 import src.colorclash.utils.SaveManager;
+import src.colorclash.utils.AudioManager;
 
 import java.io.File;
 
@@ -55,6 +57,7 @@ public class MenuPanel extends BaseMenuPanel {
         playButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                AudioManager.getInstance().playBackgroundMusic("sample-15s.wav");
                 frame.changeFrame("GAME");
                 model.resetGame();
                 frame.getGamePanel().resetGamePanel();

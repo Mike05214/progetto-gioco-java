@@ -103,6 +103,9 @@ public class GameModel {
         checkCollisions();
         updateSurvivalScore();
         if (isGameOver) {
+            AudioManager.getInstance().stopBackgroundMusic();
+            AudioManager.getInstance().playSoundEffect("game_over.wav");
+
             if (score > saveManager.getHighscore()) {
                 saveManager.writeHighscore(score);
             }
@@ -257,7 +260,7 @@ public class GameModel {
             if (!playerArea.isEmpty()) {
 
                 if (player.getColorId() == obs.getColorId()) {
-                    AudioManager.getInstance().playSoundEffect("baseball_hit.wav");
+                    AudioManager.getInstance().playSoundEffect("hit.wav");
                     createExplosion(obs.getX(), obs.getY() - EXPLOSION_OFFSET, obs.getColorId());
                     floatingScores.add(new FloatingScore(obs.getX(), obs.getY(), obs.getPoints()));
                     addScore(obs.getPoints());
@@ -267,6 +270,9 @@ public class GameModel {
 
                     if (!isInvulnerable) {
                         decreaseLives();
+                        if (!isGameOver) {
+                            AudioManager.getInstance().playSoundEffect("hurt.wav");
+                        }
                         isInvulnerable = true;
                     }
                 }

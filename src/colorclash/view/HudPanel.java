@@ -1,5 +1,6 @@
 package src.colorclash.view;
 
+import src.colorclash.utils.AudioManager;
 import src.colorclash.utils.Config;
 
 import java.awt.BorderLayout;
@@ -19,6 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.BorderFactory;
 
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioInputStream;
 
 import java.io.File;
 
@@ -163,6 +165,7 @@ public class HudPanel extends JPanel {
 
     public void restoreScoreLabel(int currentScore) {
         scoreLabel.setText("SCORE: " + currentScore);
+        
     }// fine restoreScoreLabel
 
     public void hideNewColorUnlocked() {

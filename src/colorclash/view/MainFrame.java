@@ -41,9 +41,8 @@ public class MainFrame extends JFrame {
 
         if (panelName.equals("GAME")) {
             mainPanel.getComponent(1).requestFocusInWindow();
-            AudioManager.getInstance().playBackgroundMusic("sample-15s.wav");
         }
-        if (panelName.equals("MENU")) {
+        if (panelName.equals("MENU")||panelName.equals("PAUSE")) {
             AudioManager.getInstance().stopBackgroundMusic();
         }
     }

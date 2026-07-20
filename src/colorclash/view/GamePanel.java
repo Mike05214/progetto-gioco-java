@@ -1,6 +1,7 @@
 package src.colorclash.view;
 
 import src.colorclash.model.GameModel;
+import src.colorclash.utils.AudioManager;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -211,6 +212,7 @@ public class GamePanel extends JPanel {
                     } else {
                         hudPanel.restoreScoreLabel(model.getScore());
                     }
+                    AudioManager.getInstance().playBackgroundMusic("sample-15s.wav");
                     gameLoop.start();
                     hudPanel.getPauseButton().setEnabled(true);
                     isResuming = false;
