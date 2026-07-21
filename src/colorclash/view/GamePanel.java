@@ -234,7 +234,9 @@ public class GamePanel extends JPanel {
                 tickCount++;
                 visible = !visible;
                 if (visible) {
+                    
                     hudPanel.showNewColorUnlocked();
+                    AudioManager.getInstance().playSoundEffect("notification.wav");
                     gameSpace.createBorder(model.getPhase());
                 } else {
                     hudPanel.hideNewColorUnlocked();
@@ -251,6 +253,7 @@ public class GamePanel extends JPanel {
             }
         });
         alertTimer.start();
+        
     }
 
     public void stopBlinking() {
