@@ -79,7 +79,6 @@ public class MenuPanel extends BaseMenuPanel {
                 AudioManager.getInstance().stopBackgroundMusic();
                 model.getSaveManager().loadGameState(model);
                 frame.changeFrame("GAME");
-                AudioManager.getInstance().playSoundEffect("race_countdown.wav");
                 frame.getGamePanel().resumeCountdown();
             }
         });

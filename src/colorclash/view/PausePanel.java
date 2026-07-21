@@ -55,7 +55,6 @@ public class PausePanel extends BaseMenuPanel {
             public void actionPerformed(ActionEvent e) {
                 AudioManager.getInstance().stopBackgroundMusic();
                 frame.changeFrame("GAME");
-                AudioManager.getInstance().playSoundEffect("race_countdown.wav");
                 frame.getGamePanel().resumeCountdown();
             }
         });

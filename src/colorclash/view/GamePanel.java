@@ -221,6 +221,7 @@ public class GamePanel extends JPanel {
         });
         countdown.setInitialDelay(RESUME_COOLDOWN_DELAY);
         countdown.start();
+        AudioManager.getInstance().playSoundEffect("race_countdown.wav");
     }// fine resumeCountdown
 
     public void newColorUnlockedCountdown() {
@@ -241,7 +242,7 @@ public class GamePanel extends JPanel {
                     hudPanel.hideNewColorUnlocked();
                     gameSpace.deleteBorder();
                 }
-                
+
                 if (tickCount >= 8) {
                     ((Timer) e.getSource()).stop();
                     gameSpace.deleteBorder();
