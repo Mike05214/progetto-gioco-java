@@ -1,6 +1,7 @@
 package src.colorclash.main;
 
 import src.colorclash.view.MainFrame;
+import src.colorclash.utils.AudioManager;
 
 public class Main {
     public static void main(String[] args) {
@@ -14,6 +15,8 @@ public class Main {
                 mainFrame.setVisible(true);
             }
         });
+        AudioManager.getInstance().playBackgroundMusic("menu.wav");
+
 
     }// fine main
 }// fine classe Main

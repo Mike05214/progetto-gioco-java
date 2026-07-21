@@ -1,6 +1,7 @@
 package src.colorclash.view;
 
 import src.colorclash.model.GameModel;
+import src.colorclash.utils.AudioManager;
 import src.colorclash.view.MainFrame;
 
 import java.awt.Color;
@@ -52,7 +53,9 @@ public class PausePanel extends BaseMenuPanel {
         resume.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                AudioManager.getInstance().stopBackgroundMusic();
                 frame.changeFrame("GAME");
+                AudioManager.getInstance().playSoundEffect("race_countdown.wav");
                 frame.getGamePanel().resumeCountdown();
             }
         });

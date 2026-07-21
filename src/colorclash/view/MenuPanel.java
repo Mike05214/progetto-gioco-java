@@ -57,6 +57,7 @@ public class MenuPanel extends BaseMenuPanel {
         playButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                AudioManager.getInstance().stopBackgroundMusic();
                 AudioManager.getInstance().playBackgroundMusic("sample-15s.wav");
                 frame.changeFrame("GAME");
                 model.resetGame();
@@ -75,8 +76,10 @@ public class MenuPanel extends BaseMenuPanel {
         resumeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                AudioManager.getInstance().stopBackgroundMusic();
                 model.getSaveManager().loadGameState(model);
                 frame.changeFrame("GAME");
+                AudioManager.getInstance().playSoundEffect("race_countdown.wav");
                 frame.getGamePanel().resumeCountdown();
             }
         });

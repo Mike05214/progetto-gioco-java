@@ -44,7 +44,17 @@ public class MainFrame extends JFrame {
         }
         if (panelName.equals("MENU")||panelName.equals("PAUSE")) {
             AudioManager.getInstance().stopBackgroundMusic();
+            
         }
+        if (panelName.equals("PAUSE")) {
+            AudioManager.getInstance().playBackgroundMusic("pause.wav");
+            
+        }
+        if (panelName.equals("MENU")) {
+            AudioManager.getInstance().playBackgroundMusic("menu.wav");
+            
+        }
+        
     }
 
     private void initialSettings() {
