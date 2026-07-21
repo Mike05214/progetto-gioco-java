@@ -30,8 +30,8 @@ public class GamePanel extends JPanel {
 
     // costanti
     private final int DELAY = 8;
-    private final int RESUME_COOLDOWN_DELAY = 1000;
-    private final int SECONDS_LEFT = 3;
+    private final int RESUME_COOLDOWN_DELAY = 800;
+    private final int COUNT_LEFT = 3;
     private final int NEW_COLOR_LABEL_VISIBLE_DELAY = 500;
 
     public GamePanel(MainFrame frame) {
@@ -195,9 +195,9 @@ public class GamePanel extends JPanel {
         isResuming = true;
         gameLoop.stop(); // per colpa del setVisible
         hudPanel.getPauseButton().setEnabled(false);
-        hudPanel.showCountdown(SECONDS_LEFT);
+        hudPanel.showCountdown(COUNT_LEFT);
         Timer countdown = new Timer(RESUME_COOLDOWN_DELAY, new ActionListener() { 
-            int count = 3;
+            int count = COUNT_LEFT;
             @Override
             public void actionPerformed(ActionEvent e) {
                 count--;
@@ -219,7 +219,6 @@ public class GamePanel extends JPanel {
                 }
             }
         });
-        countdown.setInitialDelay(RESUME_COOLDOWN_DELAY);
         AudioManager.getInstance().playSoundEffect("race_countdown.wav");
         countdown.start();
         
