@@ -35,27 +35,22 @@ public class MainFrame extends JFrame {
     }// fine costruttore
 
     public void changeFrame(String panelName) {
-        // Se stiamo per mostrare il menu, aggiorniamo il bottone
 
         cardLayout.show(mainPanel, panelName);
 
         if (panelName.equals("GAME")) {
             mainPanel.getComponent(1).requestFocusInWindow();
         }
-        if (panelName.equals("MENU")||panelName.equals("PAUSE")) {
-            AudioManager.getInstance().stopBackgroundMusic();
-            
-        }
         if (panelName.equals("PAUSE")) {
+            AudioManager.getInstance().stopBackgroundMusic();
             AudioManager.getInstance().playBackgroundMusic("pause.wav");
             
         }
         if (panelName.equals("MENU")) {
+            AudioManager.getInstance().stopBackgroundMusic();
             AudioManager.getInstance().playBackgroundMusic("menu.wav");
-            
         }
-        
-    }
+    }// fine changeFrame
 
     private void initialSettings() {
         setTitle("Color Clash");

@@ -233,8 +233,7 @@ public class GamePanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 tickCount++;
                 visible = !visible;
-                if (visible) {
-                    
+                if (visible && !model.isGameOver()) {
                     hudPanel.showNewColorUnlocked();
                     AudioManager.getInstance().playSoundEffect("notification.wav");
                     gameSpace.createBorder(model.getPhase());
@@ -242,7 +241,7 @@ public class GamePanel extends JPanel {
                     hudPanel.hideNewColorUnlocked();
                     gameSpace.deleteBorder();
                 }
-
+                
                 if (tickCount >= 8) {
                     ((Timer) e.getSource()).stop();
                     gameSpace.deleteBorder();
