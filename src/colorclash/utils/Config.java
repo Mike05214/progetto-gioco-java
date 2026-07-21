@@ -18,7 +18,14 @@ public class Config {
     // CAMPI ISTANZA
     private Properties properties;
 
-    // Costruttore privato (Design Pattern Singleton)
+    // METODI STATICI
+    public static Config getInstance() {
+        if (config == null) {
+            config = new Config();
+        }
+        return config;
+    }
+    
     private Config() {
         BufferedReader buffRead = null;
         try {
@@ -74,31 +81,22 @@ public class Config {
         return properties.getProperty(key);
     }
 
-    // (Opzionale) Metodo helper per prendere direttamente gli interi e non dover
-    // fare
-    // Integer.parseInt(...) ogni singola volta in giro per le altre classi
     public int getIntProperty(String key) {
         String value = properties.getProperty(key);
         if (value != null) {
-            return Integer.parseInt(value.trim()); // trim() toglie eventuali spazi vuoti
+            return Integer.valueOf(value.trim());
         }
-        return 0; // Valore di default se la chiave non esiste
+        return 0;
     }
 
     public Double getDoubleProperty(String key) {
         String value = properties.getProperty(key);
         if (value != null) {
-            return Double.parseDouble(value.trim()); // trim() toglie eventuali spazi vuoti
+            return Double.valueOf(value.trim());
         }
-        return 0.0; // Valore di default se la chiave non esiste
+        return 0.0;
     }
 
-    // METODI STATICI
-    public static Config getInstance() {
-        if (config == null) {
-            config = new Config();
-        }
-        return config;
-    }
+    
 
 } // end class

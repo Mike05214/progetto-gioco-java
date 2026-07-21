@@ -3,6 +3,7 @@ package src.colorclash.utils;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -32,7 +33,7 @@ public class SaveManager {
     }
 
     public SaveManager() {
-        // 1. Crea la cartella e il file vuoto al primo avvio
+        // MANTENUTO: Crea la cartella e il file vuoto al primo avvio
         File cartellaSalvataggi = new File("saves");
         if (!cartellaSalvataggi.exists()) {
             cartellaSalvataggi.mkdirs();
@@ -42,7 +43,6 @@ public class SaveManager {
         if (!fileHighscore.exists()) {
             try {
                 fileHighscore.createNewFile();
-                // Scriviamo uno "0" iniziale se il file è appena stato creato
                 writeHighscore(0);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -50,28 +50,28 @@ public class SaveManager {
         }
     }
 
-    // LETTURA DEL FILE (basato sull'Esercizio 1a del prof)
     public int getHighscore() {
         int score = 0;
         BufferedReader buffRead = null;
 
         try {
-            // Incapsulamento degli stream per la lettura dei caratteri
             buffRead = new BufferedReader(
                     new InputStreamReader(
-                            new FileInputStream(highscoreFilePath), charset)); // [cite: 7]
+                            new FileInputStream(highscoreFilePath), charset));
 
-            String line = buffRead.readLine(); // [cite: 7]
-            if (line != null && !line.isEmpty()) { // [cite: 7]
-                score = Integer.parseInt(line.trim());
+            String line = buffRead.readLine();
+            if (line != null && !line.isEmpty()) {
+                // MODIFICATO: Stile del prof (valueOf)
+                score = Integer.valueOf(line.trim());
             }
-        } catch (IOException ioe) { // [cite: 7]
-            ioe.printStackTrace(); // [cite: 7]
+        } catch (FileNotFoundException fnfe) { // MODIFICATO: catch separati come il prof
+            fnfe.printStackTrace();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
         } finally {
-            // Chiusura sicura dello stream
             try {
                 if (buffRead != null)
-                    buffRead.close(); // [cite: 7]
+                    buffRead.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -80,27 +80,25 @@ public class SaveManager {
         return score;
     }
 
-    // SCRITTURA DEL FILE (basato sull'Esercizio 1c del prof)
     public void writeHighscore(int newScore) {
         PrintWriter printWriter = null;
 
         try {
-            // Incapsulamento degli stream per la scrittura dei caratteri
             printWriter = new PrintWriter(
                     new BufferedWriter(
                             new OutputStreamWriter(
                                     new FileOutputStream(highscoreFilePath), charset)),
-                    true); // [cite: 7]
+                    true);
 
-            // Scriviamo il nuovo punteggio nel file
-            printWriter.print(String.valueOf(newScore)); // [cite: 7]
+            printWriter.print(String.valueOf(newScore));
 
+        } catch (FileNotFoundException fnfe) { // MODIFICATO: catch separati
+            fnfe.printStackTrace();
         } catch (IOException ioe) {
             ioe.printStackTrace();
         } finally {
-            // Chiusura sicura dello stream
             if (printWriter != null) {
-                printWriter.close(); // [cite: 7]
+                printWriter.close();
             }
         }
     }
@@ -110,39 +108,38 @@ public class SaveManager {
         PrintWriter printWriter = null;
 
         try {
-            // Usiamo la stessa catena di flussi insegnata dal prof
             printWriter = new PrintWriter(
                     new BufferedWriter(
                             new OutputStreamWriter(
                                     new FileOutputStream(gameStatePath), charset)),
                     true);
 
-            // 1. Salviamo le variabili di base
-            printWriter.println("SCORE:" + score);
-            printWriter.println("LIVES:" + lives);
-            printWriter.println("PHASE:" + phase);
-            printWriter.println("CURRENT_SPEED:" + speed);
-            printWriter.println("AVAIBLE_COLORS:" + avaibleColors);
+            // MODIFICATO: Uso di print() + \r\n come fa il professore per i ritorni a capo
+            printWriter.print("SCORE:" + score + "\r\n");
+            printWriter.print("LIVES:" + lives + "\r\n");
+            printWriter.print("PHASE:" + phase + "\r\n");
+            printWriter.print("CURRENT_SPEED:" + speed + "\r\n");
+            printWriter.print("AVAIBLE_COLORS:" + avaibleColors + "\r\n");
 
-            // 2. Salviamo il Player (X, Y, ID Colore)
-            printWriter.println("PLAYER:" + player.getX() + "," + player.getY() + "," + player.getColorId());
+            // MODIFICATO: Uso del punto e virgola ; come separatore di token
+            printWriter.print("PLAYER:" + player.getX() + ";" + player.getY() + ";" + player.getColorId() + "\r\n");
 
-            // Salviamo tutti i nemici presenti a schermo
             for (Obstacle obs : enemies) {
                 String tipo = obs.getClass().getSimpleName();
 
-                // Struttura: TIPO, X, Y, SPEED, COLOR_ID, WIDTH, HEIGHT
-                printWriter.println("OBSTACLE:" + tipo + "," +
-                        obs.getX() + "," +
-                        obs.getY() + "," +
-                        obs.getFallSpeed() + "," +
-                        obs.getColorId() + "," +
-                        obs.getWidth() + "," +
-                        obs.getHeight());
+                printWriter.print("OBSTACLE:" + tipo + ";" +
+                        obs.getX() + ";" +
+                        obs.getY() + ";" +
+                        obs.getFallSpeed() + ";" +
+                        obs.getColorId() + ";" +
+                        obs.getWidth() + ";" +
+                        obs.getHeight() + "\r\n");
             }
 
             System.out.println("Stato della partita congelato e salvato!");
 
+        } catch (FileNotFoundException fnfe) {
+            fnfe.printStackTrace();
         } catch (IOException ioe) {
             ioe.printStackTrace();
         } finally {
@@ -153,69 +150,65 @@ public class SaveManager {
     }
 
     public boolean loadGameState(GameModel model) {
-        File file = new File("saves/gamestate.txt");
+        String gameStatePath = "saves/gamestate.txt";
+        File file = new File(gameStatePath);
 
-        // Se il file non esiste, significa che non c'è una partita da riprendere
+        // MANTENUTO
         if (!file.exists()) {
             return false;
         }
 
         BufferedReader buffRead = null;
         try {
-            // La catena di lettura del prof
             buffRead = new BufferedReader(
                     new InputStreamReader(
-                            new FileInputStream(file), charset));
+                            new FileInputStream(gameStatePath), charset));
 
-            String line;
-            model.getEnemies().clear(); // Svuotiamo i nemici attuali prima di caricare i vecchi
+            // MODIFICATO: dichiarazione var a null prima del while (come il prof)
+            String line = null; 
+            model.getEnemies().clear(); 
 
             while ((line = buffRead.readLine()) != null) {
 
-                // Analizziamo riga per riga in base alla "targhetta" che abbiamo messo
                 if (line.startsWith("SCORE:")) {
-                    int savedScore = Integer.parseInt(line.split(":")[1]); // legge i valori trasformando le stringhe in
-                                                                           // int
-                    model.setScore(savedScore); // Devi creare questo setter nel GameModel
+                    // MODIFICATO: valueOf
+                    int savedScore = Integer.valueOf(line.split(":")[1]); 
+                    model.setScore(savedScore);
 
                 } else if (line.startsWith("LIVES:")) {
-                    int savedLives = Integer.parseInt(line.split(":")[1]);// legge i valori trasformando le stringhe in
-                                                                          // int
-                    model.setLives(savedLives); // Devi creare questo setter nel GameModel
+                    int savedLives = Integer.valueOf(line.split(":")[1]);
+                    model.setLives(savedLives);
 
                 } else if (line.startsWith("PHASE:")) {
-                    int savedPhase = Integer.parseInt(line.split(":")[1]);// legge i valori trasformando le stringhe in
-                                                                          // int
-                    model.setPhase(savedPhase); // Devi creare questo setter nel GameModel
+                    int savedPhase = Integer.valueOf(line.split(":")[1]);
+                    model.setPhase(savedPhase);
 
                 } else if(line.startsWith("CURRENT_SPEED:")){
-                    
-                    double savedSpeed = Double.parseDouble(line.split(":")[1]);
+                    double savedSpeed = Double.valueOf(line.split(":")[1]); 
                     model.setCurrentSpeed(savedSpeed);
 
                 } else if (line.startsWith("AVAIBLE_COLORS:")){
-                    int savedColors = Integer.parseInt(line.split(":")[1]);
+                    int savedColors = Integer.valueOf(line.split(":")[1]);
                     model.setAvaibleColors(savedColors);
                     
                 } else if (line.startsWith("PLAYER:")) {
-                    String[] dati = line.split(":")[1].split(",");
-                    model.getPlayer().setX(Integer.parseInt(dati[0]));
-                    model.getPlayer().setY(Integer.parseInt(dati[1]));
-                    model.getPlayer().setColorId(Integer.parseInt(dati[2]));
+                    // MODIFICATO: Recupero con il ;
+                    String[] dati = line.split(":")[1].split(";"); 
+                    model.getPlayer().setX(Integer.valueOf(dati[0]));
+                    model.getPlayer().setY(Integer.valueOf(dati[1]));
+                    model.getPlayer().setColorId(Integer.valueOf(dati[2]));
 
                 } else if (line.startsWith("OBSTACLE:")) {
-                    String[] dati = line.split(":")[1].split(",");
+                    String[] dati = line.split(":")[1].split(";"); 
 
-                    // Spacchettiamo l'array esattamente nell'ordine in cui l'abbiamo salvato
                     String tipo = dati[0];
-                    int x = Integer.parseInt(dati[1]);
-                    int y = Integer.parseInt(dati[2]);
-                    double speed = Double.parseDouble(dati[3]); // <-- Attenzione: parseDouble per la velocità!
-                    int colorId = Integer.parseInt(dati[4]);
-                    int width = Integer.parseInt(dati[5]);
-                    int height = Integer.parseInt(dati[6]);
+                    int x = Integer.valueOf(dati[1]);
+                    int y = Integer.valueOf(dati[2]);
+                    double speed = Double.valueOf(dati[3]); 
+                    int colorId = Integer.valueOf(dati[4]);
+                    int width = Integer.valueOf(dati[5]);
+                    int height = Integer.valueOf(dati[6]);
 
-                    // Ricreiamo l'ostacolo passando tutti i 6 parametri al costruttore
                     if (tipo.equals("StandardObstacle")) {
                         model.getEnemies().add(new StandardObstacle(x, y, speed, colorId, width, height));
                     } else if (tipo.equals("SpeedRacer")) {
@@ -226,14 +219,19 @@ public class SaveManager {
                 }
             }
 
-            // Una volta caricato, eliminiamo il file per evitare che il giocatore
-            // possa morire, chiudere forzatamente e ricaricare il vecchio salvataggio
+            // MANTENUTO
             file.delete();
             return true;
 
-        } catch (IOException | NumberFormatException e) {
-            e.printStackTrace();
-            return false; // Errore nella lettura
+        } catch (FileNotFoundException fnfe) { // MODIFICATO: Divisione precisa delle eccezioni
+            fnfe.printStackTrace();
+            return false;
+        } catch (IOException ioe) { 
+            ioe.printStackTrace();
+            return false; 
+        } catch (NumberFormatException nfe) { 
+            nfe.printStackTrace();
+            return false;
         } finally {
             try {
                 if (buffRead != null)
@@ -243,5 +241,4 @@ public class SaveManager {
             }
         }
     }
-
 }
