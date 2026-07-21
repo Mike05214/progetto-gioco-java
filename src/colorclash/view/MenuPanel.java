@@ -22,9 +22,9 @@ public class MenuPanel extends BaseMenuPanel {
     private JButton resumeButton;
     private JButton playButton;
     private JButton deleteSaveButton;
+    private JButton soundButton;
     private GameModel model;
-    private MainFrame frame; 
-   
+    private MainFrame frame;
 
     // costanti
     private final int HI_LABEL_SIZE = 18;
@@ -32,18 +32,20 @@ public class MenuPanel extends BaseMenuPanel {
     private final int ROW_1 = 1;
     private final int ROW_2 = 2;
     private final int ROW_3 = 3;
+    private final int ROW_4 = 4;
 
     public MenuPanel(MainFrame frame) {
         super();
         this.model = GameModel.getInstance();
-        this.frame= frame;
+        this.frame = frame;
         setBackground(Color.DARK_GRAY);
         initButtons();
         initTitleLabel("COLOR CLASH", Color.YELLOW);
         addComponentToCenter(playButton, ROW_0, true);
         addComponentToCenter(resumeButton, ROW_1, true);
         addComponentToCenter(deleteSaveButton, ROW_2, true);
-        addComponentToCenter(highScoreLabel, ROW_3, true);
+        addComponentToCenter(soundButton, ROW_3, true);
+        addComponentToCenter(highScoreLabel, ROW_4, true);
     }// fine costruttore
 
     public void updateHighScoreDisplay() {
@@ -72,7 +74,6 @@ public class MenuPanel extends BaseMenuPanel {
         resumeButton = new JButton("RESUME");
         resumeButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
         resumeButton.setFont(new Font("Arial", Font.BOLD, BUTTON_TEXT_SIZE));
-       
         resumeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -88,17 +89,34 @@ public class MenuPanel extends BaseMenuPanel {
         deleteSaveButton.setFont(new Font("Arial", Font.BOLD, BUTTON_TEXT_SIZE));
         deleteSaveButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e){
+            public void actionPerformed(ActionEvent e) {
                 File saveFile = new File("saves/gamestate.txt");
                 saveFile.delete();
                 deleteSaveButton.setEnabled(false);
                 resumeButton.setEnabled(false);
             }
-        }); 
+        });
         refreshResumeButton();
+
+        soundButton = new JButton("SOUND: ON");
+        soundButton.setFont(new Font("Arial", Font.BOLD, BUTTON_TEXT_SIZE)); // Usa le costanti che hai già
+        soundButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+        soundButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AudioManager.getInstance().toggleSound();
+                if (AudioManager.getInstance().isSoundEnabled()) {
+                    soundButton.setText("SOUND: ON");
+                    AudioManager.getInstance().playBackgroundMusic("menu.wav");
+                } else {
+                    soundButton.setText("SOUND: OFF");
+                }
+            }
+        });
+        
     }// fine initButtons
 
-    public void refreshResumeButton(){
+    public void refreshResumeButton() {
         File saveFile = new File("saves/gamestate.txt");
         resumeButton.setEnabled(saveFile.exists());
         deleteSaveButton.setEnabled(saveFile.exists());
