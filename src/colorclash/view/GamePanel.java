@@ -220,8 +220,9 @@ public class GamePanel extends JPanel {
             }
         });
         countdown.setInitialDelay(RESUME_COOLDOWN_DELAY);
-        countdown.start();
         AudioManager.getInstance().playSoundEffect("race_countdown.wav");
+        countdown.start();
+        
     }// fine resumeCountdown
 
     public void newColorUnlockedCountdown() {
