@@ -54,7 +54,7 @@ public class MenuPanel extends BaseMenuPanel {
 
     public void initButtons() {
         playButton = new JButton("PLAY");
-        playButton.setFont(new Font("Arial", Font.BOLD, BUTTON_TEXT_SIZE));
+        playButton.setFont(new Font("Impact", Font.PLAIN, BUTTON_TEXT_SIZE));
         playButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
         playButton.addActionListener(new ActionListener() {
             @Override
@@ -68,12 +68,12 @@ public class MenuPanel extends BaseMenuPanel {
         });
 
         highScoreLabel = new JLabel("High Score:" + model.getHighscore());
-        highScoreLabel.setFont(new Font("Arial", Font.PLAIN, HI_LABEL_SIZE));
+        highScoreLabel.setFont(new Font("Impact", Font.PLAIN, HI_LABEL_SIZE));
         highScoreLabel.setForeground(Color.WHITE);
 
         resumeButton = new JButton("RESUME");
         resumeButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
-        resumeButton.setFont(new Font("Arial", Font.BOLD, BUTTON_TEXT_SIZE));
+        resumeButton.setFont(new Font("Impact", Font.PLAIN, BUTTON_TEXT_SIZE));
         resumeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -86,7 +86,7 @@ public class MenuPanel extends BaseMenuPanel {
 
         deleteSaveButton = new JButton("DELETE SAVE");
         deleteSaveButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
-        deleteSaveButton.setFont(new Font("Arial", Font.BOLD, BUTTON_TEXT_SIZE));
+        deleteSaveButton.setFont(new Font("Impact", Font.PLAIN, BUTTON_TEXT_SIZE));
         deleteSaveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -99,7 +99,7 @@ public class MenuPanel extends BaseMenuPanel {
         refreshResumeButton();
 
         soundButton = new JButton("SOUND: ON");
-        soundButton.setFont(new Font("Arial", Font.BOLD, BUTTON_TEXT_SIZE)); // Usa le costanti che hai già
+        soundButton.setFont(new Font("Impact", Font.PLAIN, BUTTON_TEXT_SIZE)); // Usa le costanti che hai già
         soundButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
         soundButton.addActionListener(new ActionListener() {
             @Override

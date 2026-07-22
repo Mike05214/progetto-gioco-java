@@ -47,7 +47,7 @@ public class PausePanel extends BaseMenuPanel {
 
     private JButton initResumeButton() {
         JButton resume = new JButton("RESUME");
-        resume.setFont(new Font("Arial", Font.BOLD, BUTTON_TEXT_SIZE));
+        resume.setFont(new Font("Impact", Font.PLAIN, BUTTON_TEXT_SIZE));
         resume.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
         resume.setMnemonic(KeyEvent.VK_X);
         resume.addActionListener(new ActionListener() {
@@ -63,7 +63,7 @@ public class PausePanel extends BaseMenuPanel {
 
     private JButton initBackToMenuButton() {
         JButton backToMenu = new JButton("BACK TO MENU");
-        backToMenu.setFont(new Font("Arial", Font.BOLD, BUTTON_TEXT_SIZE));
+        backToMenu.setFont(new Font("Impact", Font.PLAIN, BUTTON_TEXT_SIZE));
         backToMenu.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
         backToMenu.addActionListener(new ActionListener() {
             @Override
@@ -79,7 +79,7 @@ public class PausePanel extends BaseMenuPanel {
 
     private JButton initSaveAndExitButton() {
         JButton saveAndExit = new JButton("SAVE AND EXIT");
-        saveAndExit.setFont(new Font("Arial", Font.BOLD, BUTTON_TEXT_SIZE));
+        saveAndExit.setFont(new Font("Impact", Font.PLAIN, BUTTON_TEXT_SIZE));
         saveAndExit.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
         saveAndExit.addActionListener(new ActionListener() {
             @Override

@@ -69,7 +69,7 @@ public class HudPanel extends JPanel {
         pauseButton = new JButton("PAUSE (ALT+X)");
 
         pauseButton.setMnemonic(KeyEvent.VK_X);
-        pauseButton.setFont(new Font("Arial", Font.BOLD, PAUSE_BUTTON_FONT_SIZE));
+        pauseButton.setFont(new Font("Impact", Font.PLAIN, PAUSE_BUTTON_FONT_SIZE));
         pauseButton.setPreferredSize(new Dimension(PAUSE_BUTTON_WIDTH, HUD_HEIGHT));
         westernPanel.add(pauseButton);
         this.add(westernPanel, BorderLayout.WEST);
@@ -80,7 +80,7 @@ public class HudPanel extends JPanel {
         centerPanel.setOpaque(false);
         scoreLabel = new JLabel("SCORE: 0");
         scoreLabel.setForeground(Color.WHITE);
-        scoreLabel.setFont(new Font("Arial", Font.BOLD, SCORE_LABEL_FONT_SIZE));
+        scoreLabel.setFont(new Font("Impact", Font.PLAIN, SCORE_LABEL_FONT_SIZE));
         centerPanel.add(scoreLabel);
         this.add(centerPanel, BorderLayout.CENTER);
     }// fine initCenterPanel

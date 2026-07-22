@@ -48,7 +48,7 @@ public class GameSpace extends JPanel {
         this.model = GameModel.getInstance();
         this.setLayout(new GridBagLayout());
         restartButton = new JButton("BACK TO MENU");
-        restartButton.setFont(new Font("Arial", Font.BOLD, RESTART_BUTTON_FONT_SIZE));
+        restartButton.setFont(new Font("Impact", Font.PLAIN, RESTART_BUTTON_FONT_SIZE));
         restartButton.setPreferredSize(new Dimension(RESTART_BUTTON_WIDTH, RESTART_BUTTON_HEIGHT));
         restartButton.setVisible(false);
         this.add(restartButton);
@@ -86,7 +86,7 @@ public class GameSpace extends JPanel {
             g2d.setColor(new Color(255, 255, 255, fs.getAlpha()));
 
             // Imposta stile e grandezza del testo
-            g2d.setFont(new Font("Arial", Font.BOLD, 20));
+            g2d.setFont(new Font("Impact", Font.PLAIN, 20));
 
             // Disegna la stringa a schermo
             g2d.drawString(fs.getText(), (int) fs.getX(), (int) fs.getY());
@@ -120,10 +120,10 @@ public class GameSpace extends JPanel {
         g2d.setColor(new Color(GAME_OVER_COLOR_R, GAME_OVER_COLOR_G, GAME_OVER_COLOR_B, GAME_OVER_OPACITY));
         g2d.fillRect(0, 0, getWidth(), getHeight());
         g2d.setColor(Color.WHITE);
-        g2d.setFont(new Font("Monospaced", Font.BOLD, GAME_OVER_FONT_SIZE));
+        g2d.setFont(new Font("Impact", Font.PLAIN, GAME_OVER_FONT_SIZE));
         String gameOverText = "GAME OVER";
         g2d.drawString(gameOverText, getWidth() / 2 - 265, getHeight() / 2 - 80);
-        g2d.setFont(new Font("Monospaced", Font.PLAIN, 25));
+        g2d.setFont(new Font("Impact", Font.PLAIN, 25));
         g2d.drawString("SCORE: " + model.getScore(), getWidth() / 2 - 100, getHeight() / 2 - 35);
     }// fine showGameOver
 

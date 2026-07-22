@@ -39,7 +39,7 @@ public abstract class BaseMenuPanel extends JPanel {
     // metodi protetti
     protected void initTitleLabel(String text, Color color) {
         JLabel titleLabel = new JLabel(text, SwingConstants.CENTER);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, TITLE_SIZE));
+        titleLabel.setFont(new Font("Impact", Font.PLAIN, TITLE_SIZE));
         titleLabel.setForeground(color);
         this.add(titleLabel, BorderLayout.NORTH);
     }// fine initTitleLabel
