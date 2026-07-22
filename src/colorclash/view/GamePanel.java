@@ -252,6 +252,7 @@ public class GamePanel extends JPanel {
 
             }
         });
+        alertTimer.setInitialDelay(0);
         alertTimer.start();
         
     }
