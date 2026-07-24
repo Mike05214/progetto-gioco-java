@@ -34,7 +34,7 @@ public class PausePanel extends BaseMenuPanel {
         this.model = GameModel.getInstance(); // è quello del gamePanel
         this.frame = frame;
         setBackground(Color.BLACK);
-        initTitleLabel("PAUSE", Color.ORANGE);
+        initTitleLabel("PAUSE", Color.RED);
 
         this.resumeButton = initResumeButton();
         this.backToMenuButton = initBackToMenuButton();

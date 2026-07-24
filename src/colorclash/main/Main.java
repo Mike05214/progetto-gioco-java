@@ -37,7 +37,7 @@ public class Main {
             // Personalizzazione globale (sovrascrive il tema scelto per questi elementi)
             UIManager.put("Button.background", new Color(50, 50, 50));
             UIManager.put("Button.foreground", Color.WHITE);
-            UIManager.put("Button.font", new Font("Arial", Font.BOLD, 16));
+            UIManager.put("Button.font", new Font("Impact", Font.PLAIN, 20));
             UIManager.put("Button.focus", new Color(0, 0, 0, 0));
             
 

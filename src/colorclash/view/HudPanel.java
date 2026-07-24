@@ -40,7 +40,7 @@ public class HudPanel extends JPanel {
     private final int HUD_WIDTH = 0;
     private final int HUD_HEIGHT = 35;
     private final int PAUSE_BUTTON_WIDTH = 150;
-    private final int PAUSE_BUTTON_FONT_SIZE = 14;
+    private final int PAUSE_BUTTON_FONT_SIZE = 18;
     private final int SCORE_LABEL_FONT_SIZE = 20;
     private final int LIVES_CONTAINER_WIDTH = 150;
     private final int LC_BORDER_TOP = 1;
@@ -50,13 +50,13 @@ public class HudPanel extends JPanel {
     private final int HGAP = 0;
     private final int VGAP = 0;
     private final int H_LABELS_BORDER_TOP = 0;
-    private final int H_LABELS_BORDER_LEFT = 8;
+    private final int H_LABELS_BORDER_LEFT = 0;
     private final int H_LABELS_BORDER_BOTTOM = 0;
-    private final int H_LABELS_BORDER_RIGHT = 0;
+    private final int H_LABELS_BORDER_RIGHT = 10;
 
     public HudPanel() {
         this.setLayout(new BorderLayout());
-        this.setBackground(Color.DARK_GRAY);
+        this.setBackground(Color.LIGHT_GRAY);
         this.setPreferredSize(new Dimension(HUD_WIDTH, HUD_HEIGHT));
 
         initWesternPanel();
@@ -66,8 +66,7 @@ public class HudPanel extends JPanel {
 
     private void initWesternPanel() {
         JPanel westernPanel = new JPanel(new GridBagLayout());
-        pauseButton = new JButton("PAUSE (ALT+X)");
-
+        pauseButton = new JButton("PAUSE");
         pauseButton.setMnemonic(KeyEvent.VK_X);
         pauseButton.setFont(new Font("Impact", Font.PLAIN, PAUSE_BUTTON_FONT_SIZE));
         pauseButton.setPreferredSize(new Dimension(PAUSE_BUTTON_WIDTH, HUD_HEIGHT));
@@ -79,7 +78,7 @@ public class HudPanel extends JPanel {
         JPanel centerPanel = new JPanel(new GridBagLayout());
         centerPanel.setOpaque(false);
         scoreLabel = new JLabel("SCORE: 0");
-        scoreLabel.setForeground(Color.WHITE);
+        scoreLabel.setForeground(Color.BLACK);
         scoreLabel.setFont(new Font("Impact", Font.PLAIN, SCORE_LABEL_FONT_SIZE));
         centerPanel.add(scoreLabel);
         this.add(centerPanel, BorderLayout.CENTER);
@@ -87,7 +86,9 @@ public class HudPanel extends JPanel {
 
     private void initLivesContainer() {
         livesContainer = new JPanel(new FlowLayout(FlowLayout.RIGHT, HGAP, VGAP));
-        livesContainer.setOpaque(false);
+        livesContainer.setOpaque(true);
+        
+        livesContainer.setBackground(new Color(0, 100, 0));
         livesContainer.setBorder(
                 BorderFactory.createEmptyBorder(LC_BORDER_TOP, LC_BORDER_LEFT, LC_BORDER_BOTTOM, LC_BORDER_RIGHT));
         livesContainer.setPreferredSize(new Dimension(LIVES_CONTAINER_WIDTH, HUD_HEIGHT));
@@ -175,5 +176,9 @@ public class HudPanel extends JPanel {
     // getters di HudPanel
     public JButton getPauseButton() {
         return this.pauseButton;
+    }
+
+    public JLabel getScoreLabel() {
+        return this.scoreLabel;
     }
 }// fine classe HudPanel

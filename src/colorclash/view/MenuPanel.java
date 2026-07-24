@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Font;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 
@@ -27,7 +28,7 @@ public class MenuPanel extends BaseMenuPanel {
     private MainFrame frame;
 
     // costanti
-    private final int HI_LABEL_SIZE = 18;
+    private final int HI_LABEL_SIZE = 20;
     private final int ROW_0 = 0;
     private final int ROW_1 = 1;
     private final int ROW_2 = 2;
@@ -38,7 +39,7 @@ public class MenuPanel extends BaseMenuPanel {
         super();
         this.model = GameModel.getInstance();
         this.frame = frame;
-        setBackground(Color.DARK_GRAY);
+        setBackground(new Color(0, 80, 0));
         initButtons();
         initTitleLabel("COLOR CLASH", Color.YELLOW);
         addComponentToCenter(playButton, ROW_0, true);
@@ -49,7 +50,7 @@ public class MenuPanel extends BaseMenuPanel {
     }// fine costruttore
 
     public void updateHighScoreDisplay() {
-        highScoreLabel.setText("High Score: " + model.getHighscore());
+        highScoreLabel.setText("High Score:   " + model.getHighscore());
     }// fine updateHighScoreDisplay
 
     public void initButtons() {
@@ -67,9 +68,16 @@ public class MenuPanel extends BaseMenuPanel {
             }
         });
 
-        highScoreLabel = new JLabel("High Score:" + model.getHighscore());
+        highScoreLabel = new JLabel("High Score:   " + model.getHighscore());
         highScoreLabel.setFont(new Font("Impact", Font.PLAIN, HI_LABEL_SIZE));
-        highScoreLabel.setForeground(Color.WHITE);
+        highScoreLabel.setOpaque(true);
+        highScoreLabel.setBackground(new Color(50, 50, 50)); // Stesso grigio scuro dei bottoni
+        highScoreLabel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(Color.WHITE, 1), // Linea esterna visibile (colore, spessore)
+                BorderFactory.createEmptyBorder(10, 20, 10, 20) // Spazio vuoto interno (alto, sinistra, basso, destra)
+        ));
+        highScoreLabel.setBackground(Color.LIGHT_GRAY);
+        highScoreLabel.setForeground(Color.BLACK);
 
         resumeButton = new JButton("RESUME");
         resumeButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
@@ -113,7 +121,7 @@ public class MenuPanel extends BaseMenuPanel {
                 }
             }
         });
-        
+
     }// fine initButtons
 
     public void refreshResumeButton() {

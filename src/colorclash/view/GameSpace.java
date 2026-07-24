@@ -122,9 +122,9 @@ public class GameSpace extends JPanel {
         g2d.setColor(Color.WHITE);
         g2d.setFont(new Font("Impact", Font.PLAIN, GAME_OVER_FONT_SIZE));
         String gameOverText = "GAME OVER";
-        g2d.drawString(gameOverText, getWidth() / 2 - 265, getHeight() / 2 - 80);
+        g2d.drawString(gameOverText, getWidth() / 2 - 220, getHeight() / 2 - 80);
         g2d.setFont(new Font("Impact", Font.PLAIN, 25));
-        g2d.drawString("SCORE: " + model.getScore(), getWidth() / 2 - 100, getHeight() / 2 - 35);
+        g2d.drawString("SCORE: " + model.getScore(), getWidth() / 2 - 60, getHeight() / 2 - 35);
     }// fine showGameOver
 
     public void showLegend(Graphics2D g2d) {
