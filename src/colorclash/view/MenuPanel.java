@@ -28,7 +28,7 @@ public class MenuPanel extends BaseMenuPanel {
     private MainFrame frame;
 
     // costanti
-    private final int HI_LABEL_SIZE = 20;
+    private final int TEXT_LABEL_SIZE = 18;
     private final int ROW_0 = 0;
     private final int ROW_1 = 1;
     private final int ROW_2 = 2;
@@ -68,8 +68,8 @@ public class MenuPanel extends BaseMenuPanel {
             }
         });
 
-        highScoreLabel = new JLabel("High Score:   " + model.getHighscore());
-        highScoreLabel.setFont(new Font("Impact", Font.PLAIN, HI_LABEL_SIZE));
+        highScoreLabel = new JLabel("HIGH SCORE:   " + model.getHighscore());
+        highScoreLabel.setFont(new Font("Impact", Font.PLAIN, TEXT_LABEL_SIZE));
         highScoreLabel.setOpaque(true);
         highScoreLabel.setBackground(new Color(50, 50, 50)); // Stesso grigio scuro dei bottoni
         highScoreLabel.setBorder(BorderFactory.createCompoundBorder(
