@@ -77,7 +77,7 @@ public class HudPanel extends JPanel {
     private void initCenterPanel() {
         JPanel centerPanel = new JPanel(new GridBagLayout());
         centerPanel.setOpaque(false);
-        scoreLabel = new JLabel("SCORE: 0");
+        scoreLabel = new JLabel("SCORE:   0");
         scoreLabel.setForeground(Color.BLACK);
         scoreLabel.setFont(new Font("Impact", Font.PLAIN, SCORE_LABEL_FONT_SIZE));
         centerPanel.add(scoreLabel);
@@ -135,7 +135,7 @@ public class HudPanel extends JPanel {
         }
 
         if (scoreLabel != null) {
-            scoreLabel.setText("SCORE: " + currentScore);
+            scoreLabel.setText("SCORE:  " + currentScore);
             this.lastScore = currentScore;
         }
     }// fine updateScoreText
@@ -165,7 +165,7 @@ public class HudPanel extends JPanel {
     }
 
     public void restoreScoreLabel(int currentScore) {
-        scoreLabel.setText("SCORE: " + currentScore);
+        scoreLabel.setText("SCORE:  " + currentScore);
         
     }// fine restoreScoreLabel
 
