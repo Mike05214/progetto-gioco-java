@@ -13,6 +13,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Font;
 import java.awt.BasicStroke;
+import java.awt.RenderingHints;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -95,6 +96,7 @@ public class GameSpace extends JPanel {
 
     private void drawPlayer(Graphics2D g2d) {
         boolean drawPlayer = true;
+        
         if (model.isInvulnerable()) {
 
             if (model.getInvulnTimer() % 20 < 10) {
@@ -117,6 +119,7 @@ public class GameSpace extends JPanel {
     }// fine drawObstacles
 
     private void showGameOver(Graphics2D g2d) {
+        g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g2d.setColor(new Color(GAME_OVER_COLOR_R, GAME_OVER_COLOR_G, GAME_OVER_COLOR_B, GAME_OVER_OPACITY));
         g2d.fillRect(0, 0, getWidth(), getHeight());
         g2d.setColor(Color.WHITE);
