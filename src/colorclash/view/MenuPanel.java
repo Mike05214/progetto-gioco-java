@@ -106,18 +106,18 @@ public class MenuPanel extends BaseMenuPanel {
         });
         refreshResumeButton();
 
-        soundButton = new JButton("SOUND: ON");
-        soundButton.setFont(new Font("Impact", Font.PLAIN, BUTTON_TEXT_SIZE)); // Usa le costanti che hai già
+        soundButton = new JButton("🔊");
+        soundButton.setFont(new Font("Dialog", Font.PLAIN, 25)); 
         soundButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
         soundButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 AudioManager.getInstance().toggleSound();
                 if (AudioManager.getInstance().isSoundEnabled()) {
-                    soundButton.setText("SOUND: ON");
+                    soundButton.setText("🔊");
                     AudioManager.getInstance().playBackgroundMusic("menu.wav");
                 } else {
-                    soundButton.setText("SOUND: OFF");
+                    soundButton.setText("🔇");
                 }
             }
         });
