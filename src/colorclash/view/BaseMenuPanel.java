@@ -51,7 +51,7 @@ public abstract class BaseMenuPanel extends JPanel {
                 FontMetrics fm = g2.getFontMetrics();
 
                 // 1. Definisci la tua sequenza di colori (puoi allungarla o accorciarla)
-                Color[] colori = {
+                Color[] color = {
                         Color.RED, Color.ORANGE, Color.YELLOW, Color.GREEN,
                         Color.CYAN, Color.BLUE, Color.MAGENTA
                 };
@@ -77,7 +77,7 @@ public abstract class BaseMenuPanel extends JPanel {
                     // Sceglie il colore dall'array basandosi sull'indice,
                     // usando l'operatore modulo (%) per ricominciare se i caratteri sono più dei
                     // colori.
-                    g2.setColor(colori[i % colori.length]);
+                    g2.setColor(color[i % color.length]);
 
                     // Disegna il singolo carattere
                     g2.drawString(pattern, xAttuale, y);
@@ -85,8 +85,6 @@ public abstract class BaseMenuPanel extends JPanel {
                     // Sposta la X attuale della larghezza esatta del carattere appena disegnato
                     xAttuale += fm.stringWidth(pattern);
                 }
-
-                g2.dispose();
             }
         };
         titleLabel.setFont(new Font("Impact", Font.PLAIN, TITLE_SIZE));
