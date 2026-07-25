@@ -66,9 +66,10 @@ public class HudPanel extends JPanel {
 
     private void initWesternPanel() {
         JPanel westernPanel = new JPanel(new GridBagLayout());
-        pauseButton = new JButton("PAUSE");
+        pauseButton = new JButton("⏸️");
         pauseButton.setMnemonic(KeyEvent.VK_X);
-        pauseButton.setFont(new Font("Impact", Font.PLAIN, PAUSE_BUTTON_FONT_SIZE));
+        pauseButton.setFont(new Font("Dialog", Font.PLAIN, 24));
+        
         pauseButton.setPreferredSize(new Dimension(PAUSE_BUTTON_WIDTH, HUD_HEIGHT));
         westernPanel.add(pauseButton);
         this.add(westernPanel, BorderLayout.WEST);
