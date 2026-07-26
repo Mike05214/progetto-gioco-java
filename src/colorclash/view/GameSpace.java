@@ -62,6 +62,7 @@ public class GameSpace extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         drawStars(g2d);
         showLegend(g2d);
         drawPlayer(g2d);
@@ -75,13 +76,14 @@ public class GameSpace extends JPanel {
     }// fine paintComponent
 
     private void drawParticles(Graphics2D g2d) {
-        for (Particle p : model.getParticles()) {
+        Rectangle2D.Double particleRect = new Rectangle2D.Double();
 
+        for (Particle p : model.getParticles()) {
             int colorId = p.getColorId();
             g2d.setColor(colorPalette[colorId]);
-
-            // Disegna il frammento
-            g2d.fillRect(p.getX(), p.getY(), p.getSize(), p.getSize());
+            particleRect.setRect(p.getX(), p.getY(), p.getSize(), p.getSize());
+            g2d.fill(particleRect);
+            
         }
     }
 
@@ -127,7 +129,7 @@ public class GameSpace extends JPanel {
         if (stelle != null) {
             // Crei l'oggetto una sola volta per risparmiare memoria
             Rectangle2D.Double starRect = new Rectangle2D.Double();
-            
+
             for (Star s : stelle) {
                 g2d.setColor(new Color(255, 255, 255, s.getAlpha()));
 
@@ -141,7 +143,6 @@ public class GameSpace extends JPanel {
     }
 
     private void showGameOver(Graphics2D g2d) {
-        g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g2d.setColor(new Color(GAME_OVER_COLOR_R, GAME_OVER_COLOR_G, GAME_OVER_COLOR_B, GAME_OVER_OPACITY));
         g2d.fillRect(0, 0, getWidth(), getHeight());
         g2d.setColor(Color.WHITE);

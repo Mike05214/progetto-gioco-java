@@ -16,6 +16,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.RenderingHints;
 
 import javax.swing.JButton;
 
@@ -104,8 +105,8 @@ public class PausePanel extends BaseMenuPanel {
     @Override
     protected void paintComponent(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         super.paintComponent(g2d);
-
         g.setColor(new Color(10, 10, 20));
         g.fillRect(0, 0, getWidth(), getHeight());
 
@@ -113,7 +114,7 @@ public class PausePanel extends BaseMenuPanel {
         if (stelle != null) {
             Rectangle2D.Double starRect = new Rectangle2D.Double();
             int offsetY = frame.getGamePanel().getHudPanel().getHudPanelHeight();
-            
+
             for (Star s : stelle) {
                 g2d.setColor(new Color(255, 255, 255, s.getAlpha()));
                 starRect.setRect(s.getX(), s.getY() + offsetY, s.getSize(), s.getSize());
