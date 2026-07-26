@@ -12,6 +12,7 @@ import java.awt.Dimension;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.Font;
 import java.awt.BasicStroke;
 import java.awt.RenderingHints;
@@ -99,7 +100,7 @@ public class GameSpace extends JPanel {
 
     private void drawPlayer(Graphics2D g2d) {
         boolean drawPlayer = true;
-        
+
         if (model.isInvulnerable()) {
 
             if (model.getInvulnTimer() % 20 < 10) {
@@ -121,17 +122,22 @@ public class GameSpace extends JPanel {
         }
     }// fine drawObstacles
 
-    private void drawStars(Graphics2D g2d){
+    private void drawStars(Graphics2D g2d) {
         List<Star> stelle = model.getStars();
-    if (stelle != null) {
-        for (Star s : stelle) {
-            // Applica il colore bianco con l'opacità specifica di quella stella
-            g2d.setColor(new Color(255, 255, 255, s.getAlpha()));
+        if (stelle != null) {
+            // Crei l'oggetto una sola volta per risparmiare memoria
+            Rectangle2D.Double starRect = new Rectangle2D.Double();
             
-            // Disegna il quadratino
-            g2d.fillRect((int)s.getX(), (int)s.getY(), s.getSize(), s.getSize());
+            for (Star s : stelle) {
+                g2d.setColor(new Color(255, 255, 255, s.getAlpha()));
+
+                // Aggiorni le coordinate del rettangolo esistente usando i double
+                starRect.setRect(s.getX(), s.getY(), s.getSize(), s.getSize());
+
+                // Disegni la forma
+                g2d.fill(starRect);
+            }
         }
-    }
     }
 
     private void showGameOver(Graphics2D g2d) {

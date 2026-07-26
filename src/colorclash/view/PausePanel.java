@@ -14,6 +14,8 @@ import java.io.File;
 import java.util.List;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.geom.Rectangle2D;
 
 import javax.swing.JButton;
 
@@ -32,7 +34,7 @@ public class PausePanel extends BaseMenuPanel {
     private final int ROW_2 = 2;
 
     public PausePanel(MainFrame frame) { // il model da resettare è quello del gamePanel che infatti
-                                                          // gli viene passato come parametro
+                                         // gli viene passato come parametro
         super();
         this.model = GameModel.getInstance(); // è quello del gamePanel
         this.frame = frame;
@@ -88,11 +90,12 @@ public class PausePanel extends BaseMenuPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 frame.changeFrame("MENU");
-                model.getSaveManager().writeGameState(model.getScore(), model.getLives(), model.getPhase(), model.getCurrentSpeed(), model.getAvailableColorsCount(),
+                model.getSaveManager().writeGameState(model.getScore(), model.getLives(), model.getPhase(),
+                        model.getCurrentSpeed(), model.getAvailableColorsCount(),
                         model.getPlayer(), model.getEnemies());
                 model.resetGame();
                 frame.getMenuPanel().refreshResumeButton();
-                
+
             }
         });
         return saveAndExit;
@@ -100,17 +103,21 @@ public class PausePanel extends BaseMenuPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        
+        Graphics2D g2d = (Graphics2D) g;
+        super.paintComponent(g2d);
+
         g.setColor(new Color(10, 10, 20));
         g.fillRect(0, 0, getWidth(), getHeight());
 
         List<Star> stelle = model.getStars();
         if (stelle != null) {
+            Rectangle2D.Double starRect = new Rectangle2D.Double();
             int offsetY = frame.getGamePanel().getHudPanel().getHudPanelHeight();
+            
             for (Star s : stelle) {
-                g.setColor(new Color(255, 255, 255, s.getAlpha()));
-                g.fillRect((int)s.getX(), (int)s.getY()+offsetY, s.getSize(), s.getSize());
+                g2d.setColor(new Color(255, 255, 255, s.getAlpha()));
+                starRect.setRect(s.getX(), s.getY() + offsetY, s.getSize(), s.getSize());
+                g2d.fill(starRect);
             }
         }
     }

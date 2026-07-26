@@ -6,6 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.geom.Rectangle2D;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -110,7 +112,7 @@ public class MenuPanel extends BaseMenuPanel {
         refreshResumeButton();
 
         soundButton = new JButton("🔊");
-        soundButton.setFont(new Font("Dialog", Font.PLAIN, 25)); 
+        soundButton.setFont(new Font("Dialog", Font.PLAIN, 25));
         soundButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
         soundButton.addActionListener(new ActionListener() {
             @Override
@@ -135,17 +137,20 @@ public class MenuPanel extends BaseMenuPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        
-        g.setColor(new Color(10, 10, 20));
-        g.fillRect(0, 0, getWidth(), getHeight());
+        Graphics2D g2d = (Graphics2D) g;
+        super.paintComponent(g2d);
+        g2d.setColor(new Color(10, 10, 20));
+        g2d.fillRect(0, 0, getWidth(), getHeight());
 
         List<Star> stelle = model.getStars();
         if (stelle != null) {
+            Rectangle2D.Double starRect = new Rectangle2D.Double();
             int offsetY = frame.getGamePanel().getHudPanel().getHudPanelHeight();
+
             for (Star s : stelle) {
-                g.setColor(new Color(255, 255, 255, s.getAlpha()));
-                g.fillRect((int)s.getX(), (int)s.getY()+offsetY, s.getSize(), s.getSize());
+                g2d.setColor(new Color(255, 255, 255, s.getAlpha()));
+                starRect.setRect(s.getX(), s.getY()+offsetY, s.getSize(), s.getSize());
+                g2d.fill(starRect);
             }
         }
     }
