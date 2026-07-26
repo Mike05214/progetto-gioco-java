@@ -194,16 +194,16 @@ public class SaveManager {
                 } else if (line.startsWith("PLAYER:")) {
                     // MODIFICATO: Recupero con il ;
                     String[] dati = line.split(":")[1].split(";"); 
-                    model.getPlayer().setX(Integer.valueOf(dati[0]));
-                    model.getPlayer().setY(Integer.valueOf(dati[1]));
+                    model.getPlayer().setX(Double.valueOf(dati[0]));
+                    model.getPlayer().setY(Double.valueOf(dati[1]));
                     model.getPlayer().setColorId(Integer.valueOf(dati[2]));
 
                 } else if (line.startsWith("OBSTACLE:")) {
                     String[] dati = line.split(":")[1].split(";"); 
 
                     String tipo = dati[0];
-                    int x = Integer.valueOf(dati[1]);
-                    int y = Integer.valueOf(dati[2]);
+                    double x = Double.valueOf(dati[1]);
+                    double y = Double.valueOf(dati[2]);
                     double speed = Double.valueOf(dati[3]); 
                     int colorId = Integer.valueOf(dati[4]);
                     int width = Integer.valueOf(dati[5]);

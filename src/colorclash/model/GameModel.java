@@ -42,8 +42,8 @@ public class GameModel {
     private static GameModel model = null;
 
     // costanti
-    private final int START_X = Config.getInstance().getIntProperty("player_start_x");
-    private final int START_Y = Config.getInstance().getIntProperty("player_start_y");
+    private final double START_X = Config.getInstance().getDoubleProperty("player_start_x");
+    private final double START_Y = Config.getInstance().getDoubleProperty("player_start_y");
     private final int MIN_X = 0;
     private final int MIN_Y = 0;
     private final int OBSTACLE_START_Y = -150;
@@ -384,11 +384,11 @@ public class GameModel {
         return isGameOver;
     }
 
-    public int getStartX() {
+    public double getStartX() {
         return this.START_X;
     }
 
-    public int getStartY() {
+    public double getStartY() {
         return this.START_Y;
     }
 
