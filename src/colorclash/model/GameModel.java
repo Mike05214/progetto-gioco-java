@@ -13,6 +13,7 @@ import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.Area;
+import java.awt.geom.Rectangle2D;
 
 public class GameModel {
 
@@ -86,7 +87,8 @@ public class GameModel {
         this.isGameOver = false;
         this.random = new Random();
         this.saveManager = SaveManager.getInstance();
-        initStars(Config.getInstance().getIntProperty("frame_width"), Config.getInstance().getIntProperty("frame_height"));//da rivedere questo metodo initStars
+        initStars(Config.getInstance().getIntProperty("frame_width"),
+                Config.getInstance().getIntProperty("frame_height"));// da rivedere questo metodo initStars
 
     }// fine initGame
 
@@ -239,7 +241,7 @@ public class GameModel {
         }
     }// fine decreaseLives
 
-    private void createExplosion(int x, int y, int colorId) {
+    private void createExplosion(double x, double y, int colorId) {
         int particlesNumber = random.nextInt(MIN_PARTICLES, MAX_PARTICLES + 1);
         for (int i = 0; i < particlesNumber; i++) {
             particles.add(new Particle(x, y, colorId));
@@ -264,15 +266,17 @@ public class GameModel {
 
     private void checkCollisions() {
         Shape playerShape = player.getHitbox();
-        Rectangle playerBounds = playerShape.getBounds();
+        Rectangle2D playerBounds = playerShape.getBounds2D();
+
         for (int i = 0; i < enemies.size(); i++) {
             Obstacle obs = enemies.get(i);
             Shape obsShape = obs.getHitbox();
-            Rectangle obsBounds = obsShape.getBounds();
+            Rectangle2D obsBounds = obsShape.getBounds2D();
 
             if (!playerBounds.intersects(obsBounds)) {
                 continue;
             }
+
             Area playerArea = new Area(playerShape);
             Area obsArea = new Area(obsShape);
             playerArea.intersect(obsArea);
@@ -412,7 +416,7 @@ public class GameModel {
         return this.floatingScores;
     }
 
-    public List<Star> getStars(){
+    public List<Star> getStars() {
         return this.stars;
     }
 

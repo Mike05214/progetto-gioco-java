@@ -1,6 +1,6 @@
 package src.colorclash.model;
 
-import java.awt.Polygon;
+import java.awt.geom.Path2D;
 import java.awt.Shape;
 
 import java.util.Random;
@@ -16,22 +16,22 @@ public class SpeedRacer extends Obstacle {
     // costanti
     private final int SPEEDRACER_POINTS = Config.getInstance().getIntProperty("speed_racer_points");
 
-    public SpeedRacer(int startX, int startY, double speed, int colorId, int width, int height) {
+    public SpeedRacer(double startX, double startY, double speed, int colorId, int width, int height) {
         super(startX, startY, speed, colorId, width, height);
     }// fine costruttore
 
-    public static SpeedRacer createSpeedRacerObstacle(int panelWidth, int startY, double speed, int colorId) {
-        int randomX = random.nextInt(panelWidth - WIDTH);
+    public static SpeedRacer createSpeedRacerObstacle(int panelWidth, double startY, double speed, int colorId) {
+        double randomX = random.nextDouble(panelWidth - WIDTH);
         return new SpeedRacer(randomX, startY, speed, colorId, WIDTH, HEIGHT);
     }// fine createSpeedRacer
 
     // getters di SpeedRacer
     @Override
     public Shape getHitbox() {
-        Polygon triangle = new Polygon();
-        triangle.addPoint((int) x, (int) y);
-        triangle.addPoint((int) x + width, (int) y);
-        triangle.addPoint((int) x + width / 2, (int) y + height);
+        Path2D.Double triangle = new Path2D.Double();
+        triangle.moveTo(x, y);
+        triangle.lineTo(x + width, y);
+        triangle.lineTo(x + width / 2.0, y + height);
 
         return triangle;
     }

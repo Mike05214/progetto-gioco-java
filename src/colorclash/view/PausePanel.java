@@ -60,8 +60,8 @@ public class PausePanel extends BaseMenuPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 AudioManager.getInstance().stopBackgroundMusic();
-                frame.changeFrame("GAME");
                 frame.getGamePanel().resumeCountdown();
+                frame.changeFrame("GAME");
             }
         });
         return resume;

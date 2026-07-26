@@ -26,6 +26,7 @@ public class GameSpace extends JPanel {
 
     // variabili d'istanza
     private JButton restartButton;
+    private boolean forceDrawPlayer = false;
     private GameModel model;
     private Color[] colorPalette = {
             Color.RED, // ID 0
@@ -83,7 +84,7 @@ public class GameSpace extends JPanel {
             g2d.setColor(colorPalette[colorId]);
             particleRect.setRect(p.getX(), p.getY(), p.getSize(), p.getSize());
             g2d.fill(particleRect);
-            
+
         }
     }
 
@@ -101,21 +102,21 @@ public class GameSpace extends JPanel {
     }
 
     private void drawPlayer(Graphics2D g2d) {
-        boolean drawPlayer = true;
+        boolean shouldDraw = true;
 
-        if (model.isInvulnerable()) {
-
+        // Applica il lampeggio SOLO se non stiamo forzando il disegno
+        if (model.isInvulnerable() && !forceDrawPlayer) {
             if (model.getInvulnTimer() % 20 < 10) {
-                drawPlayer = false;
+                shouldDraw = false;
             }
         }
 
-        if (drawPlayer) {
+        if (shouldDraw) {
             Player player = model.getPlayer();
             g2d.setColor(colorPalette[player.getColorId()]);
             g2d.fill(player.getHitbox());
         }
-    }// fine playerBlinkingHandler
+    }
 
     private void drawObstacles(Graphics2D g2d) {
         for (Obstacle obs : model.getEnemies()) {
@@ -192,5 +193,9 @@ public class GameSpace extends JPanel {
     // getters di GameSpace
     public JButton getRestarButton() {
         return this.restartButton;
+    }
+
+    public void setForceDrawPlayer(boolean force) {
+        this.forceDrawPlayer = force;
     }
 }// fine classe GameSpace

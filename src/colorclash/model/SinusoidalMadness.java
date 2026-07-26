@@ -21,11 +21,11 @@ public class SinusoidalMadness extends Obstacle {
     private final int SINUSOIDALMADNESS_POINTS = Config.getInstance().getIntProperty("sinusoidal_madness_points");
 
     // variabili d'istanza
-    private int startX;
+    private double startX;
     private double angle = 0;
     private int colorTimer = 0;
 
-    public SinusoidalMadness(int x, int y, double fallSpeed, int colorId, int width, int height) {
+    public SinusoidalMadness(double x, double y, double fallSpeed, int colorId, int width, int height) {
         super(x, y, fallSpeed, colorId, width, height);
         this.startX = x;
     }// fine costruttore
@@ -34,7 +34,7 @@ public class SinusoidalMadness extends Obstacle {
     public void fall() {
         this.y += this.fallSpeed;
         angle += WAWE_SPEED;
-        this.x = this.startX + (int) (AMPLITUDE * Math.sin(angle));
+        this.x = this.startX + (AMPLITUDE * Math.sin(angle));
         colorTimer++;
 
         if (colorTimer >= COLOR_CHANGE_INTERVAL) {
@@ -44,10 +44,10 @@ public class SinusoidalMadness extends Obstacle {
         }
     }// fine fall
 
-    public static SinusoidalMadness creatSinusoidalMadness(int panelWidth, int startY, double fallSpeed, int colorId) {
-        int safeMinX = AMPLITUDE;
-        int safeMaxX = panelWidth - WIDTH - AMPLITUDE;
-        int randomX = random.nextInt(safeMinX, safeMaxX);
+    public static SinusoidalMadness creatSinusoidalMadness(int panelWidth, double startY, double fallSpeed, int colorId) {
+        double safeMinX = AMPLITUDE;
+        double safeMaxX = panelWidth - WIDTH - AMPLITUDE;
+        double randomX = random.nextDouble(safeMinX, safeMaxX);
         return new SinusoidalMadness(randomX, startY, fallSpeed, colorId, WIDTH, HEIGHT);
     }// fine createSinusoidalMadness
 

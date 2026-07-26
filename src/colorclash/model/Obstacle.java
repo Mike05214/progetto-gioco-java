@@ -5,8 +5,8 @@ import src.colorclash.utils.Config;
 
 public abstract class Obstacle {
     // variabili d'istanza ereditabili
-    protected int x;
-    protected int y;
+    protected double x;
+    protected double y;
     protected int width;
     protected int height;
     protected double fallSpeed;
@@ -16,7 +16,7 @@ public abstract class Obstacle {
     // costanti
     private final int DEFAULT_OBSTACLE_POINTS = Config.getInstance().getIntProperty("default_obstacle_points");
 
-    public Obstacle(int startX, int startY, double speed, int colorId, int width, int height) {
+    public Obstacle(double startX, double startY, double speed, int colorId, int width, int height) {
         this.x = startX;
         this.y = startY;
         this.width = width;
@@ -49,11 +49,11 @@ public abstract class Obstacle {
     // getters di Obstacle
     public abstract Shape getHitbox();
 
-    public int getX() {
+    public double getX() {
         return x;
     }
 
-    public int getY() {
+    public double getY() {
         return y;
     }
 

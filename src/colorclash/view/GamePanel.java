@@ -15,12 +15,12 @@ import javax.swing.Timer;
 public class GamePanel extends JPanel {
 
     // variabili d'istanza
-    
+
     private Timer gameLoop;
     private MainFrame frame;
     private GameSpace gameSpace;
     private HudPanel hudPanel;
-    private boolean isResuming;
+    private boolean isResuming = false;
     private boolean isScoreUpdateBlocked;
     private boolean colorSwitchLocked = false;
     private int lastPhase;
@@ -160,7 +160,7 @@ public class GamePanel extends JPanel {
                     model.getPlayer().setMovingRight(false);
                 }
 
-                if (key == KeyEvent.VK_SPACE || key == KeyEvent.VK_RIGHT || key == KeyEvent.VK_LEFT ) {
+                if (key == KeyEvent.VK_SPACE || key == KeyEvent.VK_RIGHT || key == KeyEvent.VK_LEFT) {
                     resetKeyLogic();
                 }
             }
@@ -185,7 +185,9 @@ public class GamePanel extends JPanel {
         super.setVisible(visible);
         if (this.gameLoop != null) {
             if (visible) {
-                this.gameLoop.start();
+                if (!isResuming) {
+                    this.gameLoop.start();
+                }
             } else {
                 this.gameLoop.stop();
                 model.getPlayer().resetMovementFlags();
@@ -195,11 +197,12 @@ public class GamePanel extends JPanel {
 
     public void resumeCountdown() {
         isResuming = true;
-        gameLoop.stop(); // per colpa del setVisible
         hudPanel.getPauseButton().setEnabled(false);
+        gameSpace.setForceDrawPlayer(true);
         hudPanel.showCountdown(COUNT_LEFT);
-        Timer countdown = new Timer(RESUME_COOLDOWN_DELAY, new ActionListener() { 
+        Timer countdown = new Timer(RESUME_COOLDOWN_DELAY, new ActionListener() {
             int count = COUNT_LEFT;
+
             @Override
             public void actionPerformed(ActionEvent e) {
                 count--;
@@ -215,6 +218,7 @@ public class GamePanel extends JPanel {
                         hudPanel.restoreScoreLabel(model.getScore());
                     }
                     AudioManager.getInstance().playBackgroundMusic("sample-15s.wav");
+                    gameSpace.setForceDrawPlayer(false);
                     gameLoop.start();
                     hudPanel.getPauseButton().setEnabled(true);
                     isResuming = false;
@@ -223,7 +227,7 @@ public class GamePanel extends JPanel {
         });
         AudioManager.getInstance().playSoundEffect("race_countdown.wav");
         countdown.start();
-        
+
     }// fine resumeCountdown
 
     public void newColorUnlockedCountdown() {
@@ -256,7 +260,7 @@ public class GamePanel extends JPanel {
         });
         alertTimer.setInitialDelay(0);
         alertTimer.start();
-        
+
     }
 
     public void stopBlinking() {
@@ -273,8 +277,6 @@ public class GamePanel extends JPanel {
         gameSpace.deleteBorder();
     }
 
-    
-
     // getters del GamePanel
 
     public int getGameSpaceWidth() {
@@ -289,7 +291,7 @@ public class GamePanel extends JPanel {
         return this.alertTimer;
     }
 
-    public HudPanel getHudPanel(){
+    public HudPanel getHudPanel() {
         return this.hudPanel;
     }
 }// fine classe GamePanel

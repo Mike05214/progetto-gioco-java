@@ -23,7 +23,7 @@ public class Player {
     private boolean isInvulnerable;
     private boolean movingUp, movingDown, movingLeft, movingRight;
 
-    public Player(int startX, int startY, int startColorId) {
+    public Player(double startX, double startY, int startColorId) {
         this.x = startX;
         this.y = startY;
         this.colorId = startColorId;
@@ -93,7 +93,7 @@ public class Player {
     lastColorChange = currentTime;
 } // fine switchColor
 
-    public void resetToInitialSettings(int startX, int startY, int startColorId) {
+    public void resetToInitialSettings(double startX, double startY, int startColorId) {
         this.x = startX;
         this.y = startY;
         this.colorId = startColorId;
@@ -126,13 +126,13 @@ public class Player {
 
     // metodi getters per l'avatar
 
-    public int getX() {
-        return (int) x;
+    public double getX() {
+        return  x;
     } // cast esplicito a int, il metodo fillRect nella view si aspetta delle
       // coordinate intere non double
 
-    public int getY() {
-        return (int) y;
+    public double getY() {
+        return y;
     }
 
     public int getWidth() {
@@ -176,11 +176,11 @@ public class Player {
         this.colorId = colorId;
     }
 
-    public void setX(int x) {
+    public void setX(double x) {
         this.x = x ;
     }
 
-    public void setY(int y) {
+    public void setY(double y) {
         this.y = y ; 
     }
 }// fine classe Avatar
