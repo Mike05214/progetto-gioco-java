@@ -288,4 +288,8 @@ public class GamePanel extends JPanel {
     public Timer getNewColorTimer() {
         return this.alertTimer;
     }
+
+    public HudPanel getHudPanel(){
+        return this.hudPanel;
+    }
 }// fine classe GamePanel

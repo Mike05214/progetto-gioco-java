@@ -182,4 +182,11 @@ public class HudPanel extends JPanel {
     public JLabel getScoreLabel() {
         return this.scoreLabel;
     }
+
+    public int getHudPanelHeight(){
+        return HUD_HEIGHT;
+    }
+
+    
+    
 }// fine classe HudPanel

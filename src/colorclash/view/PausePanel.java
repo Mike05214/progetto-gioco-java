@@ -30,7 +30,6 @@ public class PausePanel extends BaseMenuPanel {
     private final int ROW_0 = 0;
     private final int ROW_1 = 1;
     private final int ROW_2 = 2;
-    private final int HUD_HEIGHT = 35;
 
     public PausePanel(MainFrame frame) { // il model da resettare è quello del gamePanel che infatti
                                                           // gli viene passato come parametro
@@ -111,9 +110,10 @@ public class PausePanel extends BaseMenuPanel {
         // (essendo in pausa, leggerà le stesse identiche coordinate dell'ultimo frame)
         List<Star> stelle = model.getStars();
         if (stelle != null) {
+            int offsetY = frame.getGamePanel().getHudPanel().getHudPanelHeight();
             for (Star s : stelle) {
                 g.setColor(new Color(255, 255, 255, s.getAlpha()));
-                g.fillRect((int)s.getX(), (int)s.getY()+HUD_HEIGHT, s.getSize(), s.getSize());
+                g.fillRect((int)s.getX(), (int)s.getY()+offsetY, s.getSize(), s.getSize());
             }
         }
         
