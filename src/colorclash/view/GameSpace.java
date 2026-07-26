@@ -4,6 +4,7 @@ import src.colorclash.model.GameModel;
 import src.colorclash.model.Obstacle;
 import src.colorclash.model.Particle;
 import src.colorclash.model.Player;
+import src.colorclash.model.Star;
 import src.colorclash.model.FloatingScore;
 
 import java.awt.GridBagLayout;
@@ -14,6 +15,7 @@ import java.awt.Graphics2D;
 import java.awt.Font;
 import java.awt.BasicStroke;
 import java.awt.RenderingHints;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -45,7 +47,7 @@ public class GameSpace extends JPanel {
     private final int LEGEND_STROKE_RESIZE = 4;
 
     public GameSpace() {
-        setBackground(Color.BLACK);
+        setBackground(new Color(10, 10, 20));
         this.model = GameModel.getInstance();
         this.setLayout(new GridBagLayout());
         restartButton = new JButton("BACK TO MENU");
@@ -59,6 +61,7 @@ public class GameSpace extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
+        drawStars(g2d);
         showLegend(g2d);
         drawPlayer(g2d);
         drawObstacles(g2d);
@@ -117,6 +120,19 @@ public class GameSpace extends JPanel {
             g2d.fill(obs.getHitbox());
         }
     }// fine drawObstacles
+
+    private void drawStars(Graphics2D g2d){
+        List<Star> stelle = model.getStars();
+    if (stelle != null) {
+        for (Star s : stelle) {
+            // Applica il colore bianco con l'opacità specifica di quella stella
+            g2d.setColor(new Color(255, 255, 255, s.getAlpha()));
+            
+            // Disegna il quadratino
+            g2d.fillRect((int)s.getX(), (int)s.getY(), s.getSize(), s.getSize());
+        }
+    }
+    }
 
     private void showGameOver(Graphics2D g2d) {
         g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);

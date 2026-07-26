@@ -1,6 +1,7 @@
 package src.colorclash.view;
 
 import src.colorclash.model.GameModel;
+import src.colorclash.model.Star;
 import src.colorclash.utils.AudioManager;
 import src.colorclash.view.MainFrame;
 
@@ -10,7 +11,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.util.List;
 import java.awt.Font;
+import java.awt.Graphics;
 
 import javax.swing.JButton;
 
@@ -94,5 +97,26 @@ public class PausePanel extends BaseMenuPanel {
         });
         return saveAndExit;
     }// fine initSaveAndExitButton
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        
+        // 1. Dipingi il nero dello spazio
+        g.setColor(new Color(10, 10, 20));
+        g.fillRect(0, 0, getWidth(), getHeight());
+
+        // 2. Recupera le stelle e disegnale esattamente dov'erano 
+        // (essendo in pausa, leggerà le stesse identiche coordinate dell'ultimo frame)
+        List<Star> stelle = model.getStars();
+        if (stelle != null) {
+            for (Star s : stelle) {
+                g.setColor(new Color(255, 255, 255, s.getAlpha()));
+                g.fillRect((int)s.getX(), (int)s.getY(), s.getSize(), s.getSize());
+            }
+        }
+        
+        // 3. Qui disegnate i vostri bottoni "Riprendi", "Esci", ecc.
+    }
 
 }// fine classe PausePanel

@@ -34,6 +34,7 @@ public class GameModel {
     private int currentPhase = 1;
     private List<Particle> particles = new ArrayList<>();
     private List<FloatingScore> floatingScores = new ArrayList<>();
+    private List<Star> stars = new ArrayList<>();
     private int availableColorsCount = 2;
     private SaveManager saveManager;
     private Config config;
@@ -62,6 +63,7 @@ public class GameModel {
     private final int MAX_PARTICLES = 12;
     private final int EXPLOSION_OFFSET = 20;
     private final int MAX_LIVES = 3;
+    private final int NUM_STARS = 100;
 
     // METODI STATICI
     public static GameModel getInstance() {
@@ -84,6 +86,7 @@ public class GameModel {
         this.isGameOver = false;
         this.random = new Random();
         this.saveManager = SaveManager.getInstance();
+        initStars(Config.getInstance().getIntProperty("frame_width"), Config.getInstance().getIntProperty("frame_height"));//da rivedere questo metodo initStars
 
     }// fine initGame
 
@@ -102,6 +105,7 @@ public class GameModel {
         updateFloatingScore();
         checkCollisions();
         updateSurvivalScore();
+        updateStars(panelWidth, panelHeight);
         if (isGameOver) {
             AudioManager.getInstance().stopBackgroundMusic();
             AudioManager.getInstance().playSoundEffect("game_over.wav");
@@ -241,6 +245,22 @@ public class GameModel {
             particles.add(new Particle(x, y, colorId));
         }
     }// fine createExplosion
+
+    public void initStars(int panelWidth, int panelHeight) {
+        stars = new ArrayList<>();
+        for (int i = 0; i < NUM_STARS; i++) {
+            stars.add(new Star(panelWidth, panelHeight));
+        }
+    }
+
+    // Da chiamare nel tuo game loop (dove aggiorni gli ostacoli)
+    public void updateStars(int panelWidth, int panelHeight) {
+        if (stars != null) {
+            for (Star s : stars) {
+                s.update(panelWidth, panelHeight);
+            }
+        }
+    }
 
     private void checkCollisions() {
         Shape playerShape = player.getHitbox();
@@ -390,6 +410,10 @@ public class GameModel {
 
     public List<FloatingScore> getFloatingScores() {
         return this.floatingScores;
+    }
+
+    public List<Star> getStars(){
+        return this.stars;
     }
 
     public int getHighscore() {
