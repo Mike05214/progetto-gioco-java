@@ -102,12 +102,9 @@ public class PausePanel extends BaseMenuPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         
-        // 1. Dipingi il nero dello spazio
         g.setColor(new Color(10, 10, 20));
         g.fillRect(0, 0, getWidth(), getHeight());
 
-        // 2. Recupera le stelle e disegnale esattamente dov'erano 
-        // (essendo in pausa, leggerà le stesse identiche coordinate dell'ultimo frame)
         List<Star> stelle = model.getStars();
         if (stelle != null) {
             int offsetY = frame.getGamePanel().getHudPanel().getHudPanelHeight();
@@ -116,8 +113,6 @@ public class PausePanel extends BaseMenuPanel {
                 g.fillRect((int)s.getX(), (int)s.getY()+offsetY, s.getSize(), s.getSize());
             }
         }
-        
-        // 3. Qui disegnate i vostri bottoni "Riprendi", "Esci", ecc.
     }
 
 }// fine classe PausePanel
