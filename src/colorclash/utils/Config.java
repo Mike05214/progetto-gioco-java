@@ -71,13 +71,7 @@ public class Config {
         return fileName;
     }
 
-    // METODI ISTANZA (Esempio per leggere un parametro)
-    public String getBackgroundColor() {
-        return this.properties.getProperty("backgroundColor");
-    }
-
     public String getStringProperty(String key) {
-        // Restituisce il valore associato alla chiave, oppure null se non esiste
         return properties.getProperty(key);
     }
 

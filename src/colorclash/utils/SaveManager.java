@@ -34,9 +34,9 @@ public class SaveManager {
 
     public SaveManager() {
         // MANTENUTO: Crea la cartella e il file vuoto al primo avvio
-        File cartellaSalvataggi = new File("saves");
-        if (!cartellaSalvataggi.exists()) {
-            cartellaSalvataggi.mkdirs();
+        File SavesFolder = new File("saves");
+        if (!SavesFolder.exists()) {
+            SavesFolder.mkdirs();
         }
 
         File fileHighscore = new File(highscoreFilePath);
