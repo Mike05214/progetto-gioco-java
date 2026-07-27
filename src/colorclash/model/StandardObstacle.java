@@ -36,4 +36,9 @@ public class StandardObstacle extends Obstacle {
     public int getPoints() {
         return STANDARD_OBSTACLE_POINTS;
     }
+
+    @Override 
+    public String getType() {
+        return "StandardObstacle";
+    }
 }// fine classe StandardObstacle

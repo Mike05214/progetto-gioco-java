@@ -32,7 +32,7 @@ public class Config {
             // Caricamento del file tramite percorso calcolato a run-time
             buffRead = new BufferedReader(
                     new InputStreamReader(
-                            new FileInputStream(getConfigFileFullPath()), "ISO-8859-1"));
+                            new FileInputStream(getConfigFileFullPath()), "UTF-8"));
 
             this.properties = new Properties();
             this.properties.load(buffRead);

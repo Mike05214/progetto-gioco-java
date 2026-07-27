@@ -57,10 +57,13 @@ public class SinusoidalMadness extends Obstacle {
         return new Ellipse2D.Double(x, y, width, height);
     }
 
-    
-
     @Override
     public int getPoints() {
         return SINUSOIDALMADNESS_POINTS;
+    }
+
+    @Override 
+    public String getType() {
+        return "SinusoidalMadness";
     }
 }// fine classe SinusoidalMadness

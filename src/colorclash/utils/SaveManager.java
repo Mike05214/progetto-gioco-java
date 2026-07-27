@@ -22,6 +22,7 @@ import src.colorclash.model.StandardObstacle;
 public class SaveManager {
 
     private String highscoreFilePath = "saves/highscore.txt";
+    private String gameStatePath = "saves/gamestate.txt";
     private String charset = "UTF-8";
     private static SaveManager saveManager = null;
 
@@ -34,9 +35,9 @@ public class SaveManager {
 
     public SaveManager() {
         // MANTENUTO: Crea la cartella e il file vuoto al primo avvio
-        File SavesFolder = new File("saves");
-        if (!SavesFolder.exists()) {
-            SavesFolder.mkdirs();
+        File savesFolder = new File("saves");
+        if (!savesFolder.exists()) {
+            savesFolder.mkdirs();
         }
 
         File fileHighscore = new File(highscoreFilePath);
@@ -61,10 +62,9 @@ public class SaveManager {
 
             String line = buffRead.readLine();
             if (line != null && !line.isEmpty()) {
-                // MODIFICATO: Stile del prof (valueOf)
                 score = Integer.valueOf(line.trim());
             }
-        } catch (FileNotFoundException fnfe) { // MODIFICATO: catch separati come il prof
+        } catch (FileNotFoundException fnfe) { 
             fnfe.printStackTrace();
         } catch (IOException ioe) {
             ioe.printStackTrace();
@@ -82,7 +82,6 @@ public class SaveManager {
 
     public void writeHighscore(int newScore) {
         PrintWriter printWriter = null;
-
         try {
             printWriter = new PrintWriter(
                     new BufferedWriter(
@@ -104,7 +103,6 @@ public class SaveManager {
     }
 
     public void writeGameState(int score, int lives, int phase, double speed, int avaibleColors, Player player, List<Obstacle> enemies) {
-        String gameStatePath = "saves/gamestate.txt";
         PrintWriter printWriter = null;
 
         try {
@@ -114,20 +112,16 @@ public class SaveManager {
                                     new FileOutputStream(gameStatePath), charset)),
                     true);
 
-            // MODIFICATO: Uso di print() + \r\n come fa il professore per i ritorni a capo
             printWriter.print("SCORE:" + score + "\r\n");
             printWriter.print("LIVES:" + lives + "\r\n");
             printWriter.print("PHASE:" + phase + "\r\n");
             printWriter.print("CURRENT_SPEED:" + speed + "\r\n");
             printWriter.print("AVAIBLE_COLORS:" + avaibleColors + "\r\n");
-
-            // MODIFICATO: Uso del punto e virgola ; come separatore di token
             printWriter.print("PLAYER:" + player.getX() + ";" + player.getY() + ";" + player.getColorId() + "\r\n");
 
             for (Obstacle obs : enemies) {
-                String tipo = obs.getClass().getSimpleName();
 
-                printWriter.print("OBSTACLE:" + tipo + ";" +
+                printWriter.print("OBSTACLE:" + obs.getType() + ";" +
                         obs.getX() + ";" +
                         obs.getY() + ";" +
                         obs.getFallSpeed() + ";" +
@@ -136,7 +130,7 @@ public class SaveManager {
                         obs.getHeight() + "\r\n");
             }
 
-            System.out.println("Stato della partita congelato e salvato!");
+            System.out.println("Game status frozen and saved");
 
         } catch (FileNotFoundException fnfe) {
             fnfe.printStackTrace();
@@ -150,7 +144,6 @@ public class SaveManager {
     }
 
     public boolean loadGameState(GameModel model) {
-        String gameStatePath = "saves/gamestate.txt";
         File file = new File(gameStatePath);
 
         // MANTENUTO
@@ -193,34 +186,31 @@ public class SaveManager {
                     
                 } else if (line.startsWith("PLAYER:")) {
                     // MODIFICATO: Recupero con il ;
-                    String[] dati = line.split(":")[1].split(";"); 
-                    model.getPlayer().setX(Double.valueOf(dati[0]));
-                    model.getPlayer().setY(Double.valueOf(dati[1]));
-                    model.getPlayer().setColorId(Integer.valueOf(dati[2]));
+                    String[] playerData = line.split(":")[1].split(";"); 
+                    model.getPlayer().setX(Double.valueOf(playerData[0]));
+                    model.getPlayer().setY(Double.valueOf(playerData[1]));
+                    model.getPlayer().setColorId(Integer.valueOf(playerData[2]));
 
                 } else if (line.startsWith("OBSTACLE:")) {
-                    String[] dati = line.split(":")[1].split(";"); 
+                    String[] obsData = line.split(":")[1].split(";"); 
 
-                    String tipo = dati[0];
-                    double x = Double.valueOf(dati[1]);
-                    double y = Double.valueOf(dati[2]);
-                    double speed = Double.valueOf(dati[3]); 
-                    int colorId = Integer.valueOf(dati[4]);
-                    int width = Integer.valueOf(dati[5]);
-                    int height = Integer.valueOf(dati[6]);
+                    String type = obsData[0];
+                    double x = Double.valueOf(obsData[1]);
+                    double y = Double.valueOf(obsData[2]);
+                    double speed = Double.valueOf(obsData[3]); 
+                    int colorId = Integer.valueOf(obsData[4]);
+                    int width = Integer.valueOf(obsData[5]);
+                    int height = Integer.valueOf(obsData[6]);
 
-                    if (tipo.equals("StandardObstacle")) {
+                    if (type.equals("StandardObstacle")) {
                         model.getEnemies().add(new StandardObstacle(x, y, speed, colorId, width, height));
-                    } else if (tipo.equals("SpeedRacer")) {
+                    } else if (type.equals("SpeedRacer")) {
                         model.getEnemies().add(new SpeedRacer(x, y, speed, colorId, width, height));
-                    } else if (tipo.equals("SinusoidalMadness")) {
+                    } else if (type.equals("SinusoidalMadness")) {
                         model.getEnemies().add(new SinusoidalMadness(x, y, speed, colorId, width, height));
                     }
                 }
             }
-
-            // MANTENUTO
-            file.delete();
             return true;
 
         } catch (FileNotFoundException fnfe) { // MODIFICATO: Divisione precisa delle eccezioni

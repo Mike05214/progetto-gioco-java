@@ -22,7 +22,7 @@ public class Main {
             // Puoi provare: "Nimbus", "Metal", oppure "CDE/Motif"
             String temaScelto = "Windows Classic";
 
-            System.out.println("Temi disponibili su questo PC:");
+            System.out.println("Themes available on this PC:");
             for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 System.out.println("- " + info.getName());
             }

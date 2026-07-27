@@ -41,4 +41,9 @@ public class SpeedRacer extends Obstacle {
         return SPEEDRACER_POINTS;
     }
 
+    @Override 
+    public String getType() {
+        return "SpeedRacer";
+    }
+
 }// fine classe SpeedRacer

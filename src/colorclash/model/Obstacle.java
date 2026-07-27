@@ -80,4 +80,7 @@ public abstract class Obstacle {
     public double getFallSpeed(){
         return fallSpeed;
     }
+
+    // metodo astratto
+    public abstract String getType();
 }// fine classe astratta Obstacle

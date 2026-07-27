@@ -91,10 +91,14 @@ public class MenuPanel extends BaseMenuPanel {
         resumeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                AudioManager.getInstance().stopBackgroundMusic();
-                model.getSaveManager().loadGameState(model);
-                frame.getGamePanel().resumeCountdown();
-                frame.changeFrame("GAME");
+                if (model.getSaveManager().loadGameState(model)) {
+                    AudioManager.getInstance().stopBackgroundMusic();
+                    frame.getGamePanel().resumeCountdown();
+                    frame.changeFrame("GAME");
+                } else {
+                    // Opzionale: mostra un messaggio di errore all'utente
+                    System.out.println("Error: Unable to load the save file.");
+                }
             }
         });
 
@@ -151,7 +155,7 @@ public class MenuPanel extends BaseMenuPanel {
 
             for (Star s : stelle) {
                 g2d.setColor(new Color(255, 255, 255, s.getAlpha()));
-                starRect.setRect(s.getX(), s.getY()+offsetY, s.getSize(), s.getSize());
+                starRect.setRect(s.getX(), s.getY() + offsetY, s.getSize(), s.getSize());
                 g2d.fill(starRect);
             }
         }
