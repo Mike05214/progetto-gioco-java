@@ -34,7 +34,6 @@ public class SaveManager {
     }
 
     public SaveManager() {
-        // MANTENUTO: Crea la cartella e il file vuoto al primo avvio
         File savesFolder = new File("saves");
         if (!savesFolder.exists()) {
             savesFolder.mkdirs();
@@ -157,14 +156,12 @@ public class SaveManager {
                     new InputStreamReader(
                             new FileInputStream(gameStatePath), charset));
 
-            // MODIFICATO: dichiarazione var a null prima del while (come il prof)
             String line = null; 
             model.getEnemies().clear(); 
 
             while ((line = buffRead.readLine()) != null) {
 
                 if (line.startsWith("SCORE:")) {
-                    // MODIFICATO: valueOf
                     int savedScore = Integer.valueOf(line.split(":")[1]); 
                     model.setScore(savedScore);
 
@@ -213,7 +210,7 @@ public class SaveManager {
             }
             return true;
 
-        } catch (FileNotFoundException fnfe) { // MODIFICATO: Divisione precisa delle eccezioni
+        } catch (FileNotFoundException fnfe) {
             fnfe.printStackTrace();
             return false;
         } catch (IOException ioe) { 
