@@ -1,6 +1,5 @@
 package src.colorclash.model;
 
-import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
 

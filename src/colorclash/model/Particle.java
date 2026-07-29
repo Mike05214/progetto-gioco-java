@@ -22,7 +22,7 @@ public class Particle {
         this.size = rand.nextInt(MIN_SIZE, (MAX_SIZE + 1));
         this.dirX = (rand.nextDouble() - 0.5) * 10;
         this.dirY = (rand.nextDouble() - 0.5) * 10;
-        this.lifeSpan = rand.nextInt(20, 40 + 1);
+        this.lifeSpan = rand.nextInt(MIN_LIFE_SPAN, MAX_LIFE_SPAN + 1);
     }//fine costruttore
 
     public void update() {

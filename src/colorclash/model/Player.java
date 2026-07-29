@@ -7,21 +7,22 @@ import src.colorclash.utils.Config;
 
 public class Player {
 
-    // Coordinate e dimensioni
+    // variabili di stato
     private double x;
     private double y;
     private long lastColorChange = 0;
     private long currentTime = 0;
+    private int colorId;
+    private boolean isInvulnerable;
+    private boolean movingUp, movingDown, movingLeft, movingRight;
+
+    //costanti
     private final double SCALE_FACTOR = 0.7071;
     private final long COLOR_COOLDOWN = Config.getInstance().getIntProperty("color_cooldown");
     private final double PLAYER_SPEED = Config.getInstance().getDoubleProperty("player_speed"); 
     private final int PLAYER_WIDTH = Config.getInstance().getIntProperty("player_width");
     private final int PLAYER_HEIGHT = Config.getInstance().getIntProperty("player_height");
-
-    // Attributi di gioco dell'avatar
-    private int colorId;
-    private boolean isInvulnerable;
-    private boolean movingUp, movingDown, movingLeft, movingRight;
+    
 
     public Player(double startX, double startY, int startColorId) {
         this.x = startX;
@@ -85,13 +86,13 @@ public class Player {
     }// fine colorCoolDown
 
     public void switchColor(int availableColorsCount, boolean forward) {
-    if (forward) {
-        this.colorId = (this.colorId + 1) % availableColorsCount;
-    } else {
-        this.colorId = (this.colorId - 1 + availableColorsCount) % availableColorsCount;
-    }
-    lastColorChange = currentTime;
-} // fine switchColor
+        if (forward) {
+            this.colorId = (this.colorId + 1) % availableColorsCount;
+        } else {
+            this.colorId = (this.colorId - 1 + availableColorsCount) % availableColorsCount;
+        }
+        lastColorChange = currentTime;
+    }// fine switchColor
 
     public void resetToInitialSettings(double startX, double startY, int startColorId) {
         this.x = startX;
@@ -128,8 +129,7 @@ public class Player {
 
     public double getX() {
         return  x;
-    } // cast esplicito a int, il metodo fillRect nella view si aspetta delle
-      // coordinate intere non double
+    }
 
     public double getY() {
         return y;
@@ -177,10 +177,10 @@ public class Player {
     }
 
     public void setX(double x) {
-        this.x = x ;
+        this.x = x;
     }
 
     public void setY(double y) {
-        this.y = y ; 
+        this.y = y; 
     }
-}// fine classe Avatar
+}// fine classe Player
