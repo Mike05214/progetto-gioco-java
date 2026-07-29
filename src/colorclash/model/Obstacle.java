@@ -48,6 +48,7 @@ public abstract class Obstacle {
 
     // getters di Obstacle
     public abstract Shape getHitbox();
+    public abstract String getType();
 
     public double getX() {
         return x;
@@ -81,6 +82,5 @@ public abstract class Obstacle {
         return fallSpeed;
     }
 
-    // metodo astratto
-    public abstract String getType();
+    
 }// fine classe astratta Obstacle

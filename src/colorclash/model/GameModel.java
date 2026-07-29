@@ -7,10 +7,7 @@ import java.util.Random;
 import src.colorclash.utils.SaveManager;
 import src.colorclash.utils.AudioManager;
 import src.colorclash.utils.Config;
-import src.colorclash.utils.AudioManager;
 
-import java.awt.Color;
-import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
@@ -38,7 +35,6 @@ public class GameModel {
     private List<Star> stars = new ArrayList<>();
     private int availableColorsCount = 2;
     private SaveManager saveManager;
-    private Config config;
     private static GameModel model = null;
 
     // costanti
