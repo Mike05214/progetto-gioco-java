@@ -22,6 +22,7 @@ public class Main {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsClassicLookAndFeel");
             UIManager.put("Button.background", new Color(50, 50, 50));
             UIManager.put("Button.foreground", Color.WHITE);
+            UIManager.put("Button.font", new Font("Impact", Font.PLAIN, 20));
             UIManager.put("Button.focus", new Color(0, 0, 0, 0));
             
 
