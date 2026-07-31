@@ -18,31 +18,15 @@ public class Main {
 
         // --- INIZIO IMPOSTAZIONI LOOK AND FEEL ---
         try {
-            // Scegli il tema di Swing che vuoi testare cambiando questa stringa.
-            // Puoi provare: "Nimbus", "Metal", oppure "CDE/Motif"
-            String temaScelto = "Windows Classic";
-
-            System.out.println("Themes available on this PC:");
-            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-                System.out.println("- " + info.getName());
-            }
-
-            for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-                if (temaScelto.equals(info.getName())) {
-                    UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-
-            // Personalizzazione globale (sovrascrive il tema scelto per questi elementi)
+            
+            UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsClassicLookAndFeel");
             UIManager.put("Button.background", new Color(50, 50, 50));
             UIManager.put("Button.foreground", Color.WHITE);
-            UIManager.put("Button.font", new Font("Impact", Font.PLAIN, 20));
             UIManager.put("Button.focus", new Color(0, 0, 0, 0));
             
 
         } catch (Exception e) {
-            System.err.println("Errore durante l'impostazione del Look and Feel.");
+            System.err.println("Error setting the Look and Feel.");
             e.printStackTrace();
         }
         // --- FINE IMPOSTAZIONI LOOK AND FEEL ---
