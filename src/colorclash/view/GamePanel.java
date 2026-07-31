@@ -261,13 +261,13 @@ public class GamePanel extends JPanel {
         alertTimer.setInitialDelay(0);
         alertTimer.start();
 
-    }
+    }// fine newColorUnlockedCountdown
 
     public void stopBlinking() {
         if (alertTimer != null && alertTimer.isRunning()) {
             alertTimer.stop();
         }
-    }
+    }// fine stopBlinking
 
     public void resetGamePanel() {
         this.lastPhase = model.getPhase();
@@ -275,7 +275,7 @@ public class GamePanel extends JPanel {
         stopBlinking();
         hudPanel.restoreScoreLabel(model.getScore());
         gameSpace.deleteBorder();
-    }
+    }// fine resetGamePanel
 
     // getters del GamePanel
 

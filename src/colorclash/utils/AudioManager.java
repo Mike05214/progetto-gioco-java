@@ -15,6 +15,7 @@ public class AudioManager {
     private Clip backgroundMusic;
     private boolean isMuted = false;
 
+    //costruttore
     private AudioManager() {}
 
     public static AudioManager getInstance() {
@@ -22,7 +23,7 @@ public class AudioManager {
             instance = new AudioManager();
         }
         return instance;
-    }
+    }//fine getInstance
 
     private String getAudioFileFullPath(String fileName) {
         String path = AudioManager.class.getResource("/src/colorclash/sounds/" + fileName).toString(); 
@@ -35,19 +36,19 @@ public class AudioManager {
         
         path = path.replaceAll("%20", " "); 
         return path;
-    }
+    }//fine getAudioFullPath
 
     public void playSoundEffect(String fileName) {
         if (isMuted) {
             return;
         }
 
-        FileInputStream fis = null; //
+        FileInputStream fis = null;
         ByteArrayInputStream bais = null;
         AudioInputStream audioIn = null;
 
         try {
-            fis = new FileInputStream(getAudioFileFullPath(fileName)); //
+            fis = new FileInputStream(getAudioFileFullPath(fileName));
             
             byte[] audioData = fis.readAllBytes();
             bais = new ByteArrayInputStream(audioData);
@@ -81,7 +82,7 @@ public class AudioManager {
                 ioe.printStackTrace(); 
             }
         } 
-    }
+    }//fine playSoundEffect
 
 
     public void playBackgroundMusic(String fileName) {
@@ -121,20 +122,20 @@ public class AudioManager {
                 ioe.printStackTrace(); 
             }
         } 
-    }
+    }//fine playBackgroundMusic
 
     public void stopBackgroundMusic() {
         if (backgroundMusic != null && backgroundMusic.isRunning()) {
             backgroundMusic.stop();
         }
-    }
+    }//fine stopBackgroundMusic
 
     public void toggleSound() {
         isMuted = !isMuted;
         if (isMuted) {
             stopBackgroundMusic();
         }
-    }
+    }//fine toggleIsMuted
 
     public boolean isSoundEnabled() {
         return !isMuted;
