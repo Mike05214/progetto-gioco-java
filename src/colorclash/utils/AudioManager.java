@@ -15,7 +15,6 @@ public class AudioManager {
     private Clip backgroundMusic;
     private boolean isMuted = false;
 
-    // Costruttore privato (Design Pattern Singleton)
     private AudioManager() {}
 
     public static AudioManager getInstance() {
@@ -25,23 +24,19 @@ public class AudioManager {
         return instance;
     }
 
-    // Ricava a run-time il percorso completo del file per garantire la portabilità
     private String getAudioFileFullPath(String fileName) {
-        String path = AudioManager.class.getResource("/src/colorclash/sounds/" + fileName).toString(); //
+        String path = AudioManager.class.getResource("/src/colorclash/sounds/" + fileName).toString(); 
         
         if (path.contains("//")) {
-            path = path.substring("file:/".length()); // Versione Windows[cite: 5]
+            path = path.substring("file:/".length()); // Versione Windows
         } else if (path.contains("/")) {
-            path = path.substring("file:".length()); // Versione Linux[cite: 5]
+            path = path.substring("file:".length()); // Versione Linux
         }
         
-        path = path.replaceAll("%20", " "); //[cite: 5]
+        path = path.replaceAll("%20", " "); 
         return path;
     }
 
-    // ==========================================
-    // 1. EFFETTI SONORI (Esplosioni, Danni)
-    // ==========================================
     public void playSoundEffect(String fileName) {
         if (isMuted) {
             return;
@@ -68,40 +63,38 @@ public class AudioManager {
                 }
             });
 
-        } catch (FileNotFoundException fnfe) { //
+        } catch (FileNotFoundException fnfe) { 
             System.out.println("ERRORE: File audio non trovato -> " + fileName);
-            fnfe.printStackTrace(); //[cite: 1, 3, 5]
-        } catch (IOException ioe) { //[cite: 1, 3, 5]
+            fnfe.printStackTrace(); 
+        } catch (IOException ioe) { 
             System.out.println("Errore di IO riproduzione effetto sonoro: " + fileName);
-            ioe.printStackTrace(); //[cite: 1, 3, 5]
+            ioe.printStackTrace(); 
         } catch (Exception e) {
-            // Catch generico mantenuto solo per le eccezioni specifiche di javax.sound (non coperte dal prof)
+            
             e.printStackTrace();
         } finally {
             try {
-                if (fis != null) fis.close(); //[cite: 1, 3, 5]
+                if (fis != null) fis.close(); 
                 if (bais != null) bais.close();
                 if (audioIn != null) audioIn.close();
-            } catch (IOException ioe) { //[cite: 1, 3, 5]
-                ioe.printStackTrace(); //[cite: 1, 3, 5]
+            } catch (IOException ioe) { 
+                ioe.printStackTrace(); 
             }
-        } //[cite: 1, 3, 5]
+        } 
     }
 
-    // ==========================================
-    // 2. MUSICA DI SOTTOFONDO IN LOOP
-    // ==========================================
+
     public void playBackgroundMusic(String fileName) {
         if (isMuted) {
             return;
         }
 
-        FileInputStream fis = null; //[cite: 1, 3, 5]
+        FileInputStream fis = null; 
         ByteArrayInputStream bais = null;
         AudioInputStream audioIn = null;
 
         try {
-            fis = new FileInputStream(getAudioFileFullPath(fileName)); //[cite: 1, 3, 5]
+            fis = new FileInputStream(getAudioFileFullPath(fileName)); 
 
             byte[] audioData = fis.readAllBytes();
             bais = new ByteArrayInputStream(audioData);
@@ -111,23 +104,23 @@ public class AudioManager {
             backgroundMusic.open(audioIn);
             backgroundMusic.loop(Clip.LOOP_CONTINUOUSLY);
 
-        } catch (FileNotFoundException fnfe) { //[cite: 1, 3, 5]
+        } catch (FileNotFoundException fnfe) { 
             System.out.println("ERRORE: File audio non trovato -> " + fileName);
-            fnfe.printStackTrace(); //[cite: 1, 3, 5]
-        } catch (IOException ioe) { //[cite: 1, 3, 5]
+            fnfe.printStackTrace(); 
+        } catch (IOException ioe) { 
             System.out.println("Errore di IO riproduzione musica di sottofondo.");
-            ioe.printStackTrace(); //[cite: 1, 3, 5]
+            ioe.printStackTrace(); 
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             try {
-                if (fis != null) fis.close(); //[cite: 1, 3, 5]
+                if (fis != null) fis.close(); 
                 if (bais != null) bais.close();
                 if (audioIn != null) audioIn.close();
-            } catch (IOException ioe) { //[cite: 1, 3, 5]
-                ioe.printStackTrace(); //[cite: 1, 3, 5]
+            } catch (IOException ioe) { 
+                ioe.printStackTrace(); 
             }
-        } //[cite: 1, 3, 5]
+        } 
     }
 
     public void stopBackgroundMusic() {

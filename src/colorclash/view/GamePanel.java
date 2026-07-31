@@ -217,7 +217,7 @@ public class GamePanel extends JPanel {
                     } else {
                         hudPanel.restoreScoreLabel(model.getScore());
                     }
-                    AudioManager.getInstance().playBackgroundMusic("sample-15s.wav");
+                    AudioManager.getInstance().playBackgroundMusic("soundtrack.wav");
                     gameSpace.setForceDrawPlayer(false);
                     gameLoop.start();
                     hudPanel.getPauseButton().setEnabled(true);

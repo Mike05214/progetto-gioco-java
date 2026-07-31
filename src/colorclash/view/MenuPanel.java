@@ -67,7 +67,7 @@ public class MenuPanel extends BaseMenuPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 AudioManager.getInstance().stopBackgroundMusic();
-                AudioManager.getInstance().playBackgroundMusic("sample-15s.wav");
+                AudioManager.getInstance().playBackgroundMusic("soundtrack.wav");
                 frame.changeFrame("GAME");
                 model.resetGame();
                 frame.getGamePanel().resetGamePanel();
