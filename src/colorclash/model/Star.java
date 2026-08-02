@@ -25,15 +25,11 @@ public class Star {
     }// fine costruttore
 
     public void reset(int screenWidth, int startY) {
-        // Posizione X casuale per tutta la larghezza dello schermo
-        this.x = rand.nextInt(0, (screenWidth + 1));
-        this.y = startY;
         this.size = rand.nextInt(MIN_SIZE, (MAX_SIZE + 1));
-        // La velocità di caduta rimane proporzionale alla dimensione
-        this.speed = this.size * FALL_SPEED_MULTIPLIER;
-        
-        // Opacità casuale tra 100 e 255 per l'effetto di profondità
-        this.alpha = rand.nextInt(MIN_OPACITY, (MAX_OPACITY + 1));
+        this.x = rand.nextInt(0, (screenWidth-size) + 1);
+        this.y = startY;
+        this.speed = this.size * FALL_SPEED_MULTIPLIER; // La velocità di caduta rimane proporzionale alla dimensione
+        this.alpha = rand.nextInt(MIN_OPACITY, (MAX_OPACITY + 1)); // Opacità casuale tra 100 e 255 per l'effetto di profondità
     }// fine reset
 
     public void update(int screenWidth, int screenHeight) {

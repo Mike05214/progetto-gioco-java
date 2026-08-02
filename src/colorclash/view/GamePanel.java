@@ -129,10 +129,10 @@ public class GamePanel extends JPanel {
                 }
 
                 if (key == KeyEvent.VK_SPACE || key == KeyEvent.VK_RIGHT) {
-                    spaceKeyLogic(true);
+                    ColorSwitchLogic(true);
                 }
                 if (key == KeyEvent.VK_LEFT) {
-                    spaceKeyLogic(false);
+                    ColorSwitchLogic(false);
                 }
 
             }
@@ -168,7 +168,7 @@ public class GamePanel extends JPanel {
 
     }// fine initSetupListeners
 
-    private void spaceKeyLogic(boolean forward) {
+    private void ColorSwitchLogic(boolean forward) {
         if (!colorSwitchLocked) {
             model.getPlayer().colorCooldown(model.getAvailableColorsCount(), forward);
             colorSwitchLocked = true;

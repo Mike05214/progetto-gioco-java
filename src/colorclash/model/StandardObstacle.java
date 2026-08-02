@@ -4,6 +4,7 @@ import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
 
 import java.util.Random;
+import src.colorclash.utils.Config;
 
 public class StandardObstacle extends Obstacle {
     // costanti statiche
@@ -12,7 +13,7 @@ public class StandardObstacle extends Obstacle {
     private static final Random random = new Random();
 
     // costanti
-    private final int STANDARD_OBSTACLE_POINTS = 100;
+    private final int STANDARD_OBSTACLE_POINTS = Config.getInstance().getIntProperty("default_obstacle_points");
 
     public StandardObstacle(double startX, double startY, double speed, int colorId, int width, int height) {
         super(startX, startY, speed, colorId, width, height);

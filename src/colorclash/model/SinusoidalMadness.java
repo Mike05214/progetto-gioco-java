@@ -31,7 +31,7 @@ public class SinusoidalMadness extends Obstacle {
     }// fine costruttore
 
     @Override
-    public void fall() {
+    public void update() {
         this.y += this.fallSpeed;
         angle += WAWE_SPEED;
         this.x = this.startX + (AMPLITUDE * Math.sin(angle));

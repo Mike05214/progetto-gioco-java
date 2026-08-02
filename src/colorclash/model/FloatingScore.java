@@ -1,7 +1,7 @@
 package src.colorclash.model;
 
 public class FloatingScore {
-    
+
     private double x, y;
     private String text;
     private int alpha = 255;
@@ -10,22 +10,26 @@ public class FloatingScore {
         this.x = startX;
         this.y = startY;
         this.text = "+" + points;
-    }//fine costruttore
+    }// fine costruttore
 
     public void update() {
         this.y -= 1.5;
         this.alpha -= 3;
-        
+
         if (this.alpha < 0) {
             this.alpha = 0;
         }
-    }//fine update
+    }// fine update
 
     public boolean isDead() {
-        return this.alpha <= 0;
-    }//fine isDead
+        if (alpha <= 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }// fine isDead
 
-    //getters di FloatingScore
+    // getters di FloatingScore
 
     public double getX() {
         return this.x;
@@ -42,4 +46,4 @@ public class FloatingScore {
     public int getAlpha() {
         return this.alpha;
     }
-}//fine classe FloatingScore
+}// fine classe FloatingScore

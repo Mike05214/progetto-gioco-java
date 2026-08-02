@@ -3,6 +3,7 @@ package src.colorclash.view;
 import src.colorclash.model.GameModel;
 import src.colorclash.model.Star;
 import src.colorclash.utils.AudioManager;
+import src.colorclash.utils.SaveManager;
 import src.colorclash.view.MainFrame;
 
 import java.awt.Color;
@@ -91,7 +92,7 @@ public class PausePanel extends BaseMenuPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 frame.changeFrame("MENU");
-                model.getSaveManager().writeGameState(model.getScore(), model.getLives(), model.getPhase(),
+                SaveManager.getInstance().writeGameState(model.getScore(), model.getLives(), model.getPhase(),
                         model.getCurrentSpeed(), model.getAvailableColorsCount(),
                         model.getPlayer(), model.getEnemies());
                 model.resetGame();

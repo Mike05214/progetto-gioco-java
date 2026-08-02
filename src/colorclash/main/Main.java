@@ -13,8 +13,8 @@ public class Main {
     public static void main(String[] args) {
         // PREVIENE IL BUG DEL CLEARTYPE DI WINDOWS, "Usa il tuo anti-aliasing interno e
         // non fare domande a Windows".
-        System.setProperty("awt.useSystemAAFontSettings", "on");
-        System.setProperty("swing.aatext", "true");
+        System.setProperty("awt.useSystemAAFontSettings", "on"); //
+        System.setProperty("swing.aatext", "true"); // 
 
         // --- INIZIO IMPOSTAZIONI LOOK AND FEEL ---
         try {
@@ -26,10 +26,11 @@ public class Main {
             UIManager.put("Button.focus", new Color(0, 0, 0, 0));
             
 
-        } catch (Exception e) {
+        } catch (Exception e) {  //Nel caso venga catturata un'eccezione il programma applica il look and fell di default
             System.err.println("Error setting the Look and Feel.");
             e.printStackTrace();
         }
+       
         // --- FINE IMPOSTAZIONI LOOK AND FEEL ---
 
         javax.swing.SwingUtilities.invokeLater(new Runnable() {

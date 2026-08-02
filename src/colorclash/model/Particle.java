@@ -20,7 +20,7 @@ public class Particle {
         this.colorId = colorId;
         this.rand = new Random();
         this.size = rand.nextInt(MIN_SIZE, (MAX_SIZE + 1));
-        this.dirX = (rand.nextDouble() - 0.5) * 10;
+        this.dirX = (rand.nextDouble() - 0.5) * 10; // va da -0.5 a 0.5 determinandone direzione orizzontale moltiplicato per 10 per velocità effettiva
         this.dirY = (rand.nextDouble() - 0.5) * 10;
         this.lifeSpan = rand.nextInt(MIN_LIFE_SPAN, MAX_LIFE_SPAN + 1);
     }//fine costruttore

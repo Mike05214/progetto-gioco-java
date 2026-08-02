@@ -91,7 +91,7 @@ public class MenuPanel extends BaseMenuPanel {
         resumeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (model.getSaveManager().loadGameState(model)) {
+                if (SaveManager.getInstance().loadGameState(model)) {
                     AudioManager.getInstance().stopBackgroundMusic();
                     frame.getGamePanel().resumeCountdown();
                     frame.changeFrame("GAME");

@@ -1,7 +1,6 @@
 package src.colorclash.model;
 
 import java.awt.Shape;
-import src.colorclash.utils.Config;
 
 public abstract class Obstacle {
     // variabili d'istanza ereditabili
@@ -13,8 +12,6 @@ public abstract class Obstacle {
     protected int colorId;
     protected boolean isActive;
 
-    // costanti
-    private final int DEFAULT_OBSTACLE_POINTS = Config.getInstance().getIntProperty("default_obstacle_points");
 
     public Obstacle(double startX, double startY, double speed, int colorId, int width, int height) {
         this.x = startX;
@@ -26,7 +23,7 @@ public abstract class Obstacle {
         this.isActive = true;
     }// fine costruttore
 
-    public void fall() {
+    public void update() {
         this.y += fallSpeed;
     }// fine fall
 
@@ -47,8 +44,12 @@ public abstract class Obstacle {
     }
 
     // getters di Obstacle
+
     public abstract Shape getHitbox();
+
     public abstract String getType();
+    
+    abstract int getPoints();
 
     public double getX() {
         return x;
@@ -68,10 +69,6 @@ public abstract class Obstacle {
 
     public int getColorId() {
         return colorId;
-    }
-
-    public int getPoints() {
-        return DEFAULT_OBSTACLE_POINTS;
     }
 
     public boolean isActive() {

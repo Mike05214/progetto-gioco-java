@@ -1,12 +1,12 @@
 package src.colorclash.model;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
 import src.colorclash.utils.SaveManager;
 import src.colorclash.utils.AudioManager;
 import src.colorclash.utils.Config;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 import java.awt.Shape;
 import java.awt.geom.Area;
@@ -28,8 +28,9 @@ public class GameModel {
     private int frameCounter = 0;
     private int spawnInterval = Config.getInstance().getIntProperty("obstacle_spawn_rate_ms"); // 125 frame = 2 secondo
                                                                                                // (se il timer è a 8ms)
-    private double currentFallSpeed = Config.getInstance().getDoubleProperty("obstacle_base_speed");
+    private double currentFallSpeed;;
     private int currentPhase = 1;
+
     private List<Particle> particles = new ArrayList<>();
     private List<FloatingScore> floatingScores = new ArrayList<>();
     private List<Star> stars = new ArrayList<>();
@@ -40,10 +41,11 @@ public class GameModel {
     // costanti
     private final double START_X = Config.getInstance().getDoubleProperty("player_start_x");
     private final double START_Y = Config.getInstance().getDoubleProperty("player_start_y");
-    private final int MIN_X = 0;
+    private final int MIN_X = 0; // relative al constrainX e constrainY
     private final int MIN_Y = 0;
     private final int OBSTACLE_START_Y = -150;
     private final int START_COLOR_ID = 0;
+    private final double BASE_SPEED =Config.getInstance().getDoubleProperty("obstacle_base_speed");
     private final int TICK_TIME = 8;
     private final int SCORE_DELAY = Config.getInstance().getIntProperty("score_delay");
     private final int SCORE_PHASE_2 = Config.getInstance().getIntProperty("phase_2_score_threshold");
@@ -51,18 +53,19 @@ public class GameModel {
     private final double SPEED_PHASE_MULTIPLIER = Config.getInstance().getDoubleProperty("speed_phase_multiplier");
     private final double SPEEDRACER_MULTIPLIER = Config.getInstance().getDoubleProperty("speed_racer_multiplier");
     private final int MAX_INVULN_FRAMES = 125; // 125 frame a 125fps = 1 secondi invulerabile
-    private final int DEFAULT_GAIN = 100;
+    private final int DEFAULT_GAIN = 100; // punti per il tempo di sopravvivenza
     private final int MAX_CHANCE = 100;
     private final int SPEEDRACER_CHANCE_PHASE_2 = 30;
     private final int SPEEDRACER_CHANCE_PHASE_3 = 40;
     private final int SINUSOIDALMADNESS_CHANCE = 15;
-    private final int MIN_PARTICLES = 5;
+    private final int MIN_PARTICLES = 5; // numero di particelle minime che appaiono durante esplosione ostacolo
     private final int MAX_PARTICLES = 12;
-    private final int EXPLOSION_OFFSET = 20;
+    private final int EXPLOSION_OFFSET = 20; // per alzare il centro esplosione
     private final int MAX_LIVES = 3;
     private final int NUM_STARS = 100;
 
     // METODI STATICI
+
     public static GameModel getInstance() {
         if (model == null) {
             model = new GameModel();
@@ -77,15 +80,15 @@ public class GameModel {
     }// fine costruttore
 
     private void initGame() {
-        this.player = new Player(START_X, START_Y, START_COLOR_ID);
-        this.enemies = new ArrayList<>();
-        this.lives = MAX_LIVES;
-        this.isGameOver = false;
-        this.random = new Random();
-        this.saveManager = SaveManager.getInstance();
+        player = new Player(START_X, START_Y, START_COLOR_ID);
+        enemies = new ArrayList<>();
+        lives = MAX_LIVES;
+        isGameOver = false;
+        currentFallSpeed = BASE_SPEED;
+        random = new Random();
+        saveManager = SaveManager.getInstance();
         initStars(Config.getInstance().getIntProperty("frame_width"),
-                Config.getInstance().getIntProperty("frame_height"));// da rivedere questo metodo initStars
-
+                Config.getInstance().getIntProperty("frame_height"));
     }// fine initGame
 
     public void update(int panelWidth, int panelHeight) {
@@ -94,14 +97,14 @@ public class GameModel {
             return;
         }
         invulnerabilityHandler();
-        player.move();
+        player.update();
         player.constrainX(MIN_X, panelWidth);
         player.constrainY(MIN_Y, panelHeight);
         spawningHandler(panelWidth);
         updateEnemies(panelHeight);
         updateParticles();
         updateFloatingScore();
-        checkCollisions();
+        checkCollisions(); // qui il gameover potrebbe essere settato a true
         updateSurvivalScore();
         updateStars(panelWidth, panelHeight);
         if (isGameOver) {
@@ -114,10 +117,16 @@ public class GameModel {
         }
     }// fine update
 
+    public void initStars(int panelWidth, int panelHeight) {
+        for (int i = 0; i < NUM_STARS; i++) {
+            stars.add(new Star(panelWidth, panelHeight));
+        }
+    }// fine initStars
+
     private void updateEnemies(int panelHeight) {
 
         for (Obstacle obs : enemies) {
-            obs.fall();
+            obs.update();
             obs.checkOffScreen(panelHeight);
         }
         enemies.removeIf(obs -> !obs.isActive());
@@ -127,15 +136,23 @@ public class GameModel {
         for (Particle p : particles) {
             p.update();
         }
-        particles.removeIf(Particle::isDead);
+        particles.removeIf(p -> p.isDead());
     }// fine updateParticles
 
     private void updateFloatingScore() {
         for (FloatingScore fs : floatingScores) {
             fs.update();
         }
-        floatingScores.removeIf(FloatingScore::isDead);
+        floatingScores.removeIf(fs -> fs.isDead());
     }// fine updateFloatingScore
+
+    public void updateStars(int panelWidth, int panelHeight) {
+        if (stars != null) {
+            for (Star s : stars) {
+                s.update(panelWidth, panelHeight);
+            }
+        }
+    }// fine updateStarts
 
     private void invulnerabilityHandler() {
 
@@ -244,21 +261,6 @@ public class GameModel {
         }
     }// fine createExplosion
 
-    public void initStars(int panelWidth, int panelHeight) {
-        stars = new ArrayList<>();
-        for (int i = 0; i < NUM_STARS; i++) {
-            stars.add(new Star(panelWidth, panelHeight));
-        }
-    }
-
-    // Da chiamare nel tuo game loop (dove aggiorni gli ostacoli)
-    public void updateStars(int panelWidth, int panelHeight) {
-        if (stars != null) {
-            for (Star s : stars) {
-                s.update(panelWidth, panelHeight);
-            }
-        }
-    }
 
     private void checkCollisions() {
         Shape playerShape = player.getHitbox();
@@ -275,7 +277,7 @@ public class GameModel {
 
             Area playerArea = new Area(playerShape);
             Area obsArea = new Area(obsShape);
-            playerArea.intersect(obsArea);
+            playerArea.intersect(obsArea); // restituisce intersezione tra le due aree
 
             if (!playerArea.isEmpty()) {
 
@@ -300,14 +302,7 @@ public class GameModel {
         }
     }// fine checkCollisions
 
-    public void autoSave() {
-        // Salviamo lo stato solo se il giocatore è in partita e non ha già perso.
-        // (Non ha senso salvare una partita in stato di Game Over)
-        if (!this.isGameOver) {
-            saveManager.writeGameState(this.score, this.lives, this.currentPhase, this.currentFallSpeed,
-                    this.availableColorsCount, this.player, this.enemies);
-        }
-    }
+    
 
     private void resetScore() {
         this.score = 0;
@@ -320,7 +315,7 @@ public class GameModel {
     }// fine resetObstacles
 
     private void resetDifficulty() {
-        currentFallSpeed = 3.0;
+        currentFallSpeed = BASE_SPEED;
         currentPhase = 1;
         availableColorsCount = 2;
     }// fine resetDifficulty
@@ -330,7 +325,7 @@ public class GameModel {
     }// fine resetGameover
 
     private void resetLives() {
-        lives = 3;
+        lives = MAX_LIVES;
     }// fine resetLives
 
     private void resetInvulnerability() {
@@ -349,6 +344,14 @@ public class GameModel {
         resetInvulnerability();
         resetDifficulty();
     }// fine resetGame
+
+    public void autoSave() {
+        // Salviamo lo stato solo se il giocatore è in partita e non ha già perso.
+        if (!this.isGameOver) {
+            saveManager.writeGameState(this.score, this.lives, this.currentPhase, this.currentFallSpeed,
+                    this.availableColorsCount, this.player, this.enemies);
+        }
+    }// fine autoSave
 
     // getters del GameModel
 
@@ -418,10 +421,6 @@ public class GameModel {
 
     public int getHighscore() {
         return saveManager.getHighscore();
-    }
-
-    public SaveManager getSaveManager() {
-        return this.saveManager;
     }
 
     // setters gameModel

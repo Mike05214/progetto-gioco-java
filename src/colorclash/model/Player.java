@@ -17,7 +17,7 @@ public class Player {
     private boolean movingUp, movingDown, movingLeft, movingRight;
 
     //costanti
-    private final double SCALE_FACTOR = 0.7071;
+    private final double SCALE_FACTOR = 0.7071;// 1/sqtr(2)
     private final long COLOR_COOLDOWN = Config.getInstance().getIntProperty("color_cooldown");
     private final double PLAYER_SPEED = Config.getInstance().getDoubleProperty("player_speed"); 
     private final int PLAYER_WIDTH = Config.getInstance().getIntProperty("player_width");
@@ -31,12 +31,12 @@ public class Player {
         this.isInvulnerable = false;
     }// fine costruttore
 
-    public void move() {
+    public void update() {
         boolean diagonalMovement = (movingLeft ^ movingRight) && (movingUp ^ movingDown);
         double speedVector = 0;
 
         if (diagonalMovement) {
-            speedVector = PLAYER_SPEED * SCALE_FACTOR;
+            speedVector = PLAYER_SPEED * SCALE_FACTOR; 
         } else {
             speedVector = PLAYER_SPEED;
         }
@@ -56,7 +56,7 @@ public class Player {
         if (movingRight && !movingLeft) {
             x += speedVector;
         }
-    }// fine move
+    }// fine update
 
     public void constrainX(int minX, int maxX) {
         if (this.x < minX) {
@@ -87,7 +87,7 @@ public class Player {
 
     public void switchColor(int availableColorsCount, boolean forward) {
         if (forward) {
-            this.colorId = (this.colorId + 1) % availableColorsCount;
+            this.colorId = (this.colorId + 1) % availableColorsCount; // se è in avanti aumenta verso destra 
         } else {
             this.colorId = (this.colorId - 1 + availableColorsCount) % availableColorsCount;
         }
@@ -109,7 +109,6 @@ public class Player {
 
     public Shape getHitbox() {
         Path2D.Double navicella = new Path2D.Double();
-        // costruzione della forma dell'avatar
         navicella.moveTo(this.x + (PLAYER_WIDTH * 0.5), this.y);
         navicella.lineTo(this.x + (PLAYER_WIDTH * 0.6), this.y + (PLAYER_HEIGHT * 0.3));
         navicella.lineTo(this.x + PLAYER_WIDTH, this.y + (PLAYER_HEIGHT * 0.8));
@@ -121,7 +120,6 @@ public class Player {
         navicella.lineTo(this.x, this.y + (PLAYER_HEIGHT * 0.8));
         navicella.lineTo(this.x + (PLAYER_WIDTH * 0.4), this.y + (PLAYER_HEIGHT * 0.3));
         navicella.closePath();
-        // fine costruzione della forma dell'avatar
         return navicella;
     }// fine getHitbox
 
