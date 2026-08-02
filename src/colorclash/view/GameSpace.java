@@ -81,7 +81,8 @@ public class GameSpace extends JPanel {
 
         for (Particle p : model.getParticles()) {
             int colorId = p.getColorId();
-            g2d.setColor(colorPalette[colorId]);
+            Color baseColor = colorPalette[colorId];
+            g2d.setColor(new Color(baseColor.getRed(), baseColor.getGreen(), baseColor.getBlue(), p.getAlpha()));
             particleRect.setRect(p.getX(), p.getY(), p.getSize(), p.getSize());
             g2d.fill(particleRect);
 
