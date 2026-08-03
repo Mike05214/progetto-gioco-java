@@ -1,4 +1,5 @@
 package src.colorclash.view;
+
 import src.colorclash.utils.AudioManager;
 import src.colorclash.utils.Config;
 import src.colorclash.model.GameModel;
@@ -6,7 +7,6 @@ import src.colorclash.utils.AudioManager;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
 
 import java.awt.CardLayout;
 import java.awt.Container;
