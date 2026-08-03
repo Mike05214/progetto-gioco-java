@@ -4,16 +4,13 @@ import java.util.Random;
 
 public class Particle {
     private double x, y, dirX, dirY;
-    private int lifeSpan;
     private int colorId;
     private int size;
     private Random rand;
     private int alpha = 255;
 
     private final int MIN_SIZE = 10;
-    private final int MIN_LIFE_SPAN = 20;
     private final int MAX_SIZE = 20;
-    private final int MAX_LIFE_SPAN = 40;
 
     public Particle(double x, double y, int colorId) {
         this.x = x;
@@ -29,7 +26,7 @@ public class Particle {
     public void update() {
         x += dirX;
         y += dirY;
-        this.alpha -= 5;
+        this.alpha -= 3;
 
         if (this.alpha < 0) {
             this.alpha = 0;
