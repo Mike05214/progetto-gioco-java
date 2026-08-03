@@ -31,73 +31,68 @@ public abstract class BaseMenuPanel extends JPanel {
     // variabili d'istanza
     protected JPanel centerPanel;
 
-    // metodi pubblici
-    public BaseMenuPanel() {
-        this.setLayout(new BorderLayout());
+    // METODI PUBBLICI
 
-        this.centerPanel = new JPanel(new GridBagLayout());
-        centerPanel.setOpaque(false);
-        this.add(centerPanel, BorderLayout.CENTER);
+    public BaseMenuPanel() {
+        setLayout(new BorderLayout());
+        centerPanel = new JPanel(new GridBagLayout());
+        centerPanel.setOpaque(false); // per evitare che si sovrapponga ai paintings
+        add(centerPanel, BorderLayout.CENTER);
     }// fine costruttore
 
-    // metodi protetti
-    protected void initTitleLabel(String text, Color color) {
+    // METODI PROTETTI
+
+    protected void initTitleLabel(String text) {
         JLabel titleLabel = createRainbowLabel(text);
         titleLabel.setFont(new Font("Impact", Font.PLAIN, TITLE_SIZE));
-        titleLabel.setForeground(color);
-        this.add(titleLabel, BorderLayout.NORTH);
+        add(titleLabel, BorderLayout.NORTH); //aggiunto a nord del BaseMenuPanel
     }// fine initTitleLabel
+
+    protected void addComponentToCenter(Component comp, int row, boolean hasSpaceBelow) {
+        GridBagConstraints gbc = new GridBagConstraints(); //classe per settare i vincoli del layout
+        gbc.gridx = ONE_COLUMN;
+        gbc.gridy = row;
+        gbc.insets = new Insets(TOP, LEFT, hasSpaceBelow ? BETWEEN_SPACE : 0, RIGHT); //haSpaceBelow true = BETWEEN_SPACE, hasSpaceBelow false = 0
+        centerPanel.add(comp, gbc);
+    }// fine addComponentToCenter
+
+    // METODI PRIVATI
 
     private JLabel createRainbowLabel(String text) {
         return new JLabel(text, SwingConstants.CENTER) {
             @Override
-            protected void paintComponent(Graphics g) {
-                paintLabelBackground(g, this);
-                drawRainbowText((Graphics2D) g, this);
+            protected void paintComponent(Graphics g) { //testo originale non viene paintato perchè abbiamo omesso super.paintcomponent
+                Graphics2D g2d = (Graphics2D) g;
+                drawRainbowText(g2d, this);
             }
         };
     }// fine createRainBowLabel
 
-    private void paintLabelBackground(Graphics g, JLabel label) {
-        if (label.isOpaque()) {
-            g.setColor(label.getBackground());
-            g.fillRect(0, 0, label.getWidth(), label.getHeight());
-        }
-    }// fine paintLabelBackground
-
-    private void drawRainbowText(Graphics2D g2, JLabel label) {
-        //g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-        g2.setFont(label.getFont());
+    private void drawRainbowText(Graphics2D g2d, JLabel label) {
+        g2d.setFont(label.getFont());
         String text = label.getText();
-        FontMetrics fm = g2.getFontMetrics();
+        FontMetrics fm = g2d.getFontMetrics(); //calcola le dimensioni esatte in pixel di un testo,
+        //  basandosi sul font che abbiamo impostato in precedenza su g2d E Sulle impostazioni grafiche
         Color[] rainbowColors = {
                 Color.RED, Color.ORANGE, Color.YELLOW, Color.GREEN,
                 Color.CYAN, Color.BLUE, Color.MAGENTA
         };
-        int y = (label.getHeight() - fm.getHeight()) / 2 + fm.getAscent();
-        int xAttuale = (label.getWidth() - fm.stringWidth(text)) / 2;
+        int y = (label.getHeight() - fm.getHeight()) / 2 + fm.getAscent(); //ragioniamo con l'altezza standard del font in questione 
+        int currentX = (label.getWidth() - fm.stringWidth(text)) / 2; //centratura della scritta
 
         for (int i = 0; i < text.length(); i++) {
-            char carattere = text.charAt(i);
-            String pattern = String.valueOf(carattere);
+            char c = text.charAt(i);
+            String pattern = String.valueOf(c);
 
-            if (Character.isWhitespace(carattere)) {
-                xAttuale += fm.stringWidth(pattern);
+            if (Character.isWhitespace(c)) {
+                currentX += fm.stringWidth(pattern);
                 continue;
             }
 
-            g2.setColor(rainbowColors[i % rainbowColors.length]);
-            g2.drawString(pattern, xAttuale, y);
-            xAttuale += fm.stringWidth(pattern);
+            g2d.setColor(rainbowColors[i % rainbowColors.length]);
+            g2d.drawString(pattern, currentX, y);
+            currentX += fm.stringWidth(pattern);
         }
     }// fine drawRainbowText
-
-    protected void addComponentToCenter(Component comp, int row, boolean hasSpaceBelow) {
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = ONE_COLUMN;
-        gbc.gridy = row;
-        gbc.insets = new Insets(TOP, LEFT, hasSpaceBelow ? BETWEEN_SPACE : 0, RIGHT);
-        centerPanel.add(comp, gbc);
-    }// fine addComponentToCenter
 
 }// fine classe astratta BaseMenuPanel

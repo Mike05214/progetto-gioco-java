@@ -26,7 +26,7 @@ public class Particle {
     public void update() {
         x += dirX;
         y += dirY;
-        this.alpha -= 3;
+        this.alpha -= 4;
 
         if (this.alpha < 0) {
             this.alpha = 0;

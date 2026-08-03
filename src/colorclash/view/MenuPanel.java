@@ -47,7 +47,7 @@ public class MenuPanel extends BaseMenuPanel {
         this.frame = frame;
         setBackground(new Color(10, 10, 10));
         initButtons();
-        initTitleLabel("COLOR CLASH", Color.YELLOW);
+        initTitleLabel("COLOR CLASH");
         addComponentToCenter(playButton, ROW_0, true);
         addComponentToCenter(resumeButton, ROW_1, true);
         addComponentToCenter(deleteSaveButton, ROW_2, true);

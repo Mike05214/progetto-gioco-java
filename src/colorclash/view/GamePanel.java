@@ -30,25 +30,25 @@ public class GamePanel extends JPanel {
 
     // costanti
     private final int DELAY = 8;
-    private final int RESUME_COOLDOWN_DELAY = 800;
+    private final int RESUME_COOLDOWN_DELAY = 800; //poco meno di tre secondi per sincronizzazione con l'audio del countdown
     private final int COUNT_LEFT = 3;
     private final int NEW_COLOR_LABEL_VISIBLE_DELAY = 500;
 
-    public GamePanel(MainFrame frame) {
-        this.model = GameModel.getInstance();
-        this.frame = frame;
-        this.lastPhase = model.getPhase();
+    public GamePanel(MainFrame mainframe) {
+        model = GameModel.getInstance();
+        frame = mainframe;
+        lastPhase = model.getPhase();
         setLayout(new BorderLayout());
         initGameLoop();
         initHudPanel();
         initGameSpace();
-        initSetupListeners();
+        initListeners();
 
     }// fine costruttore
 
-    // metodi privati
+    // METODI PRIVATI
     private void initGameLoop() {
-        this.gameLoop = new Timer(DELAY, new ActionListener() {
+        gameLoop = new Timer(DELAY, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 model.update(getGameSpaceWidth(), getGameSpaceHeight());
@@ -75,7 +75,7 @@ public class GamePanel extends JPanel {
     }// fine initGameLoop
 
     private void initGameSpace() {
-        this.gameSpace = new GameSpace();
+        gameSpace = new GameSpace();
         gameSpace.getRestarButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -88,11 +88,11 @@ public class GamePanel extends JPanel {
                 hudPanel.getPauseButton().setEnabled(true);
             }
         });
-        this.add(gameSpace, BorderLayout.CENTER);
+        add(gameSpace, BorderLayout.CENTER);
     }// fine initGameSpace
 
     private void initHudPanel() {
-        this.hudPanel = new HudPanel();
+        hudPanel = new HudPanel();
         hudPanel.getPauseButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -100,11 +100,12 @@ public class GamePanel extends JPanel {
                 stopBlinking();
             }
         });
-        this.add(hudPanel, BorderLayout.NORTH);
+        add(hudPanel, BorderLayout.NORTH);
     }// fine initHudPanel
 
-    private void initSetupListeners() {
-        this.addKeyListener(new KeyAdapter() {
+    private void initListeners() {
+        addKeyListener(new KeyAdapter() { // KeyAdapter è una classe astratta che implementa l'interface KeyListener
+                                          // fornendo versioni vuote dei seguenti metodi
             @Override
             public void keyPressed(KeyEvent e) {
                 if (isResuming) {
@@ -171,27 +172,27 @@ public class GamePanel extends JPanel {
     private void ColorSwitchLogic(boolean forward) {
         if (!colorSwitchLocked) {
             model.getPlayer().colorCooldown(model.getAvailableColorsCount(), forward);
-            colorSwitchLocked = true;
+            colorSwitchLocked = true; // dopo la prima pressione non cambia più il colore tenendo premuto
         }
     }// fine spaceKeyLogic
 
     private void resetKeyLogic() {
-        colorSwitchLocked = false;
+        colorSwitchLocked = false; // rilasciando il tasto la variabile viene resettata e si può di nuovo cambiare
+                                   // colore
     }// fine resetKeyLogic
 
-    // metodi pubblici
+    // METODI PUBBLICI
+
     @Override
     public void setVisible(boolean visible) {
         super.setVisible(visible);
-        if (this.gameLoop != null) {
-            if (visible) {
-                if (!isResuming) {
-                    this.gameLoop.start();
-                }
-            } else {
-                this.gameLoop.stop();
-                model.getPlayer().resetMovementFlags();
+        if (visible) {
+            if (!isResuming) {
+                this.gameLoop.start();
             }
+        } else {
+            this.gameLoop.stop();
+            model.getPlayer().resetMovementFlags();
         }
     }// fine setVisible
 
@@ -202,7 +203,6 @@ public class GamePanel extends JPanel {
         hudPanel.showCountdown(COUNT_LEFT);
         Timer countdown = new Timer(RESUME_COOLDOWN_DELAY, new ActionListener() {
             int count = COUNT_LEFT;
-
             @Override
             public void actionPerformed(ActionEvent e) {
                 count--;
@@ -232,7 +232,7 @@ public class GamePanel extends JPanel {
 
     public void newColorUnlockedCountdown() {
         isScoreUpdateBlocked = true;
-        this.alertTimer = new Timer(NEW_COLOR_LABEL_VISIBLE_DELAY, new ActionListener() {
+        alertTimer = new Timer(NEW_COLOR_LABEL_VISIBLE_DELAY, new ActionListener() {
             int tickCount = 0;
             boolean visible = false;
 
@@ -258,7 +258,7 @@ public class GamePanel extends JPanel {
 
             }
         });
-        alertTimer.setInitialDelay(0);
+        alertTimer.setInitialDelay(0); //inizia istantaneamente con il primo evento senza delay
         alertTimer.start();
 
     }// fine newColorUnlockedCountdown
@@ -280,18 +280,18 @@ public class GamePanel extends JPanel {
     // getters del GamePanel
 
     public int getGameSpaceWidth() {
-        return this.gameSpace.getWidth();
+        return gameSpace.getWidth();
     }
 
     public int getGameSpaceHeight() {
-        return this.gameSpace.getHeight();
+        return gameSpace.getHeight();
     }
 
     public Timer getNewColorTimer() {
-        return this.alertTimer;
+        return alertTimer;
     }
 
     public HudPanel getHudPanel() {
-        return this.hudPanel;
+        return hudPanel;
     }
 }// fine classe GamePanel
