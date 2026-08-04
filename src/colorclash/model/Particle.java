@@ -12,24 +12,24 @@ public class Particle {
     private final int MIN_SIZE = 10;
     private final int MAX_SIZE = 20;
 
-    public Particle(double x, double y, int colorId) {
-        this.x = x;
-        this.y = y;
+    public Particle(double startX, double startY, int colorId) {
+        x = startX;
+        y = startY;
         this.colorId = colorId;
-        this.rand = new Random();
-        this.size = rand.nextInt(MIN_SIZE, (MAX_SIZE + 1));
-        this.dirX = (rand.nextDouble() - 0.5) * 10; // va da -0.5 a 0.5 determinandone direzione orizzontale
+        rand = new Random();
+        size = rand.nextInt(MIN_SIZE, (MAX_SIZE + 1));
+        dirX = (rand.nextDouble() - 0.5) * 10; // va da -0.5 a 0.5 determinandone direzione orizzontale
                                                     // moltiplicato per 10 per velocità effettiva
-        this.dirY = (rand.nextDouble() - 0.5) * 10;
+        dirY = (rand.nextDouble() - 0.5) * 10;
     }// fine costruttore
 
     public void update() {
         x += dirX;
         y += dirY;
-        this.alpha -= 4;
+        alpha -= 4;
 
-        if (this.alpha < 0) {
-            this.alpha = 0;
+        if (alpha < 0) {
+            alpha = 0;
         }
     }// fine update
 
@@ -56,7 +56,7 @@ public class Particle {
     }
 
     public int getAlpha() {
-        return this.alpha;
+        return alpha;
     }
 
     public int getColorId() {

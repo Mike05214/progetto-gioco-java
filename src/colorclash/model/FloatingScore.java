@@ -7,17 +7,17 @@ public class FloatingScore {
     private int alpha = 255;
 
     public FloatingScore(double startX, double startY, int points) {
-        this.x = startX;
-        this.y = startY;
-        this.text = "+" + points;
+        x = startX;
+        y = startY;
+        text = "+" + points;
     }// fine costruttore
 
     public void update() {
-        this.y -= 1.5;
-        this.alpha -= 3;
+        y -= 1.5;
+        alpha -= 3;
 
-        if (this.alpha < 0) {
-            this.alpha = 0;
+        if (alpha < 0) {
+            alpha = 0;
         }
     }// fine update
 
@@ -32,18 +32,18 @@ public class FloatingScore {
     // getters di FloatingScore
 
     public double getX() {
-        return this.x;
+        return x;
     }
 
     public double getY() {
-        return this.y;
+        return y;
     }
 
     public String getText() {
-        return this.text;
+        return text;
     }
 
     public int getAlpha() {
-        return this.alpha;
+        return alpha;
     }
 }// fine classe FloatingScore

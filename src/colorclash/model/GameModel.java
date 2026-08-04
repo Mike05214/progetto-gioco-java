@@ -264,8 +264,8 @@ public class GameModel {
 
     private void checkCollisions() {
         Shape playerShape = player.getHitbox();
-        Rectangle2D playerBounds = playerShape.getBounds2D();
-
+        Rectangle2D playerBounds = playerShape.getBounds2D(); //DOC: Returns a high precision and more accurate bounding box of the Shape than the getBounds method.
+                                                             //Returns an integer Rectangle that completely encloses the Shape.
         for (int i = 0; i < enemies.size(); i++) {
             Obstacle obs = enemies.get(i);
             Shape obsShape = obs.getHitbox();
@@ -274,10 +274,10 @@ public class GameModel {
             if (!playerBounds.intersects(obsBounds)) {
                 continue;
             }
-
-            Area playerArea = new Area(playerShape);
+            //DOC: An Area object stores and manipulates a resolution-independent description of an enclosed area of 2-dimensional space.
+            Area playerArea = new Area(playerShape); //The Area class creates an area geometry from the specified Shape object.
             Area obsArea = new Area(obsShape);
-            playerArea.intersect(obsArea); // restituisce intersezione tra le due aree
+            playerArea.intersect(obsArea); // Sets the shape of this Area to the intersection of its current shape and the shape of the specified Area.
 
             if (!playerArea.isEmpty()) {
 

@@ -19,10 +19,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.BorderFactory;
 
+import java.io.File;
+
 import javax.imageio.ImageIO;
+
 import javax.sound.sampled.AudioInputStream;
 
-import java.io.File;
 
 public class HudPanel extends JPanel {
 
@@ -32,9 +34,9 @@ public class HudPanel extends JPanel {
     private JPanel livesContainer;
     private int lastLives = -1;
     private int lastScore = -1;
-    private final int MAX_LIVES = 3; 
+    private final int MAX_LIVES = 3;
     private JLabel[] heartLabels = new JLabel[MAX_LIVES];
-    private Icon iconaDiSalvataggio;
+    private Icon saveIcon;
 
     // costanti
     private final int HUD_WIDTH = 0;
@@ -43,11 +45,11 @@ public class HudPanel extends JPanel {
     private final int PAUSE_BUTTON_FONT_SIZE = 18;
     private final int SCORE_LABEL_FONT_SIZE = 20;
     private final int LIVES_CONTAINER_WIDTH = 150;
-    private final int LC_BORDER_TOP = 1;
+    private final int LC_BORDER_TOP = 2;
     private final int LC_BORDER_LEFT = 0;
     private final int LC_BORDER_BOTTOM = 0;
     private final int LC_BORDER_RIGHT = 5;
-    private final int HGAP = 0;
+    private final int HGAP = 10;
     private final int VGAP = 0;
     private final int H_LABELS_BORDER_TOP = 0;
     private final int H_LABELS_BORDER_LEFT = 0;
@@ -55,59 +57,58 @@ public class HudPanel extends JPanel {
     private final int H_LABELS_BORDER_RIGHT = 10;
 
     public HudPanel() {
-        this.setLayout(new BorderLayout());
-        this.setBackground(Color.LIGHT_GRAY);
-        this.setPreferredSize(new Dimension(HUD_WIDTH, HUD_HEIGHT));
-
+        setLayout(new BorderLayout());
+        setBackground(Color.LIGHT_GRAY);
+        setPreferredSize(new Dimension(HUD_WIDTH, HUD_HEIGHT));
         initWesternPanel();
         initCenterPanel();
         initLivesContainer();
     }// fine costruttore
 
+    // METODI PRIVATI
+
     private void initWesternPanel() {
-        JPanel westernPanel = new JPanel(new GridBagLayout());
+        JPanel westernPanel = new JPanel(new BorderLayout());
         pauseButton = new JButton("⏸️");
         pauseButton.setMnemonic(KeyEvent.VK_X);
         pauseButton.setFont(new Font("Dialog", Font.PLAIN, 24));
-        
         pauseButton.setPreferredSize(new Dimension(PAUSE_BUTTON_WIDTH, HUD_HEIGHT));
         westernPanel.add(pauseButton);
-        this.add(westernPanel, BorderLayout.WEST);
+        add(westernPanel, BorderLayout.WEST);
     }// fine initWesternPanel
 
     private void initCenterPanel() {
-        JPanel centerPanel = new JPanel(new GridBagLayout());
+        JPanel centerPanel = new JPanel();
         centerPanel.setOpaque(false);
         scoreLabel = new JLabel("SCORE:   0");
         scoreLabel.setForeground(Color.BLACK);
         scoreLabel.setFont(new Font("Impact", Font.PLAIN, SCORE_LABEL_FONT_SIZE));
         centerPanel.add(scoreLabel);
-        this.add(centerPanel, BorderLayout.CENTER);
+        add(centerPanel, BorderLayout.CENTER);
     }// fine initCenterPanel
 
     private void initLivesContainer() {
-        livesContainer = new JPanel(new FlowLayout(FlowLayout.RIGHT, HGAP, VGAP));
+        livesContainer = new JPanel(new FlowLayout(FlowLayout.RIGHT, HGAP, VGAP));//DOC: A flow layout arranges components in a directional flow, much like lines of text in a paragraph.
+                                                                                  // The flow direction is determined by the container's componentOrientation property
         livesContainer.setOpaque(true);
-        
         livesContainer.setBackground(new Color(0, 100, 0));
-        livesContainer.setBorder(
-                BorderFactory.createEmptyBorder(LC_BORDER_TOP, LC_BORDER_LEFT, LC_BORDER_BOTTOM, LC_BORDER_RIGHT));
+        livesContainer.setBorder(BorderFactory.createEmptyBorder(LC_BORDER_TOP, LC_BORDER_LEFT, LC_BORDER_BOTTOM, LC_BORDER_RIGHT));
         livesContainer.setPreferredSize(new Dimension(LIVES_CONTAINER_WIDTH, HUD_HEIGHT));
-        this.add(livesContainer, BorderLayout.EAST);
+        add(livesContainer, BorderLayout.EAST);
 
         generateVisualHearts();
     }// fine initLivesContainer
 
     private void generateVisualHearts() {
         for (int i = 0; i < MAX_LIVES; i++) {
-            heartLabels[i] = loadImage("src/colorclash/resources/cuore.png");
-            heartLabels[i].setBorder(BorderFactory.createEmptyBorder(H_LABELS_BORDER_TOP, H_LABELS_BORDER_LEFT,
-                    H_LABELS_BORDER_BOTTOM, H_LABELS_BORDER_RIGHT));
+            heartLabels[i] = loadImage();
             heartLabels[i].setPreferredSize(heartLabels[i].getPreferredSize());
             livesContainer.add(heartLabels[i]);
         }
-        this.iconaDiSalvataggio = heartLabels[0].getIcon();
+        saveIcon = heartLabels[0].getIcon();//DOC: Returns the graphic image (glyph, icon) that the label displays.
     }// fine generateVisualHearts
+
+    // METODI PUBBLICI
 
     public void updateLivesView(int currentLives) {
 
@@ -116,10 +117,9 @@ public class HudPanel extends JPanel {
         }
 
         for (int i = 0; i < MAX_LIVES; i++) {
-            heartLabels[i].setVisible(true);
 
             if (i >= (MAX_LIVES - currentLives)) {
-                heartLabels[i].setIcon(this.iconaDiSalvataggio);
+                heartLabels[i].setIcon(saveIcon);
                 heartLabels[i].setForeground(Color.RED);
             } else {
                 heartLabels[i].setIcon(null);
@@ -135,58 +135,59 @@ public class HudPanel extends JPanel {
             return;
         }
 
-        if (scoreLabel != null) {
-            scoreLabel.setText("SCORE:  " + currentScore);
-            this.lastScore = currentScore;
-        }
+        scoreLabel.setText("SCORE:  " + currentScore);
+        lastScore = currentScore;
+
     }// fine updateScoreText
 
-    public static JLabel loadImage(String filename) {
-        BufferedImage image;
+    public JLabel loadImage() {
+        BufferedImage image; //DOC: The BufferedImage subclass describes an Image with an accessible buffer of image data. extends Image
         JLabel imageContainer;
-        try {
-            image = ImageIO.read(new File(filename));
-            imageContainer = new JLabel(new ImageIcon(image));
+        try {// DOC: ImageIO containing static convenience methods for locating ImageReaders and ImageWriters, and performing simple encoding and decoding.
+            image = ImageIO.read(getClass().getResource("/src/colorclash/resources/cuore.png"));//DOC: read(URL input) Returns a BufferedImage as the result of decoding a supplied URL
+                                                                                                     // with an ImageReader chosen automatically from among those currently registered.
+            imageContainer = new JLabel(new ImageIcon(image));//DOC: Creates an ImageIcon from an image object.
             return imageContainer;
         } catch (Exception e) {
-            System.out.println("Errore nel caricamento di " + filename + ": " + e);
-            System.out.println("Come misura di emergenza carico il cuore emoji");
+            System.out.println("Error loading graphic hearts: " + e);
+            System.out.println("As an emergency measure, loading the heart emoji");
             JLabel errorLabel = new JLabel("♥");
+            errorLabel.setFont(new Font("Arial", Font.PLAIN, 30));
             errorLabel.setForeground(Color.RED);
             return errorLabel;
         }
     }// fine loadImage
 
     public void showCountdown(int secondsLeft) {
-        this.scoreLabel.setText("GAME RESTARTS IN: " + secondsLeft);
+        scoreLabel.setText("GAME RESTARTS IN: " + secondsLeft);
     }// fine showCountdown
 
     public void showNewColorUnlocked() {
-        this.scoreLabel.setText("NEW COLOR UNLOCKED!");
-    }
+        scoreLabel.setText("NEW COLOR UNLOCKED!");
+    }// fine showNewColorUnlocked
 
     public void restoreScoreLabel(int currentScore) {
         scoreLabel.setText("SCORE:  " + currentScore);
-        
+
     }// fine restoreScoreLabel
 
     public void hideNewColorUnlocked() {
-        this.scoreLabel.setText("");
-    }
+        scoreLabel.setText("");
+        
+    }// fine hideNewColorUnloccked
 
     // getters di HudPanel
+
     public JButton getPauseButton() {
-        return this.pauseButton;
+        return pauseButton;
     }
 
     public JLabel getScoreLabel() {
-        return this.scoreLabel;
+        return scoreLabel;
     }
 
-    public int getHudPanelHeight(){
+    public int getHudPanelHeight() {
         return HUD_HEIGHT;
     }
 
-    
-    
 }// fine classe HudPanel

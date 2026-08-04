@@ -35,17 +35,17 @@ public class PausePanel extends BaseMenuPanel {
     private final int ROW_1 = 1;
     private final int ROW_2 = 2;
 
-    public PausePanel(MainFrame frame) { // il model da resettare è quello del gamePanel che infatti
+    public PausePanel(MainFrame mainFrame) { // il model da resettare è quello del gamePanel che infatti
                                          // gli viene passato come parametro
         super();
-        this.model = GameModel.getInstance(); // è quello del gamePanel
-        this.frame = frame;
+        model = GameModel.getInstance(); // è quello del gamePanel
+        frame = mainFrame;
         setBackground(Color.BLACK);
         initTitleLabel("PAUSE");
 
-        this.resumeButton = initResumeButton();
-        this.backToMenuButton = initBackToMenuButton();
-        this.saveAndExitButton = initSaveAndExitButton();
+        resumeButton = initResumeButton();
+        backToMenuButton = initBackToMenuButton();
+        saveAndExitButton = initSaveAndExitButton();
 
         addComponentToCenter(resumeButton, ROW_0, true);
         addComponentToCenter(backToMenuButton, ROW_1, true);

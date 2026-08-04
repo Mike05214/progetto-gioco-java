@@ -104,9 +104,8 @@ public class GamePanel extends JPanel {
     }// fine initHudPanel
 
     private void initListeners() {
-        addKeyListener(new KeyAdapter() { // KeyAdapter è una classe astratta che implementa l'interface KeyListener
-                                          // fornendo versioni vuote dei seguenti metodi
-            @Override
+        addKeyListener(new KeyAdapter() { // DOC : An abstract adapter class for receiving keyboard events.
+                                          // The methods in this class are empty. This class exists as convenience for creating listener objects.
             public void keyPressed(KeyEvent e) {
                 if (isResuming) {
                     return;
@@ -210,8 +209,7 @@ public class GamePanel extends JPanel {
                     hudPanel.showCountdown(count);
                 } else {
                     ((Timer) e.getSource()).stop();// e è l'actionEvent, getSource restituisce sempre Object di default
-                                                   // e col cast a Timer diventa Timer su cui può essere chiamato il
-                                                   // metodo stop()
+                    
                     if (isScoreUpdateBlocked && alertTimer != null) {
                         alertTimer.start();
                     } else {

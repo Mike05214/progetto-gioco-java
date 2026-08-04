@@ -14,28 +14,28 @@ public abstract class Obstacle {
 
 
     public Obstacle(double startX, double startY, double speed, int colorId, int width, int height) {
-        this.x = startX;
-        this.y = startY;
+        x = startX;
+        y = startY;
         this.width = width;
         this.height = height;
-        this.fallSpeed = speed;
+        fallSpeed = speed;
         this.colorId = colorId;
-        this.isActive = true;
+        isActive = true;
     }// fine costruttore
 
     public void update() {
-        this.y += fallSpeed;
+        y += fallSpeed;
     }// fine fall
 
     public void checkOffScreen(int screenHeight) {
 
-        if (this.y > screenHeight) {
-            this.isActive = false;
+        if (y > screenHeight) {
+            isActive = false;
         }
     }// fine checkOffScreen
 
     public void destroy() {
-        this.isActive = false;
+        isActive = false;
     }// fine destroy
 
     // setters di Obstacle

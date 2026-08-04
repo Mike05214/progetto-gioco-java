@@ -41,11 +41,11 @@ public class MenuPanel extends BaseMenuPanel {
     private final int ROW_3 = 3;
     private final int ROW_4 = 4;
 
-    public MenuPanel(MainFrame frame) {
+    public MenuPanel(MainFrame mainFrame) {
         super();
-        this.model = GameModel.getInstance();
-        this.frame = frame;
-        setBackground(new Color(10, 10, 10));
+        model = GameModel.getInstance();
+        frame = mainFrame;
+        setBackground(new Color(10, 10, 20));
         initButtons();
         initTitleLabel("COLOR CLASH");
         addComponentToCenter(playButton, ROW_0, true);

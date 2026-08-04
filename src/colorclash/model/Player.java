@@ -25,10 +25,10 @@ public class Player {
     
 
     public Player(double startX, double startY, int startColorId) {
-        this.x = startX;
-        this.y = startY;
-        this.colorId = startColorId;
-        this.isInvulnerable = false;
+        x = startX;
+        y = startY;
+        colorId = startColorId;
+        isInvulnerable = false;
     }// fine costruttore
 
     public void update() {
@@ -59,27 +59,27 @@ public class Player {
     }// fine update
 
     public void constrainX(int minX, int maxX) {
-        if (this.x < minX) {
-            this.x = minX;
+        if (x < minX) {
+            x = minX;
         }
 
-        if (this.x + PLAYER_WIDTH > maxX) {
-            this.x = maxX - PLAYER_WIDTH;
+        if (x + PLAYER_WIDTH > maxX) {
+            x = maxX - PLAYER_WIDTH;
         }
     }// fine constrainX
 
     public void constrainY(int minY, int maxY) {
-        if (this.y < minY) {
-            this.y = minY;
+        if (y < minY) {
+            y = minY;
         }
 
-        if (this.y + PLAYER_HEIGHT > maxY) {
-            this.y = maxY - PLAYER_HEIGHT;
+        if (y + PLAYER_HEIGHT > maxY) {
+            y = maxY - PLAYER_HEIGHT;
         }
     }// fine constrainY
 
     public void colorCooldown(int availableColorsCount, boolean forward) {
-        this.currentTime = System.currentTimeMillis();
+        currentTime = System.currentTimeMillis();//DOC: Returns the current time in milliseconds.
         if (currentTime - lastColorChange >= COLOR_COOLDOWN) {
             switchColor(availableColorsCount, forward);
         }
@@ -87,38 +87,38 @@ public class Player {
 
     public void switchColor(int availableColorsCount, boolean forward) {
         if (forward) {
-            this.colorId = (this.colorId + 1) % availableColorsCount; // se è in avanti aumenta verso destra 
+            colorId = (colorId + 1) % availableColorsCount; // se è in avanti aumenta verso destra 
         } else {
-            this.colorId = (this.colorId - 1 + availableColorsCount) % availableColorsCount;
+            colorId = (colorId - 1 + availableColorsCount) % availableColorsCount;
         }
         lastColorChange = currentTime;
     }// fine switchColor
 
     public void resetToInitialSettings(double startX, double startY, int startColorId) {
-        this.x = startX;
-        this.y = startY;
-        this.colorId = startColorId;
+        x = startX;
+        y = startY;
+        colorId = startColorId;
     }// fine resetToInitialSettings
 
     public void resetMovementFlags() {
-        this.movingUp = false;
-        this.movingDown = false;
-        this.movingLeft = false;
-        this.movingRight = false;
+        movingUp = false;
+        movingDown = false;
+        movingLeft = false;
+        movingRight = false;
     }// fine resetMovementFlags
 
     public Shape getHitbox() {
         Path2D.Double navicella = new Path2D.Double();
-        navicella.moveTo(this.x + (PLAYER_WIDTH * 0.5), this.y);
-        navicella.lineTo(this.x + (PLAYER_WIDTH * 0.6), this.y + (PLAYER_HEIGHT * 0.3));
-        navicella.lineTo(this.x + PLAYER_WIDTH, this.y + (PLAYER_HEIGHT * 0.8));
-        navicella.lineTo(this.x + (PLAYER_WIDTH * 0.7), this.y + (PLAYER_HEIGHT * 0.8));
-        navicella.lineTo(this.x + (PLAYER_WIDTH * 0.7), this.y + PLAYER_HEIGHT);
-        navicella.lineTo(this.x + (PLAYER_WIDTH * 0.5), this.y + (PLAYER_HEIGHT * 0.85));
-        navicella.lineTo(this.x + (PLAYER_WIDTH * 0.3), this.y + PLAYER_HEIGHT);
-        navicella.lineTo(this.x + (PLAYER_WIDTH * 0.3), this.y + (PLAYER_HEIGHT * 0.8));
-        navicella.lineTo(this.x, this.y + (PLAYER_HEIGHT * 0.8));
-        navicella.lineTo(this.x + (PLAYER_WIDTH * 0.4), this.y + (PLAYER_HEIGHT * 0.3));
+        navicella.moveTo( x + (PLAYER_WIDTH * 0.5), y);
+        navicella.lineTo( x + (PLAYER_WIDTH * 0.6), y + (PLAYER_HEIGHT * 0.3));
+        navicella.lineTo( x + PLAYER_WIDTH, y + (PLAYER_HEIGHT * 0.8));
+        navicella.lineTo( x + (PLAYER_WIDTH * 0.7), y + (PLAYER_HEIGHT * 0.8));
+        navicella.lineTo( x + (PLAYER_WIDTH * 0.7), y + PLAYER_HEIGHT);
+        navicella.lineTo( x + (PLAYER_WIDTH * 0.5), y + (PLAYER_HEIGHT * 0.85));
+        navicella.lineTo( x + (PLAYER_WIDTH * 0.3), y + PLAYER_HEIGHT);
+        navicella.lineTo( x + (PLAYER_WIDTH * 0.3), y + (PLAYER_HEIGHT * 0.8));
+        navicella.lineTo( x, y + (PLAYER_HEIGHT * 0.8));
+        navicella.lineTo( x + (PLAYER_WIDTH * 0.4), y + (PLAYER_HEIGHT * 0.3));
         navicella.closePath();
         return navicella;
     }// fine getHitbox

@@ -19,23 +19,23 @@ public class Star {
     private final double FALL_SPEED_MULTIPLIER = 0.8;
 
     public Star(int screenWidth, int screenHeight) {
-        this.rand = new Random();
+        rand = new Random();
         // Al primo avvio, distribuisce le stelle casualmente su tutto lo schermo
         reset(screenWidth, rand.nextInt(0, (screenHeight + 1)));
     }// fine costruttore
 
     public void reset(int screenWidth, int startY) {
-        this.size = rand.nextInt(MIN_SIZE, (MAX_SIZE + 1));
-        this.x = rand.nextInt(0, (screenWidth-size) + 1);
-        this.y = startY;
-        this.speed = this.size * FALL_SPEED_MULTIPLIER; // La velocità di caduta rimane proporzionale alla dimensione
-        this.alpha = rand.nextInt(MIN_OPACITY, (MAX_OPACITY + 1)); // Opacità casuale tra 100 e 255 per l'effetto di profondità
+        size = rand.nextInt(MIN_SIZE, (MAX_SIZE + 1));
+        x = rand.nextInt(0, (screenWidth-size) + 1);
+        y = startY;
+        speed = size * FALL_SPEED_MULTIPLIER; // La velocità di caduta rimane proporzionale alla dimensione
+        alpha = rand.nextInt(MIN_OPACITY, (MAX_OPACITY + 1)); // Opacità casuale tra 100 e 255 per l'effetto di profondità
     }// fine reset
 
     public void update(int screenWidth, int screenHeight) {
-        this.y += speed;
+        y += speed;
         // Se la stella esce dallo schermo, viene riposizionata in cima
-        if (this.y > screenHeight) {
+        if (y > screenHeight) {
             reset(screenWidth, 0); 
         }
     }// fine update

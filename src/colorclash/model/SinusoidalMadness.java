@@ -27,14 +27,14 @@ public class SinusoidalMadness extends Obstacle {
 
     public SinusoidalMadness(double x, double y, double fallSpeed, int colorId, int width, int height) {
         super(x, y, fallSpeed, colorId, width, height);
-        this.startX = x;
+        startX = x;
     }// fine costruttore
 
     @Override
     public void update() {
-        this.y += this.fallSpeed;
+        y += this.fallSpeed;
         angle += WAWE_SPEED;
-        this.x = this.startX + (AMPLITUDE * Math.sin(angle));
+        x = this.startX + (AMPLITUDE * Math.sin(angle));
         colorTimer++;
 
         if (colorTimer >= COLOR_CHANGE_INTERVAL) {
