@@ -51,10 +51,7 @@ public class HudPanel extends JPanel {
     private final int LC_BORDER_RIGHT = 5;
     private final int HGAP = 10;
     private final int VGAP = 0;
-    private final int H_LABELS_BORDER_TOP = 0;
-    private final int H_LABELS_BORDER_LEFT = 0;
-    private final int H_LABELS_BORDER_BOTTOM = 0;
-    private final int H_LABELS_BORDER_RIGHT = 10;
+    
 
     public HudPanel() {
         setLayout(new BorderLayout());
