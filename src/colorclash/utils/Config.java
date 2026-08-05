@@ -29,24 +29,17 @@ public class Config {
     private Config() {
         BufferedReader buffRead = null;
         try {
-            // Caricamento del file tramite percorso calcolato a run-time
             buffRead = new BufferedReader(
-                    new InputStreamReader(
-                            new FileInputStream(getConfigFileFullPath()), "UTF-8"));
+                        new InputStreamReader(
+                        new FileInputStream(getConfigFileFullPath()), "UTF-8"));
 
-            this.properties = new Properties();
-            this.properties.load(buffRead);
+            properties = new Properties();
+            properties.load(buffRead);//DOC: Reads a property list (key and element pairs) from the input character stream in a simple line-oriented format.
         } catch (FileNotFoundException fnfe) {
-            JOptionPane.showMessageDialog(null,
-                    "Configuration file not found, the program will be closed.",
-                    "Serious ERROR",
-                    JOptionPane.ERROR_MESSAGE);
+            System.out.println("Configuration file not found, the program will be closed.");
             System.exit(-1);
         } catch (IOException ioe) {
-            JOptionPane.showMessageDialog(null,
-                    "Unable to read the configuration file, the program will be closed.",
-                    "Serious ERROR",
-                    JOptionPane.ERROR_MESSAGE);
+            System.out.println("Unable to read the configuration file, the program will be closed.");
             System.exit(-1);
         } finally {
             try {
@@ -62,14 +55,16 @@ public class Config {
     private String getConfigFileFullPath() {
         String fileName = Config.class.getResource("/conf/config.txt").toString();
 
-        if (fileName.contains("//"))
+        if (fileName.contains("//")){
             fileName = fileName.substring("file:/".length()); // Versione Windows
-        else if (fileName.contains("/"))
+        }else if (fileName.contains("/")){
             fileName = fileName.substring("file:".length()); // Versione Linux
-
-        fileName = fileName.replaceAll("%20", " ");
+            fileName = fileName.replaceAll("%20", " ");
+        }
         return fileName;
-    }
+    }// fine getConfigFileFullPath
+
+    //GETTERS
 
     public String getStringProperty(String key) {
         return properties.getProperty(key);

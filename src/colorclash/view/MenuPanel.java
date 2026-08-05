@@ -13,6 +13,7 @@ import java.awt.RenderingHints;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.border.Border;
 
 import src.colorclash.model.GameModel;
 import src.colorclash.model.Star;
@@ -20,7 +21,8 @@ import src.colorclash.utils.AudioManager;
 import src.colorclash.utils.SaveManager;
 import src.colorclash.utils.AudioManager;
 
-import java.io.File;
+import java.io.File;//DOC: An abstract representation of file and directory pathnames.
+
 import java.util.List;
 
 public class MenuPanel extends BaseMenuPanel {
@@ -31,7 +33,6 @@ public class MenuPanel extends BaseMenuPanel {
     private JButton deleteSaveButton;
     private JButton soundButton;
     private GameModel model;
-    private MainFrame frame;
 
     // costanti
     private final int TEXT_LABEL_SIZE = 18;
@@ -40,13 +41,19 @@ public class MenuPanel extends BaseMenuPanel {
     private final int ROW_2 = 2;
     private final int ROW_3 = 3;
     private final int ROW_4 = 4;
+    private final int HI_LABEL_TOP = 3;
+    private final int HI_LABEL_LEFT = 25;
+    private final int HI_LABEL_BOTTOM = 3;
+    private final int HI_LABEL_RIGHT = 25;
+    private final int HI_LABEL_LINE_THICKNESS = 2;
+    private final int SOUND_BUTTON_FONT_SIZE = 25;
 
     public MenuPanel(MainFrame mainFrame) {
-        super();
+        super(mainFrame);
         model = GameModel.getInstance();
-        frame = mainFrame;
         setBackground(new Color(10, 10, 20));
         initButtons();
+        initHighScoreLabel();
         initTitleLabel("COLOR CLASH");
         addComponentToCenter(playButton, ROW_0, true);
         addComponentToCenter(resumeButton, ROW_1, true);
@@ -55,11 +62,22 @@ public class MenuPanel extends BaseMenuPanel {
         addComponentToCenter(highScoreLabel, ROW_4, true);
     }// fine costruttore
 
+    //METODI PUBBLICI 
+    
     public void updateHighScoreDisplay() {
         highScoreLabel.setText("High Score:   " + model.getHighscore());
     }// fine updateHighScoreDisplay
 
     public void initButtons() {
+        initPlayButton();
+        initResumeButton();
+        initDeleteButton();
+        initSoundButton();
+        refreshSavingButtons();
+
+    }// fine initButtons
+
+    private void initPlayButton(){
         playButton = new JButton("PLAY");
         playButton.setFont(new Font("Impact", Font.PLAIN, BUTTON_TEXT_SIZE));
         playButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
@@ -73,18 +91,9 @@ public class MenuPanel extends BaseMenuPanel {
                 frame.getGamePanel().resetGamePanel();
             }
         });
+    }// fine initPlayButton
 
-        highScoreLabel = new JLabel("HIGH SCORE:   " + model.getHighscore());
-        highScoreLabel.setFont(new Font("Impact", Font.PLAIN, TEXT_LABEL_SIZE));
-        highScoreLabel.setOpaque(true);
-        highScoreLabel.setBackground(new Color(50, 50, 50)); // Stesso grigio scuro dei bottoni
-        highScoreLabel.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(Color.WHITE, 1), // Linea esterna visibile (colore, spessore)
-                BorderFactory.createEmptyBorder(10, 20, 10, 20) // Spazio vuoto interno (alto, sinistra, basso, destra)
-        ));
-        highScoreLabel.setBackground(Color.LIGHT_GRAY);
-        highScoreLabel.setForeground(Color.BLACK);
-
+    private void initResumeButton(){
         resumeButton = new JButton("RESUME");
         resumeButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
         resumeButton.setFont(new Font("Impact", Font.PLAIN, BUTTON_TEXT_SIZE));
@@ -96,12 +105,13 @@ public class MenuPanel extends BaseMenuPanel {
                     frame.getGamePanel().resumeCountdown();
                     frame.changeFrame("GAME");
                 } else {
-                    // Opzionale: mostra un messaggio di errore all'utente
                     System.out.println("Error: Unable to load the save file.");
                 }
             }
         });
+    }// fine initResumeButton
 
+    private void initDeleteButton(){
         deleteSaveButton = new JButton("DELETE SAVE");
         deleteSaveButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
         deleteSaveButton.setFont(new Font("Impact", Font.PLAIN, BUTTON_TEXT_SIZE));
@@ -114,10 +124,11 @@ public class MenuPanel extends BaseMenuPanel {
                 resumeButton.setEnabled(false);
             }
         });
-        refreshResumeButton();
+    }// fine initDeleteButton
 
+    private void initSoundButton(){
         soundButton = new JButton("🔊");
-        soundButton.setFont(new Font("Dialog", Font.PLAIN, 25));
+        soundButton.setFont(new Font("Dialog", Font.PLAIN, SOUND_BUTTON_FONT_SIZE));
         soundButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
         soundButton.addActionListener(new ActionListener() {
             @Override
@@ -131,34 +142,26 @@ public class MenuPanel extends BaseMenuPanel {
                 }
             }
         });
+    }// fine initSoundButton
+    
+    private void initHighScoreLabel(){
+        highScoreLabel = new JLabel("HIGH SCORE:   " + model.getHighscore());
+        highScoreLabel.setFont(new Font("Impact", Font.PLAIN, TEXT_LABEL_SIZE));
+        highScoreLabel.setOpaque(true);
+        highScoreLabel.setBackground(new Color(50, 50, 50));
+        Border line = BorderFactory.createLineBorder(Color.WHITE, HI_LABEL_LINE_THICKNESS);
+        Border padding = BorderFactory.createEmptyBorder(HI_LABEL_TOP, HI_LABEL_LEFT, HI_LABEL_BOTTOM, HI_LABEL_RIGHT);
+        highScoreLabel.setBorder(BorderFactory.createCompoundBorder(line, padding));
+        highScoreLabel.setBackground(Color.LIGHT_GRAY);
+        highScoreLabel.setForeground(Color.BLACK);
+    }
 
-    }// fine initButtons
-
-    public void refreshResumeButton() {
+    public void refreshSavingButtons() {
         File saveFile = new File("saves/gamestate.txt");
         resumeButton.setEnabled(saveFile.exists());
         deleteSaveButton.setEnabled(saveFile.exists());
     }
 
-    @Override
-    protected void paintComponent(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        super.paintComponent(g2d);
-        g2d.setColor(new Color(10, 10, 20));
-        g2d.fillRect(0, 0, getWidth(), getHeight());
-
-        List<Star> stelle = model.getStars();
-        if (stelle != null) {
-            Rectangle2D.Double starRect = new Rectangle2D.Double();
-            int offsetY = frame.getGamePanel().getHudPanel().getHudPanelHeight();
-
-            for (Star s : stelle) {
-                g2d.setColor(new Color(255, 255, 255, s.getAlpha()));
-                starRect.setRect(s.getX(), s.getY() + offsetY, s.getSize(), s.getSize());
-                g2d.fill(starRect);
-            }
-        }
-    }
+    
 
 }// fine classe MenuPanel

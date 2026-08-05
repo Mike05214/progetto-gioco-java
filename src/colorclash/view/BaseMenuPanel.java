@@ -1,5 +1,9 @@
 package src.colorclash.view;
 
+import src.colorclash.view.MainFrame;
+import src.colorclash.model.GameModel;
+import src.colorclash.model.Star;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -11,10 +15,14 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.RenderingHints;
+import java.awt.geom.Rectangle2D;
+import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+
+
 
 public abstract class BaseMenuPanel extends JPanel {
     // costanti protette
@@ -30,13 +38,17 @@ public abstract class BaseMenuPanel extends JPanel {
 
     // variabili d'istanza
     protected JPanel centerPanel;
+    protected GameModel model;
+    protected MainFrame frame;
 
     // METODI PUBBLICI
 
-    public BaseMenuPanel() {
+    public BaseMenuPanel(MainFrame mainFrame) {
         // DOC: The GridBagLayout class is a flexible layout manager that aligns components vertically, 
         // horizontally or along their baseline without requiring that the components be of the same size. 
         // Each GridBagLayout object maintains a dynamic, rectangular grid of cells, with each component occupying one or more cells, called its display area.
+        frame = mainFrame;
+        model = GameModel.getInstance();
         setLayout(new BorderLayout());
         centerPanel = new JPanel(new GridBagLayout());
         centerPanel.setOpaque(false); // per evitare che si sovrapponga ai paintings
@@ -99,5 +111,26 @@ public abstract class BaseMenuPanel extends JPanel {
             currentX += fm.stringWidth(pattern);
         }
     }// fine drawRainbowText
+
+    @Override
+    public void paintComponent(Graphics g) {
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        super.paintComponent(g2d);
+        g2d.setColor(new Color(10, 10, 20));
+        g2d.fillRect(0, 0, getWidth(), getHeight());
+
+        List<Star> stelle = model.getStars();
+        if (stelle != null) {
+            Rectangle2D.Double starRect = new Rectangle2D.Double();
+            int offsetY = frame.getGamePanel().getHudPanel().getHudPanelHeight();
+
+            for (Star s : stelle) {
+                g2d.setColor(new Color(255, 255, 255, s.getAlpha()));
+                starRect.setRect(s.getX(), s.getY() + offsetY, s.getSize(), s.getSize());
+                g2d.fill(starRect);
+            }
+        }
+    }
 
 }// fine classe astratta BaseMenuPanel
