@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.net.URISyntaxException;
 import java.util.List;
 
 import src.colorclash.model.Player;
@@ -21,8 +22,10 @@ import src.colorclash.model.StandardObstacle;
 
 public class SaveManager {
 
-    private String highscoreFilePath = "saves/highscore.txt";
-    private String gameStatePath = "saves/gamestate.txt";
+    private final static boolean IS_DIST_VERSION = false; // Metti a true prima di fare il .jar per l'esame
+
+    private String highscoreFilePath;
+    private String gameStatePath;
     private String charset = "UTF-8";
     private static SaveManager saveManager = null;
 
@@ -34,20 +37,66 @@ public class SaveManager {
     }
 
     public SaveManager() {
-        File savesFolder = new File("saves");
-        if (!savesFolder.exists()) {
-            savesFolder.mkdirs();
-        }
+        try {
+            String savesDirPath = getSavesDirectory();
+            
+            File savesFolder = new File(savesDirPath);
+            if (!savesFolder.exists()) {
+                savesFolder.mkdirs();
+            }
 
-        File fileHighscore = new File(highscoreFilePath);
-        if (!fileHighscore.exists()) {
-            try {
+            boolean isLinux = System.getProperty("os.name").startsWith("Linux");
+            highscoreFilePath = savesDirPath + (isLinux ? "/highscore.txt" : "\\highscore.txt");
+            gameStatePath = savesDirPath + (isLinux ? "/gamestate.txt" : "\\gamestate.txt");
+
+            File fileHighscore = new File(highscoreFilePath);
+            if (!fileHighscore.exists()) {
                 fileHighscore.createNewFile();
                 writeHighscore(0);
-            } catch (IOException e) {
-                e.printStackTrace();
             }
+
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+    }
+
+    private String getSavesDirectory() throws URISyntaxException {
+        String savesDir = null;
+        String relPath = "\\saves";
+
+        if (System.getProperty("os.name").startsWith("Linux")) {
+            relPath = "/saves";
+        }
+
+        if (IS_DIST_VERSION) {
+            savesDir = getHomeFolderForDistVersion() + relPath;
+        } else {
+            savesDir = getHomeFolderForDevVersion() + relPath;
+        }
+        return savesDir;
+    }
+
+    private String getHomeFolderForDistVersion() throws URISyntaxException {
+        // Metodo del professore per il file .jar
+        String homeDir = null;
+        String jarPath = SaveManager.class.getResource("SaveManager.class").toURI().toString();
+        int indexOfExclamationMark = jarPath.indexOf("!");
+
+        String prefix = "jar:file:/";
+        if (System.getProperty("os.name").startsWith("Linux")) {
+            prefix = "jar:file:";
+        }
+
+        homeDir = jarPath.substring(prefix.length(), indexOfExclamationMark);
+        int lastIndexOfSlash = homeDir.lastIndexOf("/");
+        homeDir = homeDir.substring(0, lastIndexOfSlash);
+        return homeDir;
+    }
+
+    private String getHomeFolderForDevVersion() throws URISyntaxException {
+        return System.getProperty("user.dir");  //restituisce automaticamente la cartella radice del progetto aperta nell'IDE.
     }
 
     public int getHighscore() {
@@ -63,7 +112,7 @@ public class SaveManager {
             if (line != null && !line.isEmpty()) {
                 score = Integer.valueOf(line.trim());
             }
-        } catch (FileNotFoundException fnfe) { 
+        } catch (FileNotFoundException fnfe) {
             fnfe.printStackTrace();
         } catch (IOException ioe) {
             ioe.printStackTrace();
@@ -90,7 +139,7 @@ public class SaveManager {
 
             printWriter.print(String.valueOf(newScore));
 
-        } catch (FileNotFoundException fnfe) { // MODIFICATO: catch separati
+        } catch (FileNotFoundException fnfe) {
             fnfe.printStackTrace();
         } catch (IOException ioe) {
             ioe.printStackTrace();
@@ -101,7 +150,8 @@ public class SaveManager {
         }
     }
 
-    public void writeGameState(int score, int lives, int phase, double speed, int avaibleColors, Player player, List<Obstacle> enemies) {
+    public void writeGameState(int score, int lives, int phase, double speed, int avaibleColors, Player player,
+            List<Obstacle> enemies) {
         PrintWriter printWriter = null;
 
         try {
@@ -119,7 +169,6 @@ public class SaveManager {
             printWriter.print("PLAYER:" + player.getX() + ";" + player.getY() + ";" + player.getColorId() + "\r\n");
 
             for (Obstacle obs : enemies) {
-
                 printWriter.print("OBSTACLE:" + obs.getType() + ";" +
                         obs.getX() + ";" +
                         obs.getY() + ";" +
@@ -129,7 +178,7 @@ public class SaveManager {
                         obs.getHeight() + "\r\n");
             }
 
-            System.out.println("Game status frozen and saved");
+            System.out.println("Game status frozen and saved in " + gameStatePath);
 
         } catch (FileNotFoundException fnfe) {
             fnfe.printStackTrace();
@@ -145,7 +194,6 @@ public class SaveManager {
     public boolean loadGameState(GameModel model) {
         File file = new File(gameStatePath);
 
-        // MANTENUTO
         if (!file.exists()) {
             return false;
         }
@@ -156,13 +204,12 @@ public class SaveManager {
                     new InputStreamReader(
                             new FileInputStream(gameStatePath), charset));
 
-            String line = null; 
-            model.getEnemies().clear(); 
+            String line = null;
+            model.getEnemies().clear();
 
             while ((line = buffRead.readLine()) != null) {
-
                 if (line.startsWith("SCORE:")) {
-                    int savedScore = Integer.valueOf(line.split(":")[1]); 
+                    int savedScore = Integer.valueOf(line.split(":")[1]);
                     model.setScore(savedScore);
 
                 } else if (line.startsWith("LIVES:")) {
@@ -173,28 +220,27 @@ public class SaveManager {
                     int savedPhase = Integer.valueOf(line.split(":")[1]);
                     model.setPhase(savedPhase);
 
-                } else if(line.startsWith("CURRENT_SPEED:")){
-                    double savedSpeed = Double.valueOf(line.split(":")[1]); 
+                } else if (line.startsWith("CURRENT_SPEED:")) {
+                    double savedSpeed = Double.valueOf(line.split(":")[1]);
                     model.setCurrentSpeed(savedSpeed);
 
-                } else if (line.startsWith("AVAIBLE_COLORS:")){
+                } else if (line.startsWith("AVAIBLE_COLORS:")) {
                     int savedColors = Integer.valueOf(line.split(":")[1]);
                     model.setAvaibleColors(savedColors);
-                    
+
                 } else if (line.startsWith("PLAYER:")) {
-                    // MODIFICATO: Recupero con il ;
-                    String[] playerData = line.split(":")[1].split(";"); 
+                    String[] playerData = line.split(":")[1].split(";");
                     model.getPlayer().setX(Double.valueOf(playerData[0]));
                     model.getPlayer().setY(Double.valueOf(playerData[1]));
                     model.getPlayer().setColorId(Integer.valueOf(playerData[2]));
 
                 } else if (line.startsWith("OBSTACLE:")) {
-                    String[] obsData = line.split(":")[1].split(";"); 
+                    String[] obsData = line.split(":")[1].split(";");
 
                     String type = obsData[0];
                     double x = Double.valueOf(obsData[1]);
                     double y = Double.valueOf(obsData[2]);
-                    double speed = Double.valueOf(obsData[3]); 
+                    double speed = Double.valueOf(obsData[3]);
                     int colorId = Integer.valueOf(obsData[4]);
                     int width = Integer.valueOf(obsData[5]);
                     int height = Integer.valueOf(obsData[6]);
@@ -213,10 +259,10 @@ public class SaveManager {
         } catch (FileNotFoundException fnfe) {
             fnfe.printStackTrace();
             return false;
-        } catch (IOException ioe) { 
+        } catch (IOException ioe) {
             ioe.printStackTrace();
-            return false; 
-        } catch (NumberFormatException nfe) { 
+            return false;
+        } catch (NumberFormatException nfe) {
             nfe.printStackTrace();
             return false;
         } finally {
@@ -226,6 +272,14 @@ public class SaveManager {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public void deleteGameState() {
+        File file = new File(gameStatePath);
+        if (file.exists()) {
+            file.delete();
+            System.out.println("Salvataggio eliminato correttamente.");
         }
     }
 }

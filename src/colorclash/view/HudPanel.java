@@ -141,7 +141,7 @@ public class HudPanel extends JPanel {
         BufferedImage image; //DOC: The BufferedImage subclass describes an Image with an accessible buffer of image data. extends Image
         JLabel imageContainer;
         try {// DOC: ImageIO containing static convenience methods for locating ImageReaders and ImageWriters, and performing simple encoding and decoding.
-            image = ImageIO.read(getClass().getResource("/src/colorclash/resources/cuore.png"));//DOC: read(URL input) Returns a BufferedImage as the result of decoding a supplied URL
+            image = ImageIO.read(getClass().getResource("cuore.png"));//DOC: read(URL input) Returns a BufferedImage as the result of decoding a supplied URL
                                                                                                      // with an ImageReader chosen automatically from among those currently registered.
             imageContainer = new JLabel(new ImageIcon(image));//DOC: Creates an ImageIcon from an image object.
             return imageContainer;

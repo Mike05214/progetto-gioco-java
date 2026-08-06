@@ -95,12 +95,12 @@ public class PausePanel extends BaseMenuPanel {
         saveAndExitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                frame.changeFrame("MENU");
                 SaveManager.getInstance().writeGameState(model.getScore(), model.getLives(), model.getPhase(),
                 model.getCurrentSpeed(), model.getAvailableColorsCount(),
                 model.getPlayer(), model.getEnemies());
                 model.resetGame();
                 frame.getMenuPanel().refreshSavingButtons();
+                frame.changeFrame("MENU");
 
             }
         });

@@ -5,8 +5,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineEvent;
 import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.io.IOException;
 
 public class AudioManager {
@@ -15,7 +14,7 @@ public class AudioManager {
     private Clip backgroundMusic;
     private boolean isMuted = false;
 
-    //costruttore
+    // costruttore
     private AudioManager() {}
 
     public static AudioManager getInstance() {
@@ -23,34 +22,27 @@ public class AudioManager {
             instance = new AudioManager();
         }
         return instance;
-    }//fine getInstance
-
-    private String getAudioFileFullPath(String fileName) {
-        String path = AudioManager.class.getResource("/src/colorclash/sounds/" + fileName).toString(); 
-        
-        if (path.contains("//")) {
-            path = path.substring("file:/".length()); // Versione Windows
-        } else if (path.contains("/")) {
-            path = path.substring("file:".length()); // Versione Linux
-        }
-        
-        path = path.replaceAll("%20", " "); 
-        return path;
-    }//fine getAudioFullPath
+    }
 
     public void playSoundEffect(String fileName) {
         if (isMuted) {
             return;
         }
 
-        FileInputStream fis = null;
+        InputStream is = null;
         ByteArrayInputStream bais = null;
         AudioInputStream audioIn = null;
 
         try {
-            fis = new FileInputStream(getAudioFileFullPath(fileName));
+            // Carica il file audio direttamente come flusso di byte (funziona sia su IDE che nel .jar)
+            is = AudioManager.class.getResourceAsStream("/src/colorclash/sounds/" + fileName);
             
-            byte[] audioData = fis.readAllBytes();
+            if (is == null) {
+                System.out.println("ERRORE: File audio non trovato -> " + fileName);
+                return;
+            }
+            
+            byte[] audioData = is.readAllBytes();
             bais = new ByteArrayInputStream(audioData);
             audioIn = AudioSystem.getAudioInputStream(bais);
 
@@ -64,40 +56,39 @@ public class AudioManager {
                 }
             });
 
-        } catch (FileNotFoundException fnfe) { 
-            System.out.println("ERRORE: File audio non trovato -> " + fileName);
-            fnfe.printStackTrace(); 
-        } catch (IOException ioe) { 
-            System.out.println("Errore di IO riproduzione effetto sonoro: " + fileName);
-            ioe.printStackTrace(); 
         } catch (Exception e) {
-            
+            System.out.println("Errore riproduzione effetto sonoro: " + fileName);
             e.printStackTrace();
         } finally {
             try {
-                if (fis != null) fis.close(); 
+                if (is != null) is.close(); 
                 if (bais != null) bais.close();
                 if (audioIn != null) audioIn.close();
             } catch (IOException ioe) { 
-                ioe.printStackTrace(); 
+                ioe.printStackTrace();
             }
         } 
-    }//fine playSoundEffect
-
+    }
 
     public void playBackgroundMusic(String fileName) {
         if (isMuted) {
             return;
         }
 
-        FileInputStream fis = null; 
+        InputStream is = null; 
         ByteArrayInputStream bais = null;
         AudioInputStream audioIn = null;
 
         try {
-            fis = new FileInputStream(getAudioFileFullPath(fileName)); 
+            // Carica il file audio direttamente come flusso di byte
+            is = AudioManager.class.getResourceAsStream("/src/colorclash/sounds/" + fileName);
+            
+            if (is == null) {
+                System.out.println("ERRORE: File audio non trovato -> " + fileName);
+                return;
+            }
 
-            byte[] audioData = fis.readAllBytes();
+            byte[] audioData = is.readAllBytes();
             bais = new ByteArrayInputStream(audioData);
             audioIn = AudioSystem.getAudioInputStream(bais);
 
@@ -105,37 +96,32 @@ public class AudioManager {
             backgroundMusic.open(audioIn);
             backgroundMusic.loop(Clip.LOOP_CONTINUOUSLY);
 
-        } catch (FileNotFoundException fnfe) { 
-            System.out.println("ERRORE: File audio non trovato -> " + fileName);
-            fnfe.printStackTrace(); 
-        } catch (IOException ioe) { 
-            System.out.println("Errore di IO riproduzione musica di sottofondo.");
-            ioe.printStackTrace(); 
         } catch (Exception e) {
+            System.out.println("Errore riproduzione musica di sottofondo: " + fileName);
             e.printStackTrace();
         } finally {
             try {
-                if (fis != null) fis.close(); 
+                if (is != null) is.close(); 
                 if (bais != null) bais.close();
                 if (audioIn != null) audioIn.close();
             } catch (IOException ioe) { 
                 ioe.printStackTrace(); 
             }
         } 
-    }//fine playBackgroundMusic
+    }
 
     public void stopBackgroundMusic() {
         if (backgroundMusic != null && backgroundMusic.isRunning()) {
             backgroundMusic.stop();
         }
-    }//fine stopBackgroundMusic
+    }
 
     public void toggleSound() {
         isMuted = !isMuted;
         if (isMuted) {
             stopBackgroundMusic();
         }
-    }//fine toggleIsMuted
+    }
 
     public boolean isSoundEnabled() {
         return !isMuted;
