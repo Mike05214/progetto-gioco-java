@@ -48,8 +48,9 @@ public class Config {
             System.exit(-1);
         } finally {
             try {
-                if (buffRead != null)
+                if (buffRead != null){
                     buffRead.close();
+                }    
             } catch (IOException ioe) {
                 ioe.printStackTrace();
             }

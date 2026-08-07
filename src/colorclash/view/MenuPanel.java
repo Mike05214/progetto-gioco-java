@@ -58,8 +58,9 @@ public class MenuPanel extends BaseMenuPanel {
         addComponentToCenter(playButton, ROW_0, true);
         addComponentToCenter(resumeButton, ROW_1, true);
         addComponentToCenter(deleteSaveButton, ROW_2, true);
-        addComponentToCenter(soundButton, ROW_3, true);
-        addComponentToCenter(highScoreLabel, ROW_4, true);
+        addComponentToCenter(highScoreLabel, ROW_3, true);
+        addComponentToCenter(soundButton, ROW_4, false);
+        
     }// fine costruttore
 
     //METODI PUBBLICI 
@@ -118,8 +119,7 @@ public class MenuPanel extends BaseMenuPanel {
         deleteSaveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                File saveFile = new File("saves/gamestate.txt");
-                saveFile.delete();
+                SaveManager.getInstance().deleteGameState();
                 deleteSaveButton.setEnabled(false);
                 resumeButton.setEnabled(false);
             }
@@ -129,7 +129,7 @@ public class MenuPanel extends BaseMenuPanel {
     private void initSoundButton(){
         soundButton = new JButton("🔊");
         soundButton.setFont(new Font("Dialog", Font.PLAIN, SOUND_BUTTON_FONT_SIZE));
-        soundButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+        soundButton.setPreferredSize(new Dimension(SOUND_BUTTON_WIDTH, BUTTON_HEIGHT));
         soundButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

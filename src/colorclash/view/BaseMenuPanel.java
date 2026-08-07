@@ -26,6 +26,7 @@ import javax.swing.SwingConstants;
 
 public abstract class BaseMenuPanel extends JPanel {
     // costanti protette
+    protected final int SOUND_BUTTON_WIDTH = 100;
     protected final int BUTTON_WIDTH = 200;
     protected final int BUTTON_HEIGHT = 50;
     protected final int BUTTON_TEXT_SIZE = 20;

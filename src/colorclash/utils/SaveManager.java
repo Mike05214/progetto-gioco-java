@@ -24,7 +24,7 @@ import src.colorclash.model.StandardObstacle;
 
 public class SaveManager {
     //costanti
-    private final static boolean IS_DIST_VERSION = true; // Metti a true prima di fare il .jar per l'esame
+    private final static boolean IS_DIST_VERSION = false; // Metti a true prima di fare il .jar per l'esame
 
     //variabili di stato
     private String highscoreFilePath;
@@ -237,8 +237,9 @@ public class SaveManager {
             return false;
         } finally {
             try {
-                if (buffRead != null)
+                if (buffRead != null){
                     buffRead.close();
+                }    
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -249,7 +250,7 @@ public class SaveManager {
         File file = new File(gameStatePath);
         if (file.exists()) {
             file.delete();
-            System.out.println("Salvataggio eliminato correttamente.");
+            System.out.println("Save file successfully deleted.");
         }
     }// finee deleteGameState
 
