@@ -10,7 +10,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+
 import java.net.URISyntaxException;
+
 import java.util.List;
 
 import src.colorclash.model.Player;
@@ -21,25 +23,21 @@ import src.colorclash.model.SpeedRacer;
 import src.colorclash.model.StandardObstacle;
 
 public class SaveManager {
+    //costanti
+    private final static boolean IS_DIST_VERSION = true; // Metti a true prima di fare il .jar per l'esame
 
-    private final static boolean IS_DIST_VERSION = false; // Metti a true prima di fare il .jar per l'esame
-
+    //variabili di stato
     private String highscoreFilePath;
     private String gameStatePath;
     private String charset = "UTF-8";
     private static SaveManager saveManager = null;
 
-    public static SaveManager getInstance() {
-        if (saveManager == null) {
-            saveManager = new SaveManager();
-        }
-        return saveManager;
-    }
+    
 
     public SaveManager() {
         try {
             String savesDirPath = getSavesDirectory();
-            
+
             File savesFolder = new File(savesDirPath);
             if (!savesFolder.exists()) {
                 savesFolder.mkdirs();
@@ -60,44 +58,16 @@ public class SaveManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+    }//fine costruttore
+    
+    // METODI PUBBLICI
 
-    private String getSavesDirectory() throws URISyntaxException {
-        String savesDir = null;
-        String relPath = "\\saves";
-
-        if (System.getProperty("os.name").startsWith("Linux")) {
-            relPath = "/saves";
+    public static SaveManager getInstance() {
+        if (saveManager == null) {
+            saveManager = new SaveManager();
         }
-
-        if (IS_DIST_VERSION) {
-            savesDir = getHomeFolderForDistVersion() + relPath;
-        } else {
-            savesDir = getHomeFolderForDevVersion() + relPath;
-        }
-        return savesDir;
-    }
-
-    private String getHomeFolderForDistVersion() throws URISyntaxException {
-        // Metodo del professore per il file .jar
-        String homeDir = null;
-        String jarPath = SaveManager.class.getResource("SaveManager.class").toURI().toString();
-        int indexOfExclamationMark = jarPath.indexOf("!");
-
-        String prefix = "jar:file:/";
-        if (System.getProperty("os.name").startsWith("Linux")) {
-            prefix = "jar:file:";
-        }
-
-        homeDir = jarPath.substring(prefix.length(), indexOfExclamationMark);
-        int lastIndexOfSlash = homeDir.lastIndexOf("/");
-        homeDir = homeDir.substring(0, lastIndexOfSlash);
-        return homeDir;
-    }
-
-    private String getHomeFolderForDevVersion() throws URISyntaxException {
-        return System.getProperty("user.dir");  //restituisce automaticamente la cartella radice del progetto aperta nell'IDE.
-    }
+        return saveManager;
+    }// fine getInstance
 
     public int getHighscore() {
         int score = 0;
@@ -126,7 +96,7 @@ public class SaveManager {
         }
 
         return score;
-    }
+    }// fine getHighscore
 
     public void writeHighscore(int newScore) {
         PrintWriter printWriter = null;
@@ -148,7 +118,7 @@ public class SaveManager {
                 printWriter.close();
             }
         }
-    }
+    }// fine writeHighscore
 
     public void writeGameState(int score, int lives, int phase, double speed, int avaibleColors, Player player,
             List<Obstacle> enemies) {
@@ -189,7 +159,7 @@ public class SaveManager {
                 printWriter.close();
             }
         }
-    }
+    }// fine WriteGameState
 
     public boolean loadGameState(GameModel model) {
         File file = new File(gameStatePath);
@@ -273,7 +243,7 @@ public class SaveManager {
                 e.printStackTrace();
             }
         }
-    }
+    }// fine loadGameState
 
     public void deleteGameState() {
         File file = new File(gameStatePath);
@@ -281,5 +251,45 @@ public class SaveManager {
             file.delete();
             System.out.println("Salvataggio eliminato correttamente.");
         }
-    }
-}
+    }// finee deleteGameState
+
+    //METODI PRIVATI
+
+    private String getSavesDirectory() throws URISyntaxException {
+        String savesDir = null;
+        String relPath = "\\saves";
+
+        if (System.getProperty("os.name").startsWith("Linux")) {
+            relPath = "/saves";
+        }
+
+        if (IS_DIST_VERSION) {
+            savesDir = getHomeFolderForDistVersion() + relPath;
+        } else {
+            savesDir = getHomeFolderForDevVersion() + relPath;
+        }
+        return savesDir;
+    }// fine getSaveDirectory
+
+    private String getHomeFolderForDistVersion() throws URISyntaxException {
+        // Metodo del professore per il file .jar
+        String homeDir = null;
+        String jarPath = SaveManager.class.getResource("SaveManager.class").toURI().toString();
+        int indexOfExclamationMark = jarPath.indexOf("!");
+
+        String prefix = "jar:file:/";
+        if (System.getProperty("os.name").startsWith("Linux")) {
+            prefix = "jar:file:";
+        }
+
+        homeDir = jarPath.substring(prefix.length(), indexOfExclamationMark);
+        int lastIndexOfSlash = homeDir.lastIndexOf("/");
+        homeDir = homeDir.substring(0, lastIndexOfSlash);
+        return homeDir;
+    }// fine getHomeFolderForDistVersion
+
+    private String getHomeFolderForDevVersion() throws URISyntaxException {
+        return System.getProperty("user.dir");  //restituisce automaticamente la cartella radice del progetto aperta nell'IDE.
+    }// fine getHomeFolderForDevVersion
+    
+}//fine classe SaveManager
