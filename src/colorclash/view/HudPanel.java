@@ -25,7 +25,6 @@ import javax.imageio.ImageIO;
 
 import javax.sound.sampled.AudioInputStream;
 
-
 public class HudPanel extends JPanel {
 
     // variabili d'istanza
@@ -51,7 +50,6 @@ public class HudPanel extends JPanel {
     private final int LC_BORDER_RIGHT = 5;
     private final int HGAP = 10;
     private final int VGAP = 0;
-    
 
     public HudPanel() {
         setLayout(new BorderLayout());
@@ -85,11 +83,17 @@ public class HudPanel extends JPanel {
     }// fine initCenterPanel
 
     private void initLivesContainer() {
-        livesContainer = new JPanel(new FlowLayout(FlowLayout.RIGHT, HGAP, VGAP));//DOC: A flow layout arranges components in a directional flow, much like lines of text in a paragraph.
-                                                                                  // The flow direction is determined by the container's componentOrientation property
+        livesContainer = new JPanel(new FlowLayout(FlowLayout.RIGHT, HGAP, VGAP));// DOC: A flow layout arranges
+                                                                                  // components in a directional flow,
+                                                                                  // much like lines of text in a
+                                                                                  // paragraph.
+                                                                                  // The flow direction is determined by
+                                                                                  // the container's
+                                                                                  // componentOrientation property
         livesContainer.setOpaque(true);
         livesContainer.setBackground(new Color(0, 100, 0));
-        livesContainer.setBorder(BorderFactory.createEmptyBorder(LC_BORDER_TOP, LC_BORDER_LEFT, LC_BORDER_BOTTOM, LC_BORDER_RIGHT));
+        livesContainer.setBorder(
+                BorderFactory.createEmptyBorder(LC_BORDER_TOP, LC_BORDER_LEFT, LC_BORDER_BOTTOM, LC_BORDER_RIGHT));
         livesContainer.setPreferredSize(new Dimension(LIVES_CONTAINER_WIDTH, HUD_HEIGHT));
         add(livesContainer, BorderLayout.EAST);
 
@@ -102,7 +106,7 @@ public class HudPanel extends JPanel {
             heartLabels[i].setPreferredSize(heartLabels[i].getPreferredSize());
             livesContainer.add(heartLabels[i]);
         }
-        saveIcon = heartLabels[0].getIcon();//DOC: Returns the graphic image (glyph, icon) that the label displays.
+        saveIcon = heartLabels[0].getIcon();// DOC: Returns the graphic image (glyph, icon) that the label displays.
     }// fine generateVisualHearts
 
     // METODI PUBBLICI
@@ -138,13 +142,28 @@ public class HudPanel extends JPanel {
     }// fine updateScoreText
 
     public JLabel loadImage() {
-        BufferedImage image; //DOC: The BufferedImage subclass describes an Image with an accessible buffer of image data. extends Image
+        BufferedImage image; // DOC: The BufferedImage subclass describes an Image with an accessible buffer
+                             // of image data. extends Image
         JLabel imageContainer;
-        try {// DOC: ImageIO containing static convenience methods for locating ImageReaders and ImageWriters, and performing simple encoding and decoding.
-            image = ImageIO.read(getClass().getResource("cuore.png"));//DOC: read(URL input) Returns a BufferedImage as the result of decoding a supplied URL
-                                                                                                     // with an ImageReader chosen automatically from among those currently registered.
-            imageContainer = new JLabel(new ImageIcon(image));//DOC: Creates an ImageIcon from an image object.
+
+        try {// DOC: ImageIO containing static convenience methods for locating ImageReaders
+             // and ImageWriters, and performing simple encoding and decoding.
+            java.net.URL imgUrl = getClass().getResource("heart.png");
+            if (imgUrl == null) {
+                imgUrl = getClass().getResource("/src/colorclash/resources/cuore.png");
+            }
+            if (imgUrl == null) {
+                throw new Exception("File heart.png not found in any directory");
+            }
+
+            image = ImageIO.read(imgUrl);// DOC: read(URL input) Returns a BufferedImage as the result of decoding a
+                                         // supplied URL
+                                         // with an ImageReader chosen automatically from among those currently
+                                         // registered.
+
+            imageContainer = new JLabel(new ImageIcon(image));// DOC: Creates an ImageIcon from an image object.
             return imageContainer;
+
         } catch (Exception e) {
             System.out.println("Error loading graphic hearts: " + e);
             System.out.println("As an emergency measure, loading the heart emoji");
@@ -170,7 +189,7 @@ public class HudPanel extends JPanel {
 
     public void hideNewColorUnlocked() {
         scoreLabel.setText("");
-        
+
     }// fine hideNewColorUnloccked
 
     // getters di HudPanel
