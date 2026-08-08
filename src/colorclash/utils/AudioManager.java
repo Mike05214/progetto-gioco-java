@@ -66,7 +66,7 @@ public class AudioManager {
                 
                 // Gestione rigorosa del supporto linea come da dispensa
                 if (!AudioSystem.isLineSupported(info)) {
-                    throw new IOException("Error: the AudioSystem does not support the specified DataLine.Info object"); //[cite: 1]
+                    throw new IOException("Error: the AudioSystem does not support the specified DataLine.Info object"); 
                 }
 
                 try {
@@ -75,13 +75,13 @@ public class AudioManager {
                     // DOC: Opens the clip with the format and audio data present in the provided audio input stream.
                     clips[i].open(audioIn);
                 } catch (LineUnavailableException lue) {
-                    throw new IOException("Error: a LineUnavailableException exception was thrown"); //[cite: 1]
+                    throw new IOException("Error: a LineUnavailableException exception was thrown"); 
                 }
                 
             } catch (FileNotFoundException fnfe) {
                 fnfe.printStackTrace();
             } catch (UnsupportedAudioFileException uafe) {
-                uafe.printStackTrace(); //[cite: 1]
+                uafe.printStackTrace(); 
             } catch (IOException ioe) {
                 ioe.printStackTrace(); 
             } finally {
