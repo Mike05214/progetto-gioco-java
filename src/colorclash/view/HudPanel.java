@@ -148,9 +148,9 @@ public class HudPanel extends JPanel {
 
         try {// DOC: ImageIO containing static convenience methods for locating ImageReaders
              // and ImageWriters, and performing simple encoding and decoding.
-            java.net.URL imgUrl = getClass().getResource("heart.png");
+            java.net.URL imgUrl = getClass().getResource("/colorclash/resources/heart.png");
             if (imgUrl == null) {
-                imgUrl = getClass().getResource("/src/colorclash/resources/cuore.png");
+                imgUrl = getClass().getResource("/src/colorclash/resources/heart.png");
             }
             if (imgUrl == null) {
                 throw new Exception("File heart.png not found in any directory");
