@@ -6,32 +6,43 @@ import src.colorclash.utils.AudioManager;
 import javax.swing.BorderFactory;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
+
 import java.awt.Color;
 import java.awt.Font;
 
 public class Main {
     public static void main(String[] args) {
-        // PREVIENE IL BUG DEL CLEARTYPE DI WINDOWS, "Usa il tuo anti-aliasing interno e
-        // non fare domande a Windows".
-        System.setProperty("awt.useSystemAAFontSettings", "on"); //
-        System.setProperty("swing.aatext", "true"); // 
+
+        System.setProperty("awt.useSystemAAFontSettings", "on"); // DOC: Controls whether the system desktop anti-aliasing font settings should be used by the Java 2D text renderer.
+        System.setProperty("swing.aatext", "true");// DOC: Globally enables anti-aliasing for text rendering across all Swing components.
 
         // --- INIZIO IMPOSTAZIONI LOOK AND FEEL ---
         try {
-            
-            UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsClassicLookAndFeel");
+            String osName = System.getProperty("os.name").toLowerCase();
+
+            if (osName.contains("linux")) {
+                UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
+            } else {
+                UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsClassicLookAndFeel");
+            }
+
             UIManager.put("Button.background", new Color(50, 50, 50));
             UIManager.put("Button.foreground", Color.WHITE);
             UIManager.put("Button.font", new Font("Impact", Font.PLAIN, 20));
             UIManager.put("Button.focus", new Color(0, 0, 0, 0));
-            
 
-        } catch (Exception e) {  //Nel caso venga catturata un'eccezione il programma applica il look and fell di default
+        } catch (Exception e) {
             System.err.println("Error setting the Look and Feel.");
             e.printStackTrace();
         }
-       
         // --- FINE IMPOSTAZIONI LOOK AND FEEL ---
+
+        AudioManager.getInstance().playBackgroundMusic("menu.wav");
+        AudioManager.getInstance().preloadSoundEffect("game_over.wav", 1);
+        AudioManager.getInstance().preloadSoundEffect("hit.wav", 5);
+        AudioManager.getInstance().preloadSoundEffect("hurt.wav", 2);
+        AudioManager.getInstance().preloadSoundEffect("notification.wav", 4);
+        AudioManager.getInstance().preloadSoundEffect("race_countdown.wav", 1);
 
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -39,8 +50,8 @@ public class Main {
                 mainFrame.setVisible(true);
             }
         });
-
-        AudioManager.getInstance().playBackgroundMusic("menu.wav");
+       
 
     }// fine main
+    
 }// fine classe Main
