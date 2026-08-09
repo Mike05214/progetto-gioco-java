@@ -34,10 +34,6 @@ public abstract class Obstacle {
         }
     }// fine checkOffScreen
 
-    public void destroy() {
-        isActive = false;
-    }// fine destroy
-
     // setters di Obstacle
     public void setColorId(int colorId) {
         this.colorId = colorId;
