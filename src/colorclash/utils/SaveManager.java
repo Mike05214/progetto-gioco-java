@@ -23,16 +23,14 @@ import src.colorclash.model.SpeedRacer;
 import src.colorclash.model.StandardObstacle;
 
 public class SaveManager {
-    //costanti
+    // costanti
     private final static boolean IS_DIST_VERSION = false; // Metti a true prima di fare il .jar per l'esame
 
-    //variabili di stato
+    // variabili di stato
     private String highscoreFilePath;
     private String gameStatePath;
     private String charset = "UTF-8";
     private static SaveManager saveManager = null;
-
-    
 
     public SaveManager() {
         try {
@@ -58,8 +56,8 @@ public class SaveManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }//fine costruttore
-    
+    }// fine costruttore
+
     // METODI PUBBLICI
 
     public static SaveManager getInstance() {
@@ -139,13 +137,16 @@ public class SaveManager {
             printWriter.print("PLAYER:" + player.getX() + ";" + player.getY() + ";" + player.getColorId() + "\r\n");
 
             for (Obstacle obs : enemies) {
-                printWriter.print("OBSTACLE:" + obs.getType() + ";" +
-                        obs.getX() + ";" +
-                        obs.getY() + ";" +
-                        obs.getFallSpeed() + ";" +
-                        obs.getColorId() + ";" +
-                        obs.getWidth() + ";" +
-                        obs.getHeight() + "\r\n");
+                // SALVA SOLO GLI OSTACOLI ATTIVI
+                if (obs.isActive()) {
+                    printWriter.print("OBSTACLE:" + obs.getType() + ";" +
+                            obs.getX() + ";" +
+                            obs.getY() + ";" +
+                            obs.getFallSpeed() + ";" +
+                            obs.getColorId() + ";" +
+                            obs.getWidth() + ";" +
+                            obs.getHeight() + "\r\n");
+                }
             }
 
             System.out.println("Game status frozen and saved in " + gameStatePath);
@@ -175,7 +176,12 @@ public class SaveManager {
                             new FileInputStream(gameStatePath), charset));
 
             String line = null;
-            model.getEnemies().clear();
+
+            // RESETTA IL POOL INVECE DI CANCELLARLO
+            for (Obstacle obs : model.getEnemies()) {
+                obs.setActive(false);
+                obs.setY(-2000);
+            }
 
             while ((line = buffRead.readLine()) != null) {
                 if (line.startsWith("SCORE:")) {
@@ -215,12 +221,39 @@ public class SaveManager {
                     int width = Integer.valueOf(obsData[5]);
                     int height = Integer.valueOf(obsData[6]);
 
-                    if (type.equals("StandardObstacle")) {
-                        model.getEnemies().add(new StandardObstacle(x, y, speed, colorId, width, height));
-                    } else if (type.equals("SpeedRacer")) {
-                        model.getEnemies().add(new SpeedRacer(x, y, speed, colorId, width, height));
-                    } else if (type.equals("SinusoidalMadness")) {
-                        model.getEnemies().add(new SinusoidalMadness(x, y, speed, colorId, width, height));
+                    // CERCA UN OSTACOLO SPENTO NEL POOL DEL TIPO CORRISPONDENTE
+                    for (Obstacle obs : model.getEnemies()) {
+                        if (!obs.isActive()) {
+                            if (type.equals("StandardObstacle") && obs instanceof StandardObstacle) {
+                                obs.setX(x);
+                                obs.setY(y);
+                                obs.setFallSpeed(speed);
+                                obs.setColorId(colorId);
+                                obs.setWidth(width);
+                                obs.setHeight(height);
+                                obs.setActive(true);
+                                break;
+                            } else if (type.equals("SpeedRacer") && obs instanceof SpeedRacer) {
+                                obs.setX(x);
+                                obs.setY(y);
+                                obs.setFallSpeed(speed);
+                                obs.setColorId(colorId);
+                                obs.setWidth(width);
+                                obs.setHeight(height);
+                                obs.setActive(true);
+                                break;
+                            } else if (type.equals("SinusoidalMadness") && obs instanceof SinusoidalMadness) {
+                                obs.setX(x);
+                                obs.setY(y);
+                                obs.setFallSpeed(speed);
+                                obs.setColorId(colorId);
+                                obs.setWidth(width);
+                                obs.setHeight(height);
+                                ((SinusoidalMadness) obs).setStartX(x); // Necessario per resettare l'onda
+                                obs.setActive(true);
+                                break;
+                            }
+                        }
                     }
                 }
             }
@@ -237,9 +270,9 @@ public class SaveManager {
             return false;
         } finally {
             try {
-                if (buffRead != null){
+                if (buffRead != null) {
                     buffRead.close();
-                }    
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -252,9 +285,9 @@ public class SaveManager {
             file.delete();
             System.out.println("Save file successfully deleted.");
         }
-    }// finee deleteGameState
+    }// fine deleteGameState
 
-    //METODI PRIVATI
+    // METODI PRIVATI
 
     private String getSavesDirectory() throws URISyntaxException {
         String savesDir = null;
@@ -290,7 +323,8 @@ public class SaveManager {
     }// fine getHomeFolderForDistVersion
 
     private String getHomeFolderForDevVersion() throws URISyntaxException {
-        return System.getProperty("user.dir");  //restituisce automaticamente la cartella radice del progetto aperta nell'IDE.
+        return System.getProperty("user.dir"); // restituisce automaticamente la cartella radice del progetto aperta
+                                               // nell'IDE.
     }// fine getHomeFolderForDevVersion
-    
-}//fine classe SaveManager
+
+}// fine classe SaveManager

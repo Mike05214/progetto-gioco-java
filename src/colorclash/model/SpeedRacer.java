@@ -9,21 +9,17 @@ import src.colorclash.utils.Config;
 public class SpeedRacer extends Obstacle {
 
     // costanti statiche
-    private static final int WIDTH = 50;
-    private static final int HEIGHT = 100;
-    private static final Random random = new Random();
+    protected static final int WIDTH = 50;
+    protected static final int HEIGHT = 100;
 
     // costanti
     private final int SPEEDRACER_POINTS = Config.getInstance().getIntProperty("speed_racer_points");
 
-    public SpeedRacer(double startX, double startY, double speed, int colorId, int width, int height) {
-        super(startX, startY, speed, colorId, width, height);
+    public SpeedRacer() {
+        super(0, -2000, 0, 0, WIDTH, HEIGHT);
+        this.setActive(false);
     }// fine costruttore
 
-    public static SpeedRacer createSpeedRacerObstacle(int panelWidth, double startY, double speed, int colorId) {
-        double randomX = random.nextDouble(panelWidth - WIDTH);
-        return new SpeedRacer(randomX, startY, speed, colorId, WIDTH, HEIGHT);
-    }// fine createSpeedRacer
 
     // getters di SpeedRacer
     @Override

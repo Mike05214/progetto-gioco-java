@@ -9,11 +9,11 @@ import src.colorclash.utils.Config;
 public class SinusoidalMadness extends Obstacle {
 
     // costanti statiche
-    private static final int WIDTH = 70;
-    private static final int HEIGHT = 70;
-    private static final Random random = new Random();
-    private static final int AMPLITUDE = Config.getInstance().getIntProperty("sinusoidal_madness_amplitude");
-    private static final int COLOR_CHANGE_INTERVAL = Config.getInstance().getIntProperty("sinusoidal_madness_color_change_interval");
+    protected static final int WIDTH = 70;
+    protected static final int HEIGHT = 70;
+    protected static final int AMPLITUDE = Config.getInstance().getIntProperty("sinusoidal_madness_amplitude");
+    private static final int COLOR_CHANGE_INTERVAL = Config.getInstance()
+            .getIntProperty("sinusoidal_madness_color_change_interval");
     private static final int CURRENT_MAX_COLORS = 4;
 
     // costanti
@@ -22,12 +22,16 @@ public class SinusoidalMadness extends Obstacle {
 
     // variabili d'istanza
     private double startX;
-    private double angle = 0;
-    private int colorTimer = 0;
+    private double angle;
+    private int colorTimer;
 
-    public SinusoidalMadness(double x, double y, double fallSpeed, int colorId, int width, int height) {
-        super(x, y, fallSpeed, colorId, width, height);
-        startX = x;
+    public SinusoidalMadness() {
+        super(0, -2000, 0, 0, WIDTH, HEIGHT);
+
+        this.startX = 0;
+        this.angle = 0;
+        this.colorTimer = 0;
+        this.setActive(false);
     }// fine costruttore
 
     @Override
@@ -44,13 +48,6 @@ public class SinusoidalMadness extends Obstacle {
         }
     }// fine fall
 
-    public static SinusoidalMadness creatSinusoidalMadness(int panelWidth, double startY, double fallSpeed, int colorId) {
-        double safeMinX = AMPLITUDE;
-        double safeMaxX = panelWidth - WIDTH - AMPLITUDE;
-        double randomX = random.nextDouble(safeMinX, safeMaxX);
-        return new SinusoidalMadness(randomX, startY, fallSpeed, colorId, WIDTH, HEIGHT);
-    }// fine createSinusoidalMadness
-
     // getters ereditati dalla superclasse Obstacle
     @Override
     public Shape getHitbox() {
@@ -62,8 +59,12 @@ public class SinusoidalMadness extends Obstacle {
         return SINUSOIDALMADNESS_POINTS;
     }
 
-    @Override 
+    @Override
     public String getType() {
         return "SinusoidalMadness";
+    }
+
+    public void setStartX(double startX){
+        this.startX=startX;
     }
 }// fine classe SinusoidalMadness

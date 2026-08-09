@@ -75,8 +75,37 @@ public abstract class Obstacle {
         return isActive;
     }
 
+
+    
     public double getFallSpeed(){
         return fallSpeed;
+    }
+
+    // setters di Obstacle
+
+    public void setActive(boolean active){
+        isActive= active;
+
+    }
+
+    public void setY(double CordY ){
+        y=CordY;
+    }
+
+    public void setX(double CordX ){
+        x=CordX;
+    }
+
+    public void setWidth(int width ){
+        this.width=width;
+    }
+
+    public void setHeight(int height ){
+        this.height=height;
+    }
+
+    public void setFallSpeed(double speed ){
+        this.fallSpeed=speed;
     }
 
     

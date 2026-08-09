@@ -73,8 +73,14 @@ public class GameSpace extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); // DOC: Sets the value of a single preference for the rendering algorithms.
-                                                                                                  // setRenderingHint(RenderingHints.Key hintKey, Object hintValue)
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); // DOC: Sets the value
+                                                                                                  // of a single
+                                                                                                  // preference for the
+                                                                                                  // rendering
+                                                                                                  // algorithms.
+                                                                                                  // setRenderingHint(RenderingHints.Key
+                                                                                                  // hintKey, Object
+                                                                                                  // hintValue)
         drawStars(g2d);
         showLegend(g2d);
         drawPlayer(g2d);
@@ -87,7 +93,7 @@ public class GameSpace extends JPanel {
 
     }// fine paintComponent
 
-    //METODI PRIVATI
+    // METODI PRIVATI
 
     private void drawParticles(Graphics2D g2d) {
         Rectangle2D.Double particleRect = new Rectangle2D.Double();
@@ -132,15 +138,17 @@ public class GameSpace extends JPanel {
 
     private void drawObstacles(Graphics2D g2d) {
         for (Obstacle obs : model.getEnemies()) {
-            g2d.setColor(colorPalette[obs.getColorId()]);
-            g2d.fill(obs.getHitbox());
+            if (obs.isActive()) {
+                g2d.setColor(colorPalette[obs.getColorId()]);
+                g2d.fill(obs.getHitbox());
+            }
         }
     }// fine drawObstacles
 
     private void drawStars(Graphics2D g2d) {
         Rectangle2D.Double starRect = new Rectangle2D.Double();
 
-        for (Star s :  model.getStars()) {
+        for (Star s : model.getStars()) {
             g2d.setColor(new Color(255, 255, 255, s.getAlpha()));
             starRect.setRect(s.getX(), s.getY(), s.getSize(), s.getSize());
             g2d.fill(starRect);
@@ -155,11 +163,13 @@ public class GameSpace extends JPanel {
         g2d.setFont(new Font("Impact", Font.PLAIN, GAME_OVER_FONT_SIZE));
         String gameOverText = "GAME OVER";
         FontMetrics fm = g2d.getFontMetrics();
-        g2d.drawString(gameOverText, (getWidth()- fm.stringWidth(gameOverText))/ 2 , getHeight() / 2 - GAME_OVER_HEIGHT_OFFSET);
+        g2d.drawString(gameOverText, (getWidth() - fm.stringWidth(gameOverText)) / 2,
+                getHeight() / 2 - GAME_OVER_HEIGHT_OFFSET);
         g2d.setFont(new Font("Impact", Font.PLAIN, 25));
         fm = g2d.getFontMetrics();
         String score = "SCORE: " + model.getScore();
-        g2d.drawString(score, (getWidth() - fm.stringWidth(score))/ 2, getHeight() / 2 - GAME_OVER_SCORE_HEIGHT_OFFSET);
+        g2d.drawString(score, (getWidth() - fm.stringWidth(score)) / 2,
+                getHeight() / 2 - GAME_OVER_SCORE_HEIGHT_OFFSET);
     }// fine showGameOver
 
     private void showLegend(Graphics2D g2d) {
@@ -190,7 +200,7 @@ public class GameSpace extends JPanel {
         }
     }// fine showLegend
 
-    //METODI PUBBLICI 
+    // METODI PUBBLICI
 
     public void createBorder(int newColorId) {
         setBorder(BorderFactory.createLineBorder(colorPalette[newColorId], 5));

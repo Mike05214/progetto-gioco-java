@@ -15,7 +15,7 @@ import java.awt.geom.Rectangle2D;
 public class GameModel {
 
     private Player player;
-    private List<Obstacle> enemies;
+    private List<Obstacle> allEnemies;
 
     // Variabili di stato del gioco
     private int lives;
@@ -45,7 +45,7 @@ public class GameModel {
     private final int MIN_Y = 0;
     private final int OBSTACLE_START_Y = -150;
     private final int START_COLOR_ID = 0;
-    private final double BASE_SPEED =Config.getInstance().getDoubleProperty("obstacle_base_speed");
+    private final double BASE_SPEED = Config.getInstance().getDoubleProperty("obstacle_base_speed");
     private final int TICK_TIME = 8;
     private final int SCORE_DELAY = Config.getInstance().getIntProperty("score_delay");
     private final int SCORE_PHASE_2 = Config.getInstance().getIntProperty("phase_2_score_threshold");
@@ -64,6 +64,14 @@ public class GameModel {
     private final int MAX_LIVES = 3;
     private final int NUM_STARS = 100;
 
+    // Variabili per l'Object Pooling
+    private final int POOL_SIZE_STANDARD = 15;
+    private final int POOL_SIZE_SPECIAL = 10;
+
+    private StandardObstacle[] standardPool = new StandardObstacle[POOL_SIZE_STANDARD];
+    private SpeedRacer[] speedRacerPool = new SpeedRacer[POOL_SIZE_SPECIAL];
+    private SinusoidalMadness[] sinusoidalPool = new SinusoidalMadness[POOL_SIZE_SPECIAL];
+
     // METODI STATICI
 
     public static GameModel getInstance() {
@@ -80,8 +88,9 @@ public class GameModel {
     }// fine costruttore
 
     private void initGame() {
+        allEnemies = new ArrayList<>();
+        initPool();
         player = new Player(START_X, START_Y, START_COLOR_ID);
-        enemies = new ArrayList<>();
         lives = MAX_LIVES;
         isGameOver = false;
         currentFallSpeed = BASE_SPEED;
@@ -90,6 +99,21 @@ public class GameModel {
         initStars(Config.getInstance().getIntProperty("frame_width"),
                 Config.getInstance().getIntProperty("frame_height"));
     }// fine initGame
+
+    private void initPool() {
+        for (int i = 0; i < standardPool.length; i++) {
+            standardPool[i] = new StandardObstacle();
+            allEnemies.add(standardPool[i]);
+        }
+        for (int i = 0; i < speedRacerPool.length; i++) {
+            speedRacerPool[i] = new SpeedRacer();
+            allEnemies.add(speedRacerPool[i]);
+        }
+        for (int i = 0; i < sinusoidalPool.length; i++) {
+            sinusoidalPool[i] = new SinusoidalMadness();
+            allEnemies.add(sinusoidalPool[i]);
+        }
+    }
 
     public void update(int panelWidth, int panelHeight) {
 
@@ -125,11 +149,13 @@ public class GameModel {
 
     private void updateEnemies(int panelHeight) {
 
-        for (Obstacle obs : enemies) {
-            obs.update();
-            obs.checkOffScreen(panelHeight);
+        for (Obstacle obs : allEnemies) {
+            // Applica movimento e collisioni SOLO agli ostacoli attivi in gioco
+            if (obs.isActive()) {
+                obs.update();
+                obs.checkOffScreen(panelHeight);
+            }
         }
-        enemies.removeIf(obs -> !obs.isActive());
     }// fine updateEnemies
 
     private void updateParticles() {
@@ -166,6 +192,10 @@ public class GameModel {
         }
     }// fine invulnerabilityHandler
 
+// -----------------------------------------
+// ---- SPAWNING OBSTACLES ----
+// -----------------------------------------
+
     private void spawningHandler(int panelWidth) {
         frameCounter++;
 
@@ -175,45 +205,103 @@ public class GameModel {
         }
     }// fine handleSpawning
 
+    private void spawnStandard(StandardObstacle obs, int panelWidth, double startY, double speed, int colorId) {
+        int randomWidth = random.nextInt(StandardObstacle.MIN_SIZE, StandardObstacle.MAX_SIZE);
+        int randomHeight = random.nextInt(StandardObstacle.MIN_SIZE, StandardObstacle.MAX_SIZE);
+        double randomX = random.nextDouble(panelWidth - randomWidth);
+
+        obs.setX(randomX);
+        obs.setY(startY);
+        obs.setFallSpeed(speed);
+        obs.setColorId(colorId);
+        obs.setWidth(randomWidth);
+        obs.setHeight(randomHeight);
+
+        obs.setActive(true);
+    }
+
+    private void spawnSpeedRacer(SpeedRacer obs, int panelWidth, double startY, double speed, int colorId) {
+        double randomX = random.nextDouble(panelWidth - SpeedRacer.WIDTH);
+
+        obs.setX(randomX);
+        obs.setY(startY);
+        obs.setFallSpeed(speed);
+        obs.setColorId(colorId);
+        // Larghezza e altezza fisse per SpeedRacer
+        obs.setWidth(SpeedRacer.WIDTH);
+        obs.setHeight(SpeedRacer.HEIGHT);
+
+        obs.setActive(true);
+    }
+
+    private void spawnSinusoidal(SinusoidalMadness obs, int panelWidth, double startY, double speed, int colorId) {
+        double safeMinX = SinusoidalMadness.AMPLITUDE;
+        double safeMaxX = panelWidth - SinusoidalMadness.WIDTH - SinusoidalMadness.AMPLITUDE;
+        double randomX = random.nextDouble(safeMinX, safeMaxX);
+
+        obs.setX(randomX);
+        obs.setStartX(randomX); // Fondamentale per il calcolo del seno
+        obs.setY(startY);
+        obs.setFallSpeed(speed);
+        obs.setColorId(colorId);
+        obs.setWidth(SinusoidalMadness.WIDTH);
+        obs.setHeight(SinusoidalMadness.HEIGHT);
+
+        obs.setActive(true);
+    }
+
+    // Cerca il primo ostacolo spento nell'array e usa il metodo corretto del
+    // GameModel per rigenerarlo
+    private void activateFromPool(Obstacle[] pool, int panelWidth, double startY, double speed, int colorId) {
+        for (int i = 0; i < pool.length; i++) {
+            if (!pool[i].isActive()) {
+                if (pool[i] instanceof StandardObstacle) {
+                    spawnStandard((StandardObstacle) pool[i], panelWidth, startY, speed, colorId);
+                } else if (pool[i] instanceof SpeedRacer) {
+                    spawnSpeedRacer((SpeedRacer) pool[i], panelWidth, startY, speed, colorId);
+                } else if (pool[i] instanceof SinusoidalMadness) {
+                    spawnSinusoidal((SinusoidalMadness) pool[i], panelWidth, startY, speed, colorId);
+                }
+                return; // Esci appena ne hai acceso uno
+            }
+        }
+    }
+
     private void spawnRandomEnemy(int panelWidth) {
         int startY = OBSTACLE_START_Y;
         int randomColorId = random.nextInt(availableColorsCount);
-        Obstacle newEnemy;
         int chance = random.nextInt(MAX_CHANCE);
 
         switch (currentPhase) {
             case 1:
-                newEnemy = StandardObstacle.createStandardObstacle(panelWidth, startY, currentFallSpeed, randomColorId);
+                activateFromPool(standardPool, panelWidth, startY, currentFallSpeed, randomColorId);
                 break;
 
             case 2:
-
                 if (chance < SPEEDRACER_CHANCE_PHASE_2) {
-                    newEnemy = SpeedRacer.createSpeedRacerObstacle(panelWidth, startY,
-                            currentFallSpeed * SPEEDRACER_MULTIPLIER, randomColorId);
-                } else {
-                    newEnemy = StandardObstacle.createStandardObstacle(panelWidth, startY, currentFallSpeed,
+                    activateFromPool(speedRacerPool, panelWidth, startY, currentFallSpeed * SPEEDRACER_MULTIPLIER,
                             randomColorId);
+                } else {
+                    activateFromPool(standardPool, panelWidth, startY, currentFallSpeed, randomColorId);
                 }
                 break;
 
             case 3:
             default:
-
                 if (chance < SINUSOIDALMADNESS_CHANCE) {
-                    newEnemy = SinusoidalMadness.creatSinusoidalMadness(panelWidth, startY, currentFallSpeed,
-                            randomColorId);
+                    activateFromPool(sinusoidalPool, panelWidth, startY, currentFallSpeed, randomColorId);
                 } else if (chance < SPEEDRACER_CHANCE_PHASE_3) {
-                    newEnemy = SpeedRacer.createSpeedRacerObstacle(panelWidth, startY,
-                            currentFallSpeed * SPEEDRACER_MULTIPLIER, randomColorId);
-                } else {
-                    newEnemy = StandardObstacle.createStandardObstacle(panelWidth, startY, currentFallSpeed,
+                    activateFromPool(speedRacerPool, panelWidth, startY, currentFallSpeed * SPEEDRACER_MULTIPLIER,
                             randomColorId);
+                } else {
+                    activateFromPool(standardPool, panelWidth, startY, currentFallSpeed, randomColorId);
                 }
                 break;
         }
-        enemies.add(newEnemy);
-    }// fine spawnRandomEnemy
+    }
+// -----------------------------------------
+// ---- END SPAWNING OBSTACLES ----
+// ---------------------------------------
 
     private void checkDifficultyProgression(int currentScore) {
 
@@ -261,23 +349,35 @@ public class GameModel {
         }
     }// fine createExplosion
 
-
     private void checkCollisions() {
         Shape playerShape = player.getHitbox();
-        Rectangle2D playerBounds = playerShape.getBounds2D(); //DOC: Returns a high precision and more accurate bounding box of the Shape than the getBounds method.
-                                                             //Returns an integer Rectangle that completely encloses the Shape.
-        for (int i = 0; i < enemies.size(); i++) {
-            Obstacle obs = enemies.get(i);
+        Rectangle2D playerBounds = playerShape.getBounds2D(); // DOC: Returns a high precision and more accurate
+                                                              // bounding box of the Shape
+                                                              // Returns an integer Rectangle that completely encloses
+                                                              // the Shape.
+        for (int i = 0; i < allEnemies.size(); i++) { // Usa allEnemies o enemies in base a come hai chiamato la lista
+                                                      // globale
+            Obstacle obs = allEnemies.get(i);
+
+            // 1. MODIFICA: Salta gli ostacoli nel pool non ancora in gioco
+            if (!obs.isActive()) {
+                continue;
+            }
+
             Shape obsShape = obs.getHitbox();
             Rectangle2D obsBounds = obsShape.getBounds2D();
 
             if (!playerBounds.intersects(obsBounds)) {
                 continue;
             }
-            //DOC: An Area object stores and manipulates a resolution-independent description of an enclosed area of 2-dimensional space.
-            Area playerArea = new Area(playerShape); //The Area class creates an area geometry from the specified Shape object.
+
+            // DOC: An Area object stores and manipulates a resolution-independent
+            // description of an enclosed area of 2-dimensional space
+            Area playerArea = new Area(playerShape); // The Area class creates an area geometry from the specified Shape
+                                                     // object.
             Area obsArea = new Area(obsShape);
-            playerArea.intersect(obsArea); // Sets the shape of this Area to the intersection of its current shape and the shape of the specified Area.
+            playerArea.intersect(obsArea); // Sets the shape of this Area to the intersection of its current shape and
+                                           // the shape of the specified Area.
 
             if (!playerArea.isEmpty()) {
 
@@ -286,8 +386,12 @@ public class GameModel {
                     createExplosion(obs.getX(), obs.getY() - EXPLOSION_OFFSET, obs.getColorId());
                     floatingScores.add(new FloatingScore(obs.getX(), obs.getY(), obs.getPoints()));
                     addScore(obs.getPoints());
-                    enemies.remove(i);
-                    i--;
+
+                    // 2. MODIFICA: Invece di rimuoverlo dalla lista, lo spegne e lo rispedisce nel
+                    // "magazzino"
+                    obs.setActive(false);
+                    obs.setY(-2000);
+
                 } else {
 
                     if (!isInvulnerable) {
@@ -302,15 +406,16 @@ public class GameModel {
         }
     }// fine checkCollisions
 
-    
-
     private void resetScore() {
         this.score = 0;
         this.stackedTime = 0;
     }// fine resetScore
 
     private void resetObstacles() {
-        this.enemies.clear();
+        for (Obstacle obs : allEnemies) {
+            obs.setActive(false);
+            obs.setY(-2000);
+        }
         this.particles.clear();
     }// fine resetObstacles
 
@@ -349,7 +454,7 @@ public class GameModel {
         // Salviamo lo stato solo se il giocatore è in partita e non ha già perso.
         if (!this.isGameOver) {
             saveManager.writeGameState(this.score, this.lives, this.currentPhase, this.currentFallSpeed,
-                    this.availableColorsCount, this.player, this.enemies);
+                    this.availableColorsCount, this.player, this.allEnemies);
         }
     }// fine autoSave
 
@@ -368,7 +473,7 @@ public class GameModel {
     }
 
     public List<Obstacle> getEnemies() {
-        return enemies;
+        return allEnemies;
     }
 
     public int getScore() {
