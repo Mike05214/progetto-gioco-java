@@ -3,7 +3,6 @@ package src.colorclash.view;
 import src.colorclash.utils.AudioManager;
 import src.colorclash.utils.Config;
 import src.colorclash.model.GameModel;
-import src.colorclash.utils.AudioManager;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -12,7 +11,6 @@ import java.awt.CardLayout;//DOC: A CardLayout object is a layout manager for a 
                            // It treats each component in the container as a card.
                            // Only one card is visible at a time, and the container acts as a stack of cards.
 import java.awt.Container;
-import java.awt.BorderLayout;
 import java.awt.event.WindowAdapter; // DOC: An abstract adapter class for receiving window events. 
                                     // The methods in this class are empty. This class exists as convenience for creating listener objects.
 import java.awt.event.WindowEvent;

@@ -18,8 +18,6 @@ import java.awt.FontMetrics;
 import java.awt.BasicStroke;
 import java.awt.RenderingHints;
 
-import java.util.List;
-
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;

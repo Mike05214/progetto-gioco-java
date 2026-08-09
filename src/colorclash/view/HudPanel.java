@@ -1,14 +1,10 @@
 package src.colorclash.view;
 
-import src.colorclash.utils.AudioManager;
-import src.colorclash.utils.Config;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
-import java.awt.GridBagLayout;
 import java.awt.FlowLayout;
 import java.awt.Font;
 
@@ -19,11 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.BorderFactory;
 
-import java.io.File;
-
 import javax.imageio.ImageIO;
-
-import javax.sound.sampled.AudioInputStream;
 
 public class HudPanel extends JPanel {
 
@@ -41,7 +33,7 @@ public class HudPanel extends JPanel {
     private final int HUD_WIDTH = 0;
     private final int HUD_HEIGHT = 35;
     private final int PAUSE_BUTTON_WIDTH = 150;
-    private final int PAUSE_BUTTON_FONT_SIZE = 18;
+    private final int PAUSE_BUTTON_FONT_SIZE = 24;
     private final int SCORE_LABEL_FONT_SIZE = 20;
     private final int LIVES_CONTAINER_WIDTH = 150;
     private final int LC_BORDER_TOP = 2;
@@ -66,7 +58,7 @@ public class HudPanel extends JPanel {
         JPanel westernPanel = new JPanel(new BorderLayout());
         pauseButton = new JButton("⏸️");
         pauseButton.setMnemonic(KeyEvent.VK_X);
-        pauseButton.setFont(new Font("Dialog", Font.PLAIN, 24));
+        pauseButton.setFont(new Font("Dialog", Font.PLAIN, PAUSE_BUTTON_FONT_SIZE));
         pauseButton.setPreferredSize(new Dimension(PAUSE_BUTTON_WIDTH, HUD_HEIGHT));
         westernPanel.add(pauseButton);
         add(westernPanel, BorderLayout.WEST);

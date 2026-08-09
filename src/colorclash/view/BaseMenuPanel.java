@@ -1,6 +1,5 @@
 package src.colorclash.view;
 
-import src.colorclash.view.MainFrame;
 import src.colorclash.model.GameModel;
 import src.colorclash.model.Star;
 

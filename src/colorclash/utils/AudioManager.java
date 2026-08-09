@@ -11,15 +11,17 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.InputStream;
 import java.io.IOException;
 import java.io.FileNotFoundException;
+
 import java.util.HashMap;
 
 public class AudioManager {
 
+    //variabili di stato
     private static AudioManager instance;
     private Clip backgroundMusic;
     private boolean isMuted = false;
 
-    // Strutture dati per l'Object Pooling
+    //HashMap per gestione audio
     private HashMap<String, Clip[]> soundPool = new HashMap<>();
     private HashMap<String, Integer> soundIndexes = new HashMap<>();
 
@@ -31,18 +33,14 @@ public class AudioManager {
             instance = new AudioManager();
         }
         return instance;
-    }
+    }// fine getInstance
 
-    /**
-     * Carica e decodifica i file audio una sola volta in memoria.
-     * Da chiamare all'avvio del gioco (es. nella schermata di caricamento).
-     */
     public void preloadSoundEffect(String fileName, int numClips) {
         Clip[] clips = new Clip[numClips];
         
         for (int i = 0; i < numClips; i++) {
             InputStream is = null;
-            AudioInputStream audioIn = null;
+            AudioInputStream ais = null;
             
             try {
                 is = AudioManager.class.getResourceAsStream("/colorclash/sounds/" + fileName);
@@ -53,13 +51,13 @@ public class AudioManager {
                     throw new FileNotFoundException("ERROR: Audio file not found -> " + fileName);
                 }
 
-                audioIn = AudioSystem.getAudioInputStream(is);
+                ais = AudioSystem.getAudioInputStream(is);
                 
                 // DOC: Obtains the audio format of the sound data in this audio input stream.
-                AudioFormat af = audioIn.getFormat();
+                AudioFormat af = ais.getFormat();
                 
                 // DOC: getFrameLength() obtains the length of the stream, expressed in sample frames rather than bytes. getFrameSize() obtains the frame size in bytes.
-                int bufferSize = (int)audioIn.getFrameLength() * af.getFrameSize();
+                int bufferSize = (int)ais.getFrameLength() * af.getFrameSize();
                 
                 // DOC: Constructs a data line's info object from the specified information, which includes a single audio format and a desired buffer size.
                 DataLine.Info info = new DataLine.Info(Clip.class, af, bufferSize);
@@ -73,7 +71,7 @@ public class AudioManager {
                     // DOC: Obtains a line that matches the description in the specified Line.Info object.
                     clips[i] = (Clip)AudioSystem.getLine(info);
                     // DOC: Opens the clip with the format and audio data present in the provided audio input stream.
-                    clips[i].open(audioIn);
+                    clips[i].open(ais);
                 } catch (LineUnavailableException lue) {
                     throw new IOException("Error: a LineUnavailableException exception was thrown"); 
                 }
@@ -87,8 +85,8 @@ public class AudioManager {
             } finally {
                 // DOC: Closes the line, indicating that any system resources in use by the line can be released.
                 try {
-                    if (audioIn != null) {
-                        audioIn.close(); 
+                    if (ais != null) {
+                        ais.close(); 
                     }
                     if (is != null) {
                         is.close();
@@ -99,14 +97,10 @@ public class AudioManager {
             }
         }
         
-        // Salva l'array e inizializza il suo indice a 0
         soundPool.put(fileName, clips);
         soundIndexes.put(fileName, 0);
-    }
+    } // fine preloadSoundEffect
 
-    /**
-     * Riproduce il suono pescando la clip dall'array pre-caricato senza latenza.
-     */
     public void playSoundEffect(String fileName) {
         if (isMuted) return;
 
@@ -115,26 +109,24 @@ public class AudioManager {
             int index = soundIndexes.get(fileName);
             
             if (clips[index] != null) {
-                // Ferma l'eventuale esecuzione precedente della STESSA clip e la riavvolge
                 clips[index].stop();
                 clips[index].setFramePosition(0); 
                 // DOC: Allows a line to engage in data I/O.
                 clips[index].start();
             }
-            
-            // Ordine circolare: una volta giunti all'ultimo oggetto dell'array si riparte dal primo
+
             index = (index + 1) % clips.length;
             soundIndexes.put(fileName, index);
         } else {
             System.err.println("WARNING: Sound not preloaded in memory -> " + fileName);
         }
-    }
+    }// fine playSoundEffect
 
     public void playBackgroundMusic(String fileName) {
         if (isMuted) return;
 
         InputStream is = null;
-        AudioInputStream audioIn = null;
+        AudioInputStream ais = null;
 
         try {
             is = AudioManager.class.getResourceAsStream("/colorclash/sounds/" + fileName);
@@ -145,21 +137,20 @@ public class AudioManager {
                 throw new FileNotFoundException("ERROR: Audio file not found -> " + fileName);
             }
 
-            audioIn = AudioSystem.getAudioInputStream(is);
-            AudioFormat af = audioIn.getFormat();
-            int bufferSize = (int)audioIn.getFrameLength() * af.getFrameSize();
+            ais = AudioSystem.getAudioInputStream(is);
+            AudioFormat af = ais.getFormat();
+            int bufferSize = (int)ais.getFrameLength() * af.getFrameSize();
             DataLine.Info info = new DataLine.Info(Clip.class, af, bufferSize);
-            
-            // Gestione rigorosa del supporto linea come da dispensa[cite: 1]
+        
             if (!AudioSystem.isLineSupported(info)) {
-                throw new IOException("Error: the AudioSystem does not support the specified DataLine.Info object"); //[cite: 1]
+                throw new IOException("Error: the AudioSystem does not support the specified DataLine.Info object"); 
             }
 
             try {
                 backgroundMusic = (Clip)AudioSystem.getLine(info);
-                backgroundMusic.open(audioIn);
+                backgroundMusic.open(ais);
             } catch (LineUnavailableException lue) {
-                throw new IOException("Error: a LineUnavailableException exception was thrown"); //[cite: 1]
+                throw new IOException("Error: a LineUnavailableException exception was thrown");
             }
             
             // DOC: A value of LOOP_CONTINUOUSLY indicates that looping should continue until interrupted.
@@ -173,8 +164,8 @@ public class AudioManager {
             ioe.printStackTrace();
         } finally {
             try {
-                if (audioIn != null) {
-                    audioIn.close(); 
+                if (ais != null) {
+                    ais.close(); 
                 }
                 if (is != null) {
                     is.close();
@@ -183,21 +174,22 @@ public class AudioManager {
                 ioe.printStackTrace();
             }
         }
-    }
+    }//fine playBackgroundMusic
 
     public void stopBackgroundMusic() {
         if (backgroundMusic != null && backgroundMusic.isRunning()) {
             // DOC: Stops the line. A stopped line should cease I/O activity.
             backgroundMusic.stop(); 
         }
-    }
+    }// fine stopBackgroundMusic
 
     public void toggleSound() {
         isMuted = !isMuted;
         if (isMuted) stopBackgroundMusic();
-    }
+    }// fine toggleSound
 
     public boolean isSoundEnabled() {
         return !isMuted;
-    }
-}
+    }// fine isSoundEnabled
+
+}// fine classe AudioManager
