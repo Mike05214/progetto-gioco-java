@@ -79,6 +79,7 @@ public class MainFrame extends JFrame {
                         model.autoSave();
                     }
                 }
+                AudioManager.getInstance().closeAll();
                 
                 dispose();  //Releases all of the native screen resources used by this Window, its subcomponents, and all of its owned children. 
                             //That is, the resources for these Components will be destroyed, any memory they consume will be returned to the OS, and they will be marked as undisplayable.
