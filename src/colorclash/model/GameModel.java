@@ -31,7 +31,7 @@ public class GameModel {
     private double currentFallSpeed;;
     private int currentPhase = 1;
 
-    private List<Particle> particles = new ArrayList<>();
+    private List<Particle> allParticles = new ArrayList<>();
     private List<FloatingScore> floatingScores = new ArrayList<>();
     private List<Star> stars = new ArrayList<>();
     private int availableColorsCount = 2;
@@ -59,7 +59,7 @@ public class GameModel {
     private final int SPEEDRACER_CHANCE_PHASE_3 = 40;
     private final int SINUSOIDALMADNESS_CHANCE = 15;
     private final int MIN_PARTICLES = 5; // numero di particelle minime che appaiono durante esplosione ostacolo
-    private final int MAX_PARTICLES = 12;
+    private final int MAX_PARTICLES = 200;
     private final int EXPLOSION_OFFSET = 20; // per alzare il centro esplosione
     private final int MAX_LIVES = 3;
     private final int NUM_STARS = 100;
@@ -89,7 +89,8 @@ public class GameModel {
 
     private void initGame() {
         allEnemies = new ArrayList<>();
-        initPool();
+        initObstaclesPool();
+        initParticlesPool();
         player = new Player(START_X, START_Y, START_COLOR_ID);
         lives = MAX_LIVES;
         isGameOver = false;
@@ -100,7 +101,7 @@ public class GameModel {
                 Config.getInstance().getIntProperty("frame_height"));
     }// fine initGame
 
-    private void initPool() {
+    private void initObstaclesPool() {
         for (int i = 0; i < standardPool.length; i++) {
             standardPool[i] = new StandardObstacle();
             allEnemies.add(standardPool[i]);
@@ -112,6 +113,15 @@ public class GameModel {
         for (int i = 0; i < sinusoidalPool.length; i++) {
             sinusoidalPool[i] = new SinusoidalMadness();
             allEnemies.add(sinusoidalPool[i]);
+        }
+    }
+
+    private void initParticlesPool() {
+        allParticles.clear();
+        for (int i = 0; i < MAX_PARTICLES; i++) {
+            Particle p = new Particle(); // Costruttore vuoto o con valori fittizi
+            p.setActive(false);
+            allParticles.add(p);
         }
     }
 
@@ -159,10 +169,11 @@ public class GameModel {
     }// fine updateEnemies
 
     private void updateParticles() {
-        for (Particle p : particles) {
-            p.update();
+        for (Particle p : allParticles) {
+            if (p.isActive()) {
+                p.update(); // Se l'alpha arriva a 0, la particella si spegne da sola qui dentro
+            }
         }
-        particles.removeIf(p -> p.isDead());
     }// fine updateParticles
 
     private void updateFloatingScore() {
@@ -192,9 +203,9 @@ public class GameModel {
         }
     }// fine invulnerabilityHandler
 
-// -----------------------------------------
-// ---- SPAWNING OBSTACLES ----
-// -----------------------------------------
+    // -----------------------------------------
+    // ---- SPAWNING OBSTACLES ----
+    // -----------------------------------------
 
     private void spawningHandler(int panelWidth) {
         frameCounter++;
@@ -299,9 +310,9 @@ public class GameModel {
                 break;
         }
     }
-// -----------------------------------------
-// ---- END SPAWNING OBSTACLES ----
-// ---------------------------------------
+    // -----------------------------------------
+    // ---- END SPAWNING OBSTACLES ----
+    // ---------------------------------------
 
     private void checkDifficultyProgression(int currentScore) {
 
@@ -342,10 +353,18 @@ public class GameModel {
         }
     }// fine decreaseLives
 
-    private void createExplosion(double x, double y, int colorId) {
-        int particlesNumber = random.nextInt(MIN_PARTICLES, MAX_PARTICLES + 1);
-        for (int i = 0; i < particlesNumber; i++) {
-            particles.add(new Particle(x, y, colorId));
+    public void createExplosion(double x, double y, int colorId) {
+        int particlesToSpawn = 15;
+        int spawned = 0;
+
+        for (Particle p : allParticles) {
+            if (!p.isActive()) {
+                p.spawn(x, y, colorId);
+                spawned++;
+                if (spawned >= particlesToSpawn) {
+                    break; // Esce dal ciclo quando ha generato abbastanza particelle
+                }
+            }
         }
     }// fine createExplosion
 
@@ -416,8 +435,13 @@ public class GameModel {
             obs.setActive(false);
             obs.setY(-2000);
         }
-        this.particles.clear();
     }// fine resetObstacles
+
+    private void resetParticles() {
+        for (Particle p : allParticles) {
+            p.setActive(false);
+        }
+    }// fine resetParticles
 
     private void resetDifficulty() {
         currentFallSpeed = BASE_SPEED;
@@ -444,6 +468,7 @@ public class GameModel {
         getPlayer().resetToInitialSettings(getStartX(), getStartY(), getStartColorId());
         resetScore();
         resetObstacles();
+        resetParticles();
         resetGameover();
         resetLives();
         resetInvulnerability();
@@ -513,7 +538,7 @@ public class GameModel {
     }
 
     public List<Particle> getParticles() {
-        return particles;
+        return allParticles;
     }
 
     public List<FloatingScore> getFloatingScores() {
