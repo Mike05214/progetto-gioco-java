@@ -13,7 +13,8 @@ import java.awt.Font;
 public class Main {
     public static void main(String[] args) {
 
-        System.setProperty("awt.useSystemAAFontSettings", "on"); // DOC: Controls whether the system desktop anti-aliasing font settings should be used by the Java 2D text renderer.
+        System.setProperty("awt.useSystemAAFontSettings", "on"); // DOC: Controls whether the system desktop anti-aliasing font settings
+                                                                            // should be used by the Java 2D text renderer.
         System.setProperty("swing.aatext", "true");// DOC: Globally enables anti-aliasing for text rendering across all Swing components.
 
         // --- INIZIO IMPOSTAZIONI LOOK AND FEEL ---
