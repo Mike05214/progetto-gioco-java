@@ -14,10 +14,8 @@ import java.awt.geom.Rectangle2D;
 
 public class GameModel {
 
-    private Player player;
-    private List<Obstacle> allEnemies;
-
     // Variabili di stato del gioco
+    private Player player;
     private int lives;
     private boolean isGameOver;
     private int score;
@@ -30,7 +28,8 @@ public class GameModel {
                                                                                                // (se il timer è a 8ms)
     private double currentFallSpeed;;
     private int currentPhase = 1;
-
+    
+    private List<Obstacle> allEnemies;
     private List<Particle> allParticles = new ArrayList<>();
     private List<FloatingScore> floatingScores = new ArrayList<>();
     private List<Star> stars = new ArrayList<>();
@@ -443,6 +442,10 @@ public class GameModel {
         }
     }// fine resetParticles
 
+    private void resetFloatingScore(){
+        floatingScores.clear();
+    }
+
     private void resetDifficulty() {
         currentFallSpeed = BASE_SPEED;
         currentPhase = 1;
@@ -473,6 +476,7 @@ public class GameModel {
         resetLives();
         resetInvulnerability();
         resetDifficulty();
+        resetFloatingScore();
     }// fine resetGame
 
     public void autoSave() {
