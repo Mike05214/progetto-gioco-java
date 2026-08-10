@@ -24,7 +24,7 @@ import src.colorclash.model.StandardObstacle;
 
 public class SaveManager {
     // costanti
-    private final static boolean IS_DIST_VERSION = false; // Metti a true prima di fare il .jar per l'esame
+    private final static boolean IS_DIST_VERSION = false;
 
     // variabili di stato
     private String highscoreFilePath;
@@ -32,7 +32,7 @@ public class SaveManager {
     private String charset = "UTF-8";
     private static SaveManager saveManager = null;
 
-    public SaveManager() {
+    private SaveManager() {
         try {
             String savesDirPath = getSavesDirectory();
 
@@ -58,7 +58,7 @@ public class SaveManager {
         }
     }// fine costruttore
 
-    // METODI PUBBLICI
+    // METODI STATICO
 
     public static SaveManager getInstance() {
         if (saveManager == null) {
@@ -66,6 +66,8 @@ public class SaveManager {
         }
         return saveManager;
     }// fine getInstance
+
+    // METODI PUBBLICI
 
     public int getHighscore() {
         int score = 0;
@@ -160,7 +162,15 @@ public class SaveManager {
                 printWriter.close();
             }
         }
-    }// fine WriteGameState
+    }// fine writeGameState
+
+    public void deleteGameState() {
+        File file = new File(gameStatePath);
+        if (file.exists()) {
+            file.delete();
+            System.out.println("Save file successfully deleted.");
+        }
+    }// fine deleteGameState
 
     public boolean loadGameState(GameModel model) {
         File file = new File(gameStatePath);
@@ -169,93 +179,15 @@ public class SaveManager {
             return false;
         }
 
-        BufferedReader buffRead = null;
+        resetEnemyPool(model);
+
+        BufferedReader reader = null;
         try {
-            buffRead = new BufferedReader(
-                    new InputStreamReader(
-                            new FileInputStream(gameStatePath), charset));
+            reader = new BufferedReader(new InputStreamReader(new FileInputStream(gameStatePath), charset));
+            String line;
 
-            String line = null;
-
-            // RESETTA IL POOL INVECE DI CANCELLARLO
-            for (Obstacle obs : model.getEnemies()) {
-                obs.setActive(false);
-                obs.setY(-2000);
-            }
-
-            while ((line = buffRead.readLine()) != null) {
-                if (line.startsWith("SCORE:")) {
-                    int savedScore = Integer.valueOf(line.split(":")[1]);
-                    model.setScore(savedScore);
-
-                } else if (line.startsWith("LIVES:")) {
-                    int savedLives = Integer.valueOf(line.split(":")[1]);
-                    model.setLives(savedLives);
-
-                } else if (line.startsWith("PHASE:")) {
-                    int savedPhase = Integer.valueOf(line.split(":")[1]);
-                    model.setPhase(savedPhase);
-
-                } else if (line.startsWith("CURRENT_SPEED:")) {
-                    double savedSpeed = Double.valueOf(line.split(":")[1]);
-                    model.setCurrentSpeed(savedSpeed);
-
-                } else if (line.startsWith("AVAIBLE_COLORS:")) {
-                    int savedColors = Integer.valueOf(line.split(":")[1]);
-                    model.setAvaibleColors(savedColors);
-
-                } else if (line.startsWith("PLAYER:")) {
-                    String[] playerData = line.split(":")[1].split(";");
-                    model.getPlayer().setX(Double.valueOf(playerData[0]));
-                    model.getPlayer().setY(Double.valueOf(playerData[1]));
-                    model.getPlayer().setColorId(Integer.valueOf(playerData[2]));
-
-                } else if (line.startsWith("OBSTACLE:")) {
-                    String[] obsData = line.split(":")[1].split(";");
-
-                    String type = obsData[0];
-                    double x = Double.valueOf(obsData[1]);
-                    double y = Double.valueOf(obsData[2]);
-                    double speed = Double.valueOf(obsData[3]);
-                    int colorId = Integer.valueOf(obsData[4]);
-                    int width = Integer.valueOf(obsData[5]);
-                    int height = Integer.valueOf(obsData[6]);
-
-                    // CERCA UN OSTACOLO SPENTO NEL POOL DEL TIPO CORRISPONDENTE
-                    for (Obstacle obs : model.getEnemies()) {
-                        if (!obs.isActive()) {
-                            if (type.equals("StandardObstacle") && obs instanceof StandardObstacle) {
-                                obs.setX(x);
-                                obs.setY(y);
-                                obs.setFallSpeed(speed);
-                                obs.setColorId(colorId);
-                                obs.setWidth(width);
-                                obs.setHeight(height);
-                                obs.setActive(true);
-                                break;
-                            } else if (type.equals("SpeedRacer") && obs instanceof SpeedRacer) {
-                                obs.setX(x);
-                                obs.setY(y);
-                                obs.setFallSpeed(speed);
-                                obs.setColorId(colorId);
-                                obs.setWidth(width);
-                                obs.setHeight(height);
-                                obs.setActive(true);
-                                break;
-                            } else if (type.equals("SinusoidalMadness") && obs instanceof SinusoidalMadness) {
-                                obs.setX(x);
-                                obs.setY(y);
-                                obs.setFallSpeed(speed);
-                                obs.setColorId(colorId);
-                                obs.setWidth(width);
-                                obs.setHeight(height);
-                                ((SinusoidalMadness) obs).setStartX(x); // Necessario per resettare l'onda
-                                obs.setActive(true);
-                                break;
-                            }
-                        }
-                    }
-                }
+            while ((line = reader.readLine()) != null) {
+                processSaveLine(line, model);
             }
             return true;
 
@@ -270,24 +202,100 @@ public class SaveManager {
             return false;
         } finally {
             try {
-                if (buffRead != null) {
-                    buffRead.close();
+                if (reader != null) {
+                    reader.close();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-    }// fine loadGameState
-
-    public void deleteGameState() {
-        File file = new File(gameStatePath);
-        if (file.exists()) {
-            file.delete();
-            System.out.println("Save file successfully deleted.");
-        }
-    }// fine deleteGameState
+    }
 
     // METODI PRIVATI
+
+    private void resetEnemyPool(GameModel model) {
+        for (Obstacle obs : model.getEnemies()) {
+            obs.setActive(false);
+            obs.setY(-2000);
+        }
+    }
+
+    private void processSaveLine(String line, GameModel model) throws NumberFormatException {
+        String[] parts = line.split(":");
+        if (parts.length < 2)
+            return;
+
+        String key = parts[0];
+        String value = parts[1];
+
+        switch (key) {
+            case "SCORE":
+                model.setScore(Integer.valueOf(value));
+                break;
+            case "LIVES":
+                model.setLives(Integer.valueOf(value));
+                break;
+            case "PHASE":
+                model.setPhase(Integer.valueOf(value));
+                break;
+            case "CURRENT_SPEED":
+                model.setCurrentSpeed(Double.valueOf(value));
+                break;
+            case "AVAIBLE_COLORS":
+                model.setAvaibleColors(Integer.valueOf(value));
+                break;
+            case "PLAYER":
+                loadPlayerData(value, model);
+                break;
+            case "OBSTACLE":
+                loadObstacleData(value, model);
+                break;
+        }
+    }
+
+    private void loadPlayerData(String data, GameModel model) throws NumberFormatException {
+        String[] playerData = data.split(";");
+        model.getPlayer().setX(Double.valueOf(playerData[0]));
+        model.getPlayer().setY(Double.valueOf(playerData[1]));
+        model.getPlayer().setColorId(Integer.valueOf(playerData[2]));
+    }
+
+    private void loadObstacleData(String data, GameModel model) throws NumberFormatException {
+        String[] obsData = data.split(";");
+
+        String type = obsData[0];
+        double x = Double.valueOf(obsData[1]);
+        double y = Double.valueOf(obsData[2]);
+        double speed = Double.valueOf(obsData[3]);
+        int colorId = Integer.valueOf(obsData[4]);
+        int width = Integer.valueOf(obsData[5]);
+        int height = Integer.valueOf(obsData[6]);
+
+        for (Obstacle obs : model.getEnemies()) {
+            if (!obs.isActive()) {
+
+                boolean isMatchingType = (type.equals("StandardObstacle") && obs instanceof StandardObstacle) ||
+                        (type.equals("SpeedRacer") && obs instanceof SpeedRacer) ||
+                        (type.equals("SinusoidalMadness") && obs instanceof SinusoidalMadness);
+
+                if (isMatchingType) {
+                    obs.setX(x);
+                    obs.setY(y);
+                    obs.setFallSpeed(speed);
+                    obs.setColorId(colorId);
+                    obs.setWidth(width);
+                    obs.setHeight(height);
+
+                    if (obs instanceof SinusoidalMadness) {
+                        ((SinusoidalMadness) obs).setStartX(x);
+                    }
+
+                    obs.setActive(true);
+                    break;
+                }
+            }
+        }
+    }
 
     private String getSavesDirectory() throws URISyntaxException {
         String savesDir = null;

@@ -3,7 +3,6 @@ package src.colorclash.model;
 import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 
-import java.util.Random;
 import src.colorclash.utils.Config;
 
 public class SinusoidalMadness extends Obstacle {
@@ -12,11 +11,11 @@ public class SinusoidalMadness extends Obstacle {
     protected static final int WIDTH = 70;
     protected static final int HEIGHT = 70;
     protected static final int AMPLITUDE = Config.getInstance().getIntProperty("sinusoidal_madness_amplitude");
-    private static final int COLOR_CHANGE_INTERVAL = Config.getInstance()
-            .getIntProperty("sinusoidal_madness_color_change_interval");
-    private static final int CURRENT_MAX_COLORS = 4;
+    
 
     // costanti
+    private final int COLOR_CHANGE_INTERVAL = Config.getInstance().getIntProperty("sinusoidal_madness_color_change_interval");
+    private final int CURRENT_MAX_COLORS = 4;
     private final double WAWE_SPEED = 0.05;
     private final int SINUSOIDALMADNESS_POINTS = Config.getInstance().getIntProperty("sinusoidal_madness_points");
 
@@ -27,12 +26,13 @@ public class SinusoidalMadness extends Obstacle {
 
     public SinusoidalMadness() {
         super(0, -2000, 0, 0, WIDTH, HEIGHT);
-
         this.startX = 0;
         this.angle = 0;
         this.colorTimer = 0;
         this.setActive(false);
     }// fine costruttore
+
+    //METODI PUBBLICI
 
     @Override
     public void update() {
@@ -46,9 +46,10 @@ public class SinusoidalMadness extends Obstacle {
             int nextColorId = (this.getColorId() + 1) % CURRENT_MAX_COLORS;
             this.setColorId(nextColorId);
         }
-    }// fine fall
+    }// fine update
 
-    // getters ereditati dalla superclasse Obstacle
+    // getters di SinusoidalMadness
+    
     @Override
     public Shape getHitbox() {
         return new Ellipse2D.Double(x, y, width, height);
@@ -64,6 +65,7 @@ public class SinusoidalMadness extends Obstacle {
         return "SinusoidalMadness";
     }
 
+    // setters di SinusoidalMadness
     public void setStartX(double startX){
         this.startX=startX;
     }

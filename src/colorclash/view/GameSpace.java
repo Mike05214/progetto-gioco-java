@@ -16,7 +16,10 @@ import java.awt.geom.Rectangle2D;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.BasicStroke;
-import java.awt.RenderingHints;
+import java.awt.RenderingHints; // DOC: The RenderingHints class defines and manages collections of keys and
+                                // associated values which allow an application to provide input
+                                // into the choice of algorithms used by other classes which perform rendering
+                                // and image manipulation services.
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -29,9 +32,9 @@ public class GameSpace extends JPanel {
     private boolean forceDrawPlayer = false;
     private GameModel model;
     private Color[] colorPalette = {
-            Color.RED, // ID 0
-            Color.GREEN, // ID 1
-            Color.CYAN, // ID 2
+            Color.RED,
+            Color.GREEN,
+            Color.CYAN,
             Color.ORANGE
     };
 
@@ -61,14 +64,16 @@ public class GameSpace extends JPanel {
         add(restartButton);
     }// fine costruttore
 
-    // DOC: The RenderingHints class defines and manages collections of keys and
-    // associated values which allow an application to provide input
-    // into the choice of algorithms used by other classes which perform rendering
-    // and image manipulation services.
-    // The Graphics2D class, and classes that implement BufferedImageOp and RasterOp
-    // all provide methods
-    // to get and possibly to set individual or groups of RenderingHints keys and
-    // their associated values.
+    // METODI PUBBLICI
+
+    public void createBorder(int newColorId) {
+        setBorder(BorderFactory.createLineBorder(colorPalette[newColorId], 5));
+    }// fine createBorder
+
+    public void deleteBorder() {
+        setBorder(null);
+    }// fine deleteBorder
+
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -93,6 +98,7 @@ public class GameSpace extends JPanel {
 
     }// fine paintComponent
 
+    
     // METODI PRIVATI
 
     private void drawParticles(Graphics2D g2d) {
@@ -125,7 +131,7 @@ public class GameSpace extends JPanel {
     private void drawPlayer(Graphics2D g2d) {
         boolean shouldDraw = true;
 
-        if (model.isInvulnerable() && !forceDrawPlayer) { // Applica il lampeggio SOLO se non stiamo forzando il disegno
+        if (model.isInvulnerable() && !forceDrawPlayer) {
             if (model.getInvulnTimer() % 20 < 10) {
                 shouldDraw = false;
             }
@@ -194,30 +200,24 @@ public class GameSpace extends JPanel {
             if (i == currentColorId) {
                 g2d.setColor(Color.WHITE);
                 g2d.setStroke(new BasicStroke(LEGEND_STROKE_WIDTH));
-                g2d.drawRect(x - LEGEND_STROKE_NEW_START, y - LEGEND_STROKE_NEW_START,
-                        elementSize + LEGEND_STROKE_RESIZE, elementSize + LEGEND_STROKE_RESIZE); // ridimensiona il
-                                                                                                 // rettangolo
-                                                                                                 // evindenziato
+                g2d.drawRect(x - LEGEND_STROKE_NEW_START, 
+                            y - LEGEND_STROKE_NEW_START,
+                            elementSize + LEGEND_STROKE_RESIZE, 
+                            elementSize + LEGEND_STROKE_RESIZE);
             }
         }
     }// fine showLegend
 
-    // METODI PUBBLICI
-
-    public void createBorder(int newColorId) {
-        setBorder(BorderFactory.createLineBorder(colorPalette[newColorId], 5));
-    }
-
-    public void deleteBorder() {
-        setBorder(null);
-    }
-
     // getters di GameSpace
+
     public JButton getRestarButton() {
         return restartButton;
     }
 
+    //setters di GameSpace
+    
     public void setForceDrawPlayer(boolean force) {
         forceDrawPlayer = force;
     }
+    
 }// fine classe GameSpace

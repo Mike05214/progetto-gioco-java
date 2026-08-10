@@ -31,6 +31,9 @@ public class Player {
         isInvulnerable = false;
     }// fine costruttore
 
+
+    //METODI PUBBLICI
+
     public void update() {
         boolean diagonalMovement = (movingLeft ^ movingRight) && (movingUp ^ movingDown);
         double speedVector = 0;
@@ -87,7 +90,7 @@ public class Player {
 
     public void switchColor(int availableColorsCount, boolean forward) {
         if (forward) {
-            colorId = (colorId + 1) % availableColorsCount; // se è in avanti aumenta verso destra 
+            colorId = (colorId + 1) % availableColorsCount; // se è in avanti aumenta verso destra
         } else {
             colorId = (colorId - 1 + availableColorsCount) % availableColorsCount;
         }
@@ -123,7 +126,8 @@ public class Player {
         return navicella;
     }// fine getHitbox
 
-    // metodi getters per l'avatar
+
+    // metodi getters per il player
 
     public double getX() {
         return  x;
@@ -149,7 +153,8 @@ public class Player {
         return isInvulnerable;
     }
 
-    // metodi setters per l'avatar
+    // metodi setters per il player
+    
     public void setInvulnerable(boolean invulnerable) {
         this.isInvulnerable = invulnerable;
     }

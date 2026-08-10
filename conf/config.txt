@@ -20,9 +20,9 @@ sinusoidal_madness_color_change_interval=62
 sinusoidal_madness_points=300
 
 #DIFFICULTY_PROGRESSION
-obstacle_spawn_rate_ms=62
-phase_2_score_threshold=5000
-phase_3_score_threshold=10000
+obstacle_spawn_rate_frames=62
+phase_2_score_threshold=2500
+phase_3_score_threshold=5000
 score_delay=1000
 score_default_gain=100
 speed_phase_multiplier=1.35

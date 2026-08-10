@@ -26,16 +26,15 @@ public class PausePanel extends BaseMenuPanel {
     private final int ROW_1 = 1;
     private final int ROW_2 = 2;
 
-    public PausePanel(MainFrame mainFrame) { // il model da resettare è quello del gamePanel che infatti
-                                         // gli viene passato come parametro
+    public PausePanel(MainFrame mainFrame) {
         super(mainFrame);
-        model = GameModel.getInstance(); // è quello del gamePanel
+        model = GameModel.getInstance();
         setBackground(new Color(10, 10, 20));
         initTitleLabel("PAUSE");
         initButtons();
         addComponentToCenter(resumeButton, ROW_0, true);
         addComponentToCenter(backToMenuButton, ROW_1, true);
-        addComponentToCenter(saveAndExitButton, ROW_2, true);
+        addComponentToCenter(saveAndExitButton, ROW_2, false);
     }// fine costruttore
 
     //METODI PRIVATI
@@ -44,7 +43,7 @@ public class PausePanel extends BaseMenuPanel {
         initResumeButton();
         initBackToMenuButton();
         initSaveAndExitButton();
-    }
+    }// fine initButtons
 
     private void initResumeButton() {
         resumeButton = new JButton("RESUME");
@@ -96,5 +95,4 @@ public class PausePanel extends BaseMenuPanel {
 
     }// fine initSaveAndExitButton
 
-    
 }// fine classe PausePanel

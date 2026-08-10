@@ -17,7 +17,6 @@ import src.colorclash.utils.SaveManager;
 
 import java.io.File;//DOC: An abstract representation of file and directory pathnames.
 
-
 public class MenuPanel extends BaseMenuPanel {
     // variabili d'istanza
     private JLabel highScoreLabel;
@@ -53,16 +52,12 @@ public class MenuPanel extends BaseMenuPanel {
         addComponentToCenter(deleteSaveButton, ROW_2, true);
         addComponentToCenter(highScoreLabel, ROW_3, true);
         addComponentToCenter(soundButton, ROW_4, false);
-        
+
     }// fine costruttore
 
-    //METODI PUBBLICI 
-    
-    public void updateHighScoreDisplay() {
-        highScoreLabel.setText("High Score:   " + model.getHighscore());
-    }// fine updateHighScoreDisplay
+    //METODI PRIVATI
 
-    public void initButtons() {
+    private void initButtons() {
         initPlayButton();
         initResumeButton();
         initDeleteButton();
@@ -71,7 +66,7 @@ public class MenuPanel extends BaseMenuPanel {
 
     }// fine initButtons
 
-    private void initPlayButton(){
+    private void initPlayButton() {
         playButton = new JButton("PLAY");
         playButton.setFont(new Font("Impact", Font.PLAIN, BUTTON_TEXT_SIZE));
         playButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
@@ -87,7 +82,7 @@ public class MenuPanel extends BaseMenuPanel {
         });
     }// fine initPlayButton
 
-    private void initResumeButton(){
+    private void initResumeButton() {
         resumeButton = new JButton("RESUME");
         resumeButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
         resumeButton.setFont(new Font("Impact", Font.PLAIN, BUTTON_TEXT_SIZE));
@@ -105,7 +100,7 @@ public class MenuPanel extends BaseMenuPanel {
         });
     }// fine initResumeButton
 
-    private void initDeleteButton(){
+    private void initDeleteButton() {
         deleteSaveButton = new JButton("DELETE SAVE");
         deleteSaveButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
         deleteSaveButton.setFont(new Font("Impact", Font.PLAIN, BUTTON_TEXT_SIZE));
@@ -119,7 +114,7 @@ public class MenuPanel extends BaseMenuPanel {
         });
     }// fine initDeleteButton
 
-    private void initSoundButton(){
+    private void initSoundButton() {
         soundButton = new JButton("🔊");
         soundButton.setFont(new Font("Dialog", Font.PLAIN, SOUND_BUTTON_FONT_SIZE));
         soundButton.setPreferredSize(new Dimension(SOUND_BUTTON_WIDTH, BUTTON_HEIGHT));
@@ -136,8 +131,8 @@ public class MenuPanel extends BaseMenuPanel {
             }
         });
     }// fine initSoundButton
-    
-    private void initHighScoreLabel(){
+
+    private void initHighScoreLabel() {
         highScoreLabel = new JLabel("HIGH SCORE:   " + model.getHighscore());
         highScoreLabel.setFont(new Font("Impact", Font.PLAIN, TEXT_LABEL_SIZE));
         highScoreLabel.setOpaque(true);
@@ -147,14 +142,18 @@ public class MenuPanel extends BaseMenuPanel {
         highScoreLabel.setBorder(BorderFactory.createCompoundBorder(line, padding));
         highScoreLabel.setBackground(Color.LIGHT_GRAY);
         highScoreLabel.setForeground(Color.BLACK);
-    }
+    }// fine initHighScoreLabel
+
+    // METODI PUBBLICI
 
     public void refreshSavingButtons() {
         File saveFile = new File("saves/gamestate.txt");
         resumeButton.setEnabled(saveFile.exists());
         deleteSaveButton.setEnabled(saveFile.exists());
-    }
+    }// fine refreshSavingButtons
 
-    
+    public void updateHighScoreDisplay() {
+        highScoreLabel.setText("High Score:   " + model.getHighscore());
+    }// fine updateHighScoreDisplay
 
 }// fine classe MenuPanel

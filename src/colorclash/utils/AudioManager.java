@@ -2,7 +2,8 @@ package src.colorclash.utils;
 
 import javax.sound.sampled.AudioSystem; //DOC: The AudioSystem class acts as the entry point to the sampled-audio system resources.
 import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.Clip; //DOC: The Clip interface represents a special kind of data line whose audio data can be loaded prior to playback, instead of being streamed in real time.
+import javax.sound.sampled.Clip; //DOC: The Clip interface represents a special kind of data line whose audio data can be loaded prior to playback,
+                                 // instead of being streamed in real time.
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
@@ -16,18 +17,20 @@ import java.util.HashMap;
 
 public class AudioManager {
 
-    // variabili di stato
+    // variabili statiche
     private static AudioManager instance;
+
+    // variabili di stato
     private Clip backgroundMusic;
     private boolean isMuted = false;
-
-    // HashMap per gestione audio
     private HashMap<String, Clip[]> soundPool = new HashMap<>();
     private HashMap<String, Integer> soundIndexes = new HashMap<>();
 
-    // costruttore
+    
     private AudioManager() {
-    }
+    }// fine costruttore
+
+    //METODO STATICO
 
     public static AudioManager getInstance() {
         if (instance == null) {
@@ -35,6 +38,9 @@ public class AudioManager {
         }
         return instance;
     }// fine getInstance
+
+
+    //METODI PUBBLICI
 
     public void preloadSoundEffect(String fileName, int numClips) {
         Clip[] clips = new Clip[numClips];
@@ -65,7 +71,6 @@ public class AudioManager {
                 // which includes a single audio format and a desired buffer size.
                 DataLine.Info info = new DataLine.Info(Clip.class, af, bufferSize);
 
-                // Gestione rigorosa del supporto linea come da dispensa
                 if (!AudioSystem.isLineSupported(info)) {
                     throw new IOException("Error: the AudioSystem does not support the specified DataLine.Info object");
                 }
@@ -133,7 +138,6 @@ public class AudioManager {
         if (isMuted)
             return;
 
-        // Ferma e chiudi la musica precedente se è attiva
         if (backgroundMusic != null) {
             backgroundMusic.stop();
             backgroundMusic.close();
@@ -192,14 +196,13 @@ public class AudioManager {
     }// fine playBackgroundMusic
 
     public void closeAll() {
-        // 1. Ferma e chiudi la musica di sottofondo
+
         if (backgroundMusic != null) {
             backgroundMusic.stop();
             backgroundMusic.close(); // DOC: Closes the line, indicating that any system resources in use by the line
                                      // can be released.
         }
 
-        // 2. Scorri l'HashMap e chiudi tutte le clip degli effetti sonori
         for (Clip[] clips : soundPool.values()) {
             for (int i = 0; i < clips.length; i++) {
                 if (clips[i] != null) {
@@ -208,8 +211,6 @@ public class AudioManager {
                 }
             }
         }
-
-        // 3. Svuota le mappe per liberare del tutto la memoria
         soundPool.clear();
         soundIndexes.clear();
     }// fine closeAll

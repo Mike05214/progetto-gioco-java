@@ -3,7 +3,8 @@ package src.colorclash.model;
 import java.awt.Shape;
 
 public abstract class Obstacle {
-    // variabili d'istanza ereditabili
+    
+    // variabili d'istanza 
     protected double x;
     protected double y;
     protected int width;
@@ -23,6 +24,8 @@ public abstract class Obstacle {
         isActive = true;
     }// fine costruttore
 
+    //METODI PUBBLICI
+
     public void update() {
         y += fallSpeed;
     }// fine fall
@@ -35,6 +38,7 @@ public abstract class Obstacle {
     }// fine checkOffScreen
 
     // setters di Obstacle
+    
     public void setColorId(int colorId) {
         this.colorId = colorId;
     }
@@ -45,7 +49,7 @@ public abstract class Obstacle {
 
     public abstract String getType();
     
-    abstract int getPoints();
+    public abstract int getPoints();
 
     public double getX() {
         return x;

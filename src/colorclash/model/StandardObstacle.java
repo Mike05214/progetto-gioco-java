@@ -3,10 +3,10 @@ package src.colorclash.model;
 import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
 
-import java.util.Random;
 import src.colorclash.utils.Config;
 
 public class StandardObstacle extends Obstacle {
+    
     // costanti statiche
     protected static final int MIN_SIZE = 50;
     protected static final int MAX_SIZE = 100;
@@ -19,6 +19,7 @@ public class StandardObstacle extends Obstacle {
         this.setActive(false);
     }// fine costruttore
 
+    //METODI PUBBLICI
 
     // getters di StandardObstacle
     @Override

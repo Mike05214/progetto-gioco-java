@@ -20,21 +20,21 @@ public class Star {
 
     public Star(int screenWidth, int screenHeight) {
         rand = new Random();
-        // Al primo avvio, distribuisce le stelle casualmente su tutto lo schermo
         reset(screenWidth, rand.nextInt(0, (screenHeight + 1)));
     }// fine costruttore
+
+    //METODI PUBBLICI 
 
     public void reset(int screenWidth, int startY) {
         size = rand.nextInt(MIN_SIZE, (MAX_SIZE + 1));
         x = rand.nextInt(0, (screenWidth-size) + 1);
         y = startY;
-        speed = size * FALL_SPEED_MULTIPLIER; // La velocità di caduta rimane proporzionale alla dimensione
-        alpha = rand.nextInt(MIN_OPACITY, (MAX_OPACITY + 1)); // Opacità casuale tra 100 e 255 per l'effetto di profondità
+        speed = size * FALL_SPEED_MULTIPLIER; 
+        alpha = rand.nextInt(MIN_OPACITY, (MAX_OPACITY + 1)); 
     }// fine reset
 
     public void update(int screenWidth, int screenHeight) {
         y += speed;
-        // Se la stella esce dallo schermo, viene riposizionata in cima
         if (y > screenHeight) {
             reset(screenWidth, 0); 
         }
@@ -56,4 +56,5 @@ public class Star {
     public int getAlpha() { 
         return alpha; 
     }
+    
 }// fine classe Star

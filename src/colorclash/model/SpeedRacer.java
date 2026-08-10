@@ -3,7 +3,6 @@ package src.colorclash.model;
 import java.awt.geom.Path2D;
 import java.awt.Shape;
 
-import java.util.Random;
 import src.colorclash.utils.Config;
 
 public class SpeedRacer extends Obstacle {
@@ -20,6 +19,7 @@ public class SpeedRacer extends Obstacle {
         this.setActive(false);
     }// fine costruttore
 
+    //METODI PUBBLICI
 
     // getters di SpeedRacer
     @Override

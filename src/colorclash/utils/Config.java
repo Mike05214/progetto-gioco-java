@@ -10,23 +10,15 @@ import java.util.Properties;
 
 public class Config {
 
-    // COSTANTI
-    private final static boolean IS_DIST_VERSION = false; // Metti a true prima di fare il .jar per l'esame
+    // costanti statiche
+    private final static boolean IS_DIST_VERSION = false;
 
-    // CAMPI STATICI
+    // variabili statiche
     private static Config config = null;
 
-    // CAMPI ISTANZA
+    // variabili d'istanza
     private Properties properties;
     private String charset = "UTF-8";
-
-    // METODI STATICI
-    public static Config getInstance() {
-        if (config == null) {
-            config = new Config();
-        }
-        return config;
-    }
 
     private Config() {
         BufferedReader buffRead = null;
@@ -47,36 +39,47 @@ public class Config {
             System.exit(-1);
         } finally {
             try {
-                if (buffRead != null){
+                if (buffRead != null) {
                     buffRead.close();
-                }    
+                }
             } catch (IOException ioe) {
                 ioe.printStackTrace();
             }
         }
-    }
+    }// fine costruttore
+
+    // METODI STATICI
+
+    public static Config getInstance() {
+        if (config == null) {
+            config = new Config();
+        }
+        return config;
+        
+    }// fine getInstance
 
     // METODI PRIVATI
+
     private String getConfigFile() throws URISyntaxException {
         String configFile = null;
-        String relPath = "\\conf\\config.txt"; // il  \\ viene convertito in / da java 
+        String relPath = "\\conf\\config.txt"; // il \\ viene convertito in / da java
 
         if (System.getProperty("os.name").startsWith("Linux")) {
             relPath = "/conf/config.txt";
         }
 
         if (IS_DIST_VERSION) {
-            configFile = getHomeFolderForDistVersion() + relPath; //C:/percorso/del/gioco/conf/config.txt
+            configFile = getHomeFolderForDistVersion() + relPath;
         } else {
             configFile = getHomeFolderForDevVersion() + relPath;
         }
         return configFile;
-    }
+    }// fine getConfigFile
 
     private String getHomeFolderForDistVersion() throws URISyntaxException {
 
         String homeDir = null;
-        String jarPath = Config.class.getResource("Config.class").toURI().toString();//jar:file:/C:/percorso/del/gioco/ColorClash.jar!/colorclash/utils/Config.class
+        String jarPath = Config.class.getResource("Config.class").toURI().toString();
         int indexOfExclamationMark = jarPath.indexOf("!");
 
         String prefix = "jar:file:/";
@@ -84,20 +87,21 @@ public class Config {
             prefix = "jar:file:";
         }
 
-        homeDir = jarPath.substring(prefix.length(), indexOfExclamationMark);// si ottiene C:/percorso/del/gioco/ColorClash.jar
+        homeDir = jarPath.substring(prefix.length(), indexOfExclamationMark);
         int lastIndexOfSlash = homeDir.lastIndexOf("/");
-        homeDir = homeDir.substring(0, lastIndexOfSlash);//resta è esattamente C:/percorso/del/gioco, ovvero la cartella esterna in cui l'utente ha posizionato il videogioco.
+        homeDir = homeDir.substring(0, lastIndexOfSlash);
         return homeDir;
-    }
+    }//fine getHomeFolderForDistVersion
 
     private String getHomeFolderForDevVersion() throws URISyntaxException {
-        return System.getProperty("user.dir"); //restituisce automaticamente la cartella radice del progetto aperta nell'IDE.
+        return System.getProperty("user.dir"); // restituisce automaticamente la cartella radice del progetto aperta nell'IDE
     }
 
-    // GETTERS
+    // getters di Config
+
     public String getStringProperty(String key) {
         return properties.getProperty(key);
-    }
+    }// fine getStringProperty
 
     public int getIntProperty(String key) {
         String value = properties.getProperty(key);
@@ -105,7 +109,7 @@ public class Config {
             return Integer.valueOf(value.trim());
         }
         return 0;
-    }
+    }// getIntProperty
 
     public Double getDoubleProperty(String key) {
         String value = properties.getProperty(key);
@@ -113,6 +117,6 @@ public class Config {
             return Double.valueOf(value.trim());
         }
         return 0.0;
-    }
+    }// fine getDoubleProperty
 
-}
+}// fine classe Config

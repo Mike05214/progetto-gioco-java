@@ -37,13 +37,19 @@ public class Main {
         }
         // --- FINE IMPOSTAZIONI LOOK AND FEEL ---
 
+
+        // --- INIZIO INIZIALIZZAZIONE SUONO ---
         AudioManager.getInstance().preloadSoundEffect("game_over.wav", 1);
         AudioManager.getInstance().preloadSoundEffect("hit.wav", 5);
         AudioManager.getInstance().preloadSoundEffect("hurt.wav", 2);
         AudioManager.getInstance().preloadSoundEffect("notification.wav", 4);
         AudioManager.getInstance().preloadSoundEffect("race_countdown.wav", 1);
         AudioManager.getInstance().playBackgroundMusic("menu.wav");
+        // --- FINE INIZIALIZZAZIONE SUONO ---
+
         
+        // --- AVVIO FINESTRA GRAFICA ---
+
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 MainFrame mainFrame = new MainFrame();

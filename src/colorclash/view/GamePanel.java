@@ -30,7 +30,7 @@ public class GamePanel extends JPanel {
 
     // costanti
     private final int DELAY = 8;
-    private final int RESUME_COOLDOWN_DELAY = 800; //poco meno di tre secondi per sincronizzazione con l'audio del countdown
+    private final int RESUME_COOLDOWN_DELAY_ms = 800;
     private final int COUNT_LEFT = 3;
     private final int NEW_COLOR_LABEL_VISIBLE_DELAY = 500;
 
@@ -47,6 +47,7 @@ public class GamePanel extends JPanel {
     }// fine costruttore
 
     // METODI PRIVATI
+    
     private void initGameLoop() {
         gameLoop = new Timer(DELAY, new ActionListener() {
             @Override
@@ -105,7 +106,8 @@ public class GamePanel extends JPanel {
 
     private void initListeners() {
         addKeyListener(new KeyAdapter() { // DOC : An abstract adapter class for receiving keyboard events.
-                                          // The methods in this class are empty. This class exists as convenience for creating listener objects.
+                                          // The methods in this class are empty.
+                                          // This class exists as convenience for creating listener objects.
             public void keyPressed(KeyEvent e) {
                 if (isResuming) {
                     return;
@@ -171,13 +173,12 @@ public class GamePanel extends JPanel {
     private void ColorSwitchLogic(boolean forward) {
         if (!colorSwitchLocked) {
             model.getPlayer().colorCooldown(model.getAvailableColorsCount(), forward);
-            colorSwitchLocked = true; // dopo la prima pressione non cambia più il colore tenendo premuto
+            colorSwitchLocked = true; 
         }
     }// fine spaceKeyLogic
 
     private void resetKeyLogic() {
-        colorSwitchLocked = false; // rilasciando il tasto la variabile viene resettata e si può di nuovo cambiare
-                                   // colore
+        colorSwitchLocked = false; 
     }// fine resetKeyLogic
 
     // METODI PUBBLICI
@@ -200,7 +201,7 @@ public class GamePanel extends JPanel {
         hudPanel.getPauseButton().setEnabled(false);
         gameSpace.setForceDrawPlayer(true);
         hudPanel.showCountdown(COUNT_LEFT);
-        Timer countdown = new Timer(RESUME_COOLDOWN_DELAY, new ActionListener() {
+        Timer countdown = new Timer(RESUME_COOLDOWN_DELAY_ms, new ActionListener() {
             int count = COUNT_LEFT;
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -208,7 +209,7 @@ public class GamePanel extends JPanel {
                 if (count > 0) {
                     hudPanel.showCountdown(count);
                 } else {
-                    ((Timer) e.getSource()).stop();// e è l'actionEvent, getSource restituisce sempre Object di default
+                    ((Timer) e.getSource()).stop();
                     
                     if (isScoreUpdateBlocked && alertTimer != null) {
                         alertTimer.start();
@@ -256,7 +257,7 @@ public class GamePanel extends JPanel {
 
             }
         });
-        alertTimer.setInitialDelay(0); //inizia istantaneamente con il primo evento senza delay
+        alertTimer.setInitialDelay(0); 
         alertTimer.start();
 
     }// fine newColorUnlockedCountdown

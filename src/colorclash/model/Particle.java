@@ -3,6 +3,7 @@ package src.colorclash.model;
 import java.util.Random;
 
 public class Particle {
+    //variabili d'istanza
     private double x, y, dirX, dirY;
     private int colorId;
     private int size;
@@ -10,38 +11,31 @@ public class Particle {
     private int alpha = 255;
     private boolean isActive = false;
 
+    //costanti
     private final int MIN_SIZE = 10;
     private final int MAX_SIZE = 20;
 
     public Particle() {
         this.x = 0;
-        this.y = -2000; // Nascosta fuori schermo
+        this.y = -2000; 
         this.colorId = 0;
-
-        // Inizializza l'oggetto Random una sola volta nella vita della particella
         this.rand = new Random();
-
         this.isActive = false;
 
     }// fine costruttore
 
-    // 2. METODO SPAWN (chiamato dall'allParticles.get(i).spawn(...) nel GameModel)
+    //METODI PUBBLICI
+
     public void spawn(double startX, double startY, int colorId) {
         this.x = startX;
         this.y = startY;
         this.colorId = colorId;
         this.alpha = 255;
-
-        // Ricalcola grandezza e direzione ogni volta che la particella viene riciclata
         this.size = rand.nextInt(MIN_SIZE, (MAX_SIZE + 1));
         this.dirX = (rand.nextDouble() - 0.5) * 10;
         this.dirY = (rand.nextDouble() - 0.5) * 10;
-
-        // RIMETTI A ZERO la vita/opacità della particella (aggiungi qui la tua
-        // variabile della vita, es. life = 255)
-
         this.isActive = true;
-    }
+    }// fine spawn
 
     public void update() {
         x += dirX;
@@ -54,6 +48,7 @@ public class Particle {
         }
     }// fine update
 
+    
     // getters di Particle
 
     public double getX() {
@@ -80,7 +75,7 @@ public class Particle {
         return isActive;
     }
 
-    // setters
+    // setters di Particle
 
     public void setActive(boolean active) {
         this.isActive = active;

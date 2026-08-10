@@ -19,17 +19,8 @@ import javax.imageio.ImageIO;
 
 public class HudPanel extends JPanel {
 
-    // variabili d'istanza
-    private JButton pauseButton;
-    private JLabel scoreLabel;
-    private JPanel livesContainer;
-    private int lastLives = -1;
-    private int lastScore = -1;
-    private final int MAX_LIVES = 3;
-    private JLabel[] heartLabels = new JLabel[MAX_LIVES];
-    private Icon saveIcon;
-
     // costanti
+    private final int MAX_LIVES = 3;
     private final int HUD_WIDTH = 0;
     private final int HUD_HEIGHT = 35;
     private final int PAUSE_BUTTON_WIDTH = 150;
@@ -43,6 +34,16 @@ public class HudPanel extends JPanel {
     private final int HGAP = 10;
     private final int VGAP = 0;
 
+    // variabili d'istanza
+    private JButton pauseButton;
+    private JLabel scoreLabel;
+    private JPanel livesContainer;
+    private int lastLives = -1;
+    private int lastScore = -1;
+    private JLabel[] heartLabels = new JLabel[MAX_LIVES];
+    private Icon saveIcon;
+
+    
     public HudPanel() {
         setLayout(new BorderLayout());
         setBackground(Color.LIGHT_GRAY);
@@ -101,6 +102,40 @@ public class HudPanel extends JPanel {
         saveIcon = heartLabels[0].getIcon();// DOC: Returns the graphic image (glyph, icon) that the label displays.
     }// fine generateVisualHearts
 
+    private JLabel loadImage() {
+        BufferedImage image; // DOC: The BufferedImage subclass describes an Image with an accessible buffer
+                             // of image data. extends Image
+        JLabel imageContainer;
+
+        try {// DOC: ImageIO containing static convenience methods for locating ImageReaders
+             // and ImageWriters, and performing simple encoding and decoding.
+            java.net.URL imgUrl = getClass().getResource("/colorclash/resources/heart.png");
+            if (imgUrl == null) {
+                imgUrl = getClass().getResource("/src/colorclash/resources/heart.png");
+            }
+            if (imgUrl == null) {
+                throw new Exception("File heart.png not found in any directory");
+            }
+
+            image = ImageIO.read(imgUrl);// DOC: read(URL input) Returns a BufferedImage as the result of decoding a
+                                         // supplied URL
+                                         // with an ImageReader chosen automatically from among those currently
+                                         // registered.
+
+            imageContainer = new JLabel(new ImageIcon(image));// DOC: Creates an ImageIcon from an image object.
+            return imageContainer;
+
+        } catch (Exception e) {
+            System.out.println("Error loading graphic hearts: " + e);
+            System.out.println("As an emergency measure, loading the heart emoji");
+            JLabel errorLabel = new JLabel("♥");
+            errorLabel.setFont(new Font("Arial", Font.PLAIN, 30));
+            errorLabel.setForeground(Color.RED);
+            return errorLabel;
+        }
+    }// fine loadImage
+
+
     // METODI PUBBLICI
 
     public void updateLivesView(int currentLives) {
@@ -133,38 +168,7 @@ public class HudPanel extends JPanel {
 
     }// fine updateScoreText
 
-    public JLabel loadImage() {
-        BufferedImage image; // DOC: The BufferedImage subclass describes an Image with an accessible buffer
-                             // of image data. extends Image
-        JLabel imageContainer;
-
-        try {// DOC: ImageIO containing static convenience methods for locating ImageReaders
-             // and ImageWriters, and performing simple encoding and decoding.
-            java.net.URL imgUrl = getClass().getResource("/colorclash/resources/heart.png");
-            if (imgUrl == null) {
-                imgUrl = getClass().getResource("/src/colorclash/resources/heart.png");
-            }
-            if (imgUrl == null) {
-                throw new Exception("File heart.png not found in any directory");
-            }
-
-            image = ImageIO.read(imgUrl);// DOC: read(URL input) Returns a BufferedImage as the result of decoding a
-                                         // supplied URL
-                                         // with an ImageReader chosen automatically from among those currently
-                                         // registered.
-
-            imageContainer = new JLabel(new ImageIcon(image));// DOC: Creates an ImageIcon from an image object.
-            return imageContainer;
-
-        } catch (Exception e) {
-            System.out.println("Error loading graphic hearts: " + e);
-            System.out.println("As an emergency measure, loading the heart emoji");
-            JLabel errorLabel = new JLabel("♥");
-            errorLabel.setFont(new Font("Arial", Font.PLAIN, 30));
-            errorLabel.setForeground(Color.RED);
-            return errorLabel;
-        }
-    }// fine loadImage
+    
 
     public void showCountdown(int secondsLeft) {
         scoreLabel.setText("GAME RESTARTS IN: " + secondsLeft);

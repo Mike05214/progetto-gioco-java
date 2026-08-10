@@ -14,29 +14,6 @@ import java.awt.geom.Rectangle2D;
 
 public class GameModel {
 
-    // Variabili di stato del gioco
-    private Player player;
-    private int lives;
-    private boolean isGameOver;
-    private int score;
-    private int stackedTime = 0;
-    private boolean isInvulnerable = false;
-    private int invulnTimer = 0;
-    private Random random;
-    private int frameCounter = 0;
-    private int spawnInterval = Config.getInstance().getIntProperty("obstacle_spawn_rate_ms"); // 125 frame = 2 secondo
-                                                                                               // (se il timer è a 8ms)
-    private double currentFallSpeed;;
-    private int currentPhase = 1;
-    
-    private List<Obstacle> allEnemies;
-    private List<Particle> allParticles = new ArrayList<>();
-    private List<FloatingScore> floatingScores = new ArrayList<>();
-    private List<Star> stars = new ArrayList<>();
-    private int availableColorsCount = 2;
-    private SaveManager saveManager;
-    private static GameModel model = null;
-
     // costanti
     private final double START_X = Config.getInstance().getDoubleProperty("player_start_x");
     private final double START_Y = Config.getInstance().getDoubleProperty("player_start_y");
@@ -51,7 +28,7 @@ public class GameModel {
     private final int SCORE_PHASE_3 = Config.getInstance().getIntProperty("phase_3_score_threshold");
     private final double SPEED_PHASE_MULTIPLIER = Config.getInstance().getDoubleProperty("speed_phase_multiplier");
     private final double SPEEDRACER_MULTIPLIER = Config.getInstance().getDoubleProperty("speed_racer_multiplier");
-    private final int MAX_INVULN_FRAMES = 125; // 125 frame a 125fps = 1 secondi invulerabile
+    private final int MAX_INVULN_FRAMES = 125; // 125 frame  = 1 secondi invulerabile
     private final int DEFAULT_GAIN = 100; // punti per il tempo di sopravvivenza
     private final int MAX_CHANCE = 100;
     private final int SPEEDRACER_CHANCE_PHASE_2 = 30;
@@ -62,14 +39,38 @@ public class GameModel {
     private final int EXPLOSION_OFFSET = 20; // per alzare il centro esplosione
     private final int MAX_LIVES = 3;
     private final int NUM_STARS = 100;
-
-    // Variabili per l'Object Pooling
     private final int POOL_SIZE_STANDARD = 15;
     private final int POOL_SIZE_SPECIAL = 10;
 
+    // Variabili di stato del gioco
+    private Player player;
+    private int lives;
+    private boolean isGameOver;
+    private int score;
+    private int stackedTime = 0;
+    private boolean isInvulnerable = false;
+    private int invulnTimer = 0;
+    private Random random;
+    private int frameCounter = 0;
+    private int spawnInterval_frames = Config.getInstance().getIntProperty("obstacle_spawn_rate_frames");
+    private double currentFallSpeed;
+    private int currentPhase = 1;
+    private List<Obstacle> allEnemies;
+    private List<Particle> allParticles = new ArrayList<>();
+    private List<FloatingScore> floatingScores = new ArrayList<>();
+    private List<Star> stars = new ArrayList<>();
+    private int availableColorsCount = 2;
     private StandardObstacle[] standardPool = new StandardObstacle[POOL_SIZE_STANDARD];
     private SpeedRacer[] speedRacerPool = new SpeedRacer[POOL_SIZE_SPECIAL];
     private SinusoidalMadness[] sinusoidalPool = new SinusoidalMadness[POOL_SIZE_SPECIAL];
+    private SaveManager saveManager;
+
+    // variabili statiche
+    private static GameModel model = null;
+
+    private GameModel() {
+        initGame();
+    }// fine costruttore
 
     // METODI STATICI
 
@@ -81,10 +82,6 @@ public class GameModel {
     }
 
     // METODI PRIVATI
-
-    public GameModel() {
-        initGame();
-    }// fine costruttore
 
     private void initGame() {
         allEnemies = new ArrayList<>();
@@ -113,44 +110,18 @@ public class GameModel {
             sinusoidalPool[i] = new SinusoidalMadness();
             allEnemies.add(sinusoidalPool[i]);
         }
-    }
+    }// fine innitObstaclesPool
 
     private void initParticlesPool() {
         allParticles.clear();
         for (int i = 0; i < MAX_PARTICLES; i++) {
-            Particle p = new Particle(); // Costruttore vuoto o con valori fittizi
+            Particle p = new Particle();
             p.setActive(false);
             allParticles.add(p);
         }
-    }
+    }// fine initParticlesPool
 
-    public void update(int panelWidth, int panelHeight) {
-
-        if (isGameOver) {
-            return;
-        }
-        invulnerabilityHandler();
-        player.update();
-        player.constrainX(MIN_X, panelWidth);
-        player.constrainY(MIN_Y, panelHeight);
-        spawningHandler(panelWidth);
-        updateEnemies(panelHeight);
-        updateParticles();
-        updateFloatingScore();
-        checkCollisions(); // qui il gameover potrebbe essere settato a true
-        updateSurvivalScore();
-        updateStars(panelWidth, panelHeight);
-        if (isGameOver) {
-            AudioManager.getInstance().stopBackgroundMusic();
-            AudioManager.getInstance().playSoundEffect("game_over.wav");
-
-            if (score > saveManager.getHighscore()) {
-                saveManager.writeHighscore(score);
-            }
-        }
-    }// fine update
-
-    public void initStars(int panelWidth, int panelHeight) {
+    private void initStars(int panelWidth, int panelHeight) {
         for (int i = 0; i < NUM_STARS; i++) {
             stars.add(new Star(panelWidth, panelHeight));
         }
@@ -159,7 +130,6 @@ public class GameModel {
     private void updateEnemies(int panelHeight) {
 
         for (Obstacle obs : allEnemies) {
-            // Applica movimento e collisioni SOLO agli ostacoli attivi in gioco
             if (obs.isActive()) {
                 obs.update();
                 obs.checkOffScreen(panelHeight);
@@ -170,7 +140,7 @@ public class GameModel {
     private void updateParticles() {
         for (Particle p : allParticles) {
             if (p.isActive()) {
-                p.update(); // Se l'alpha arriva a 0, la particella si spegne da sola qui dentro
+                p.update();
             }
         }
     }// fine updateParticles
@@ -182,7 +152,7 @@ public class GameModel {
         floatingScores.removeIf(fs -> fs.isDead());
     }// fine updateFloatingScore
 
-    public void updateStars(int panelWidth, int panelHeight) {
+    private void updateStars(int panelWidth, int panelHeight) {
         if (stars != null) {
             for (Star s : stars) {
                 s.update(panelWidth, panelHeight);
@@ -202,14 +172,10 @@ public class GameModel {
         }
     }// fine invulnerabilityHandler
 
-    // -----------------------------------------
-    // ---- SPAWNING OBSTACLES ----
-    // -----------------------------------------
-
     private void spawningHandler(int panelWidth) {
         frameCounter++;
 
-        if (frameCounter >= spawnInterval) {
+        if (frameCounter >= spawnInterval_frames) {
             spawnRandomEnemy(panelWidth);
             frameCounter = 0;
         }
@@ -228,7 +194,7 @@ public class GameModel {
         obs.setHeight(randomHeight);
 
         obs.setActive(true);
-    }
+    }// fine spawnStandard
 
     private void spawnSpeedRacer(SpeedRacer obs, int panelWidth, double startY, double speed, int colorId) {
         double randomX = random.nextDouble(panelWidth - SpeedRacer.WIDTH);
@@ -237,12 +203,11 @@ public class GameModel {
         obs.setY(startY);
         obs.setFallSpeed(speed);
         obs.setColorId(colorId);
-        // Larghezza e altezza fisse per SpeedRacer
         obs.setWidth(SpeedRacer.WIDTH);
         obs.setHeight(SpeedRacer.HEIGHT);
 
         obs.setActive(true);
-    }
+    }// fine spawnSpeedRacer
 
     private void spawnSinusoidal(SinusoidalMadness obs, int panelWidth, double startY, double speed, int colorId) {
         double safeMinX = SinusoidalMadness.AMPLITUDE;
@@ -258,10 +223,8 @@ public class GameModel {
         obs.setHeight(SinusoidalMadness.HEIGHT);
 
         obs.setActive(true);
-    }
+    }// fine spawnSinusoidal
 
-    // Cerca il primo ostacolo spento nell'array e usa il metodo corretto del
-    // GameModel per rigenerarlo
     private void activateFromPool(Obstacle[] pool, int panelWidth, double startY, double speed, int colorId) {
         for (int i = 0; i < pool.length; i++) {
             if (!pool[i].isActive()) {
@@ -272,10 +235,10 @@ public class GameModel {
                 } else if (pool[i] instanceof SinusoidalMadness) {
                     spawnSinusoidal((SinusoidalMadness) pool[i], panelWidth, startY, speed, colorId);
                 }
-                return; // Esci appena ne hai acceso uno
+                return;
             }
         }
-    }
+    }// fine activateFromPool
 
     private void spawnRandomEnemy(int panelWidth) {
         int startY = OBSTACLE_START_Y;
@@ -308,10 +271,8 @@ public class GameModel {
                 }
                 break;
         }
-    }
-    // -----------------------------------------
-    // ---- END SPAWNING OBSTACLES ----
-    // ---------------------------------------
+    }// fine spawnRandomEnemy
+
 
     private void checkDifficultyProgression(int currentScore) {
 
@@ -352,7 +313,7 @@ public class GameModel {
         }
     }// fine decreaseLives
 
-    public void createExplosion(double x, double y, int colorId) {
+    private void createExplosion(double x, double y, int colorId) {
         int particlesToSpawn = 15;
         int spawned = 0;
 
@@ -361,7 +322,7 @@ public class GameModel {
                 p.spawn(x, y, colorId);
                 spawned++;
                 if (spawned >= particlesToSpawn) {
-                    break; // Esce dal ciclo quando ha generato abbastanza particelle
+                    break;
                 }
             }
         }
@@ -373,11 +334,9 @@ public class GameModel {
                                                               // bounding box of the Shape
                                                               // Returns an integer Rectangle that completely encloses
                                                               // the Shape.
-        for (int i = 0; i < allEnemies.size(); i++) { // Usa allEnemies o enemies in base a come hai chiamato la lista
-                                                      // globale
+        for (int i = 0; i < allEnemies.size(); i++) {
             Obstacle obs = allEnemies.get(i);
 
-            // 1. MODIFICA: Salta gli ostacoli nel pool non ancora in gioco
             if (!obs.isActive()) {
                 continue;
             }
@@ -404,9 +363,6 @@ public class GameModel {
                     createExplosion(obs.getX(), obs.getY() - EXPLOSION_OFFSET, obs.getColorId());
                     floatingScores.add(new FloatingScore(obs.getX(), obs.getY(), obs.getPoints()));
                     addScore(obs.getPoints());
-
-                    // 2. MODIFICA: Invece di rimuoverlo dalla lista, lo spegne e lo rispedisce nel
-                    // "magazzino"
                     obs.setActive(false);
                     obs.setY(-2000);
 
@@ -442,9 +398,9 @@ public class GameModel {
         }
     }// fine resetParticles
 
-    private void resetFloatingScore(){
+    private void resetFloatingScore() {
         floatingScores.clear();
-    }
+    }// fine resetFloatingScore
 
     private void resetDifficulty() {
         currentFallSpeed = BASE_SPEED;
@@ -467,6 +423,32 @@ public class GameModel {
 
     // METODI PUBBLICI
 
+    public void update(int panelWidth, int panelHeight) {
+
+        if (isGameOver) {
+            return;
+        }
+        invulnerabilityHandler();
+        player.update();
+        player.constrainX(MIN_X, panelWidth);
+        player.constrainY(MIN_Y, panelHeight);
+        spawningHandler(panelWidth);
+        updateEnemies(panelHeight);
+        updateParticles();
+        updateFloatingScore();
+        checkCollisions();
+        updateSurvivalScore();
+        updateStars(panelWidth, panelHeight);
+        if (isGameOver) {
+            AudioManager.getInstance().stopBackgroundMusic();
+            AudioManager.getInstance().playSoundEffect("game_over.wav");
+
+            if (score > saveManager.getHighscore()) {
+                saveManager.writeHighscore(score);
+            }
+        }
+    }// fine update
+
     public void resetGame() {
         getPlayer().resetToInitialSettings(getStartX(), getStartY(), getStartColorId());
         resetScore();
@@ -480,7 +462,6 @@ public class GameModel {
     }// fine resetGame
 
     public void autoSave() {
-        // Salviamo lo stato solo se il giocatore è in partita e non ha già perso.
         if (!this.isGameOver) {
             saveManager.writeGameState(this.score, this.lives, this.currentPhase, this.currentFallSpeed,
                     this.availableColorsCount, this.player, this.allEnemies);
@@ -557,7 +538,7 @@ public class GameModel {
         return saveManager.getHighscore();
     }
 
-    // setters gameModel
+    // setters del GameModel
 
     public void setScore(int score) {
         this.score = score;

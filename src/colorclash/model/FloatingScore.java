@@ -2,6 +2,7 @@ package src.colorclash.model;
 
 public class FloatingScore {
 
+    // variabili d'istanza
     private double x, y;
     private String text;
     private int alpha = 255;
@@ -11,6 +12,8 @@ public class FloatingScore {
         y = startY;
         text = "+" + points;
     }// fine costruttore
+
+    //METODI PUBBLICI
 
     public void update() {
         y -= 1.5;
@@ -28,6 +31,7 @@ public class FloatingScore {
             return false;
         }
     }// fine isDead
+    
 
     // getters di FloatingScore
 
@@ -46,4 +50,5 @@ public class FloatingScore {
     public int getAlpha() {
         return alpha;
     }
+    
 }// fine classe FloatingScore
