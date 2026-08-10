@@ -14,7 +14,7 @@ public class SinusoidalMadness extends Obstacle {
     
 
     // costanti
-    private final int COLOR_CHANGE_INTERVAL = Config.getInstance().getIntProperty("sinusoidal_madness_color_change_interval");
+    private final int COLOR_CHANGE_INTERVAL_MS = Config.getInstance().getIntProperty("sinusoidal_madness_color_change_interval_ms");
     private final int CURRENT_MAX_COLORS = 4;
     private final double WAWE_SPEED = 0.05;
     private final int SINUSOIDALMADNESS_POINTS = Config.getInstance().getIntProperty("sinusoidal_madness_points");
@@ -39,9 +39,9 @@ public class SinusoidalMadness extends Obstacle {
         y += this.fallSpeed;
         angle += WAWE_SPEED;
         x = this.startX + (AMPLITUDE * Math.sin(angle));
-        colorTimer++;
+        colorTimer += 8;
 
-        if (colorTimer >= COLOR_CHANGE_INTERVAL) {
+        if (colorTimer >= COLOR_CHANGE_INTERVAL_MS) {
             colorTimer = 0;
             int nextColorId = (this.getColorId() + 1) % CURRENT_MAX_COLORS;
             this.setColorId(nextColorId);

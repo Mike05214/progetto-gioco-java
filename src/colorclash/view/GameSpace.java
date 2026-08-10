@@ -132,7 +132,7 @@ public class GameSpace extends JPanel {
         boolean shouldDraw = true;
 
         if (model.isInvulnerable() && !forceDrawPlayer) {
-            if (model.getInvulnTimer() % 20 < 10) {
+            if (model.getInvulnTimer() % 150 < 75) {
                 shouldDraw = false;
             }
         }

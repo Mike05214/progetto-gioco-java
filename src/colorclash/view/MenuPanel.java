@@ -91,6 +91,7 @@ public class MenuPanel extends BaseMenuPanel {
             public void actionPerformed(ActionEvent e) {
                 if (SaveManager.getInstance().loadGameState(model)) {
                     AudioManager.getInstance().stopBackgroundMusic();
+                    frame.getGamePanel().getHudPanel().updateLivesView(model.getLives());
                     frame.getGamePanel().resumeCountdown();
                     frame.changeFrame("GAME");
                 } else {

@@ -23,18 +23,19 @@ public class GameModel {
     private final int START_COLOR_ID = 0;
     private final double BASE_SPEED = Config.getInstance().getDoubleProperty("obstacle_base_speed");
     private final int TICK_TIME = 8;
-    private final int SCORE_DELAY = Config.getInstance().getIntProperty("score_delay");
+    private final int SCORE_DELAY_MS = Config.getInstance().getIntProperty("score_delay_ms");
     private final int SCORE_PHASE_2 = Config.getInstance().getIntProperty("phase_2_score_threshold");
     private final int SCORE_PHASE_3 = Config.getInstance().getIntProperty("phase_3_score_threshold");
     private final double SPEED_PHASE_MULTIPLIER = Config.getInstance().getDoubleProperty("speed_phase_multiplier");
     private final double SPEEDRACER_MULTIPLIER = Config.getInstance().getDoubleProperty("speed_racer_multiplier");
-    private final int MAX_INVULN_FRAMES = 125; // 125 frame  = 1 secondi invulerabile
-    private final int DEFAULT_GAIN = 100; // punti per il tempo di sopravvivenza
+    private final int SPAWN_INTERVAL_MS = Config.getInstance().getIntProperty("obstacle_spawn_interval_ms");
+    private final int MAX_INVULN_TIME_MS = 1000; 
+    private final int DEFAULT_SCORE_GAIN = 100; 
     private final int MAX_CHANCE = 100;
     private final int SPEEDRACER_CHANCE_PHASE_2 = 30;
     private final int SPEEDRACER_CHANCE_PHASE_3 = 40;
     private final int SINUSOIDALMADNESS_CHANCE = 15;
-    private final int MIN_PARTICLES = 5; // numero di particelle minime che appaiono durante esplosione ostacolo
+    private final int MIN_PARTICLES = 5; 
     private final int MAX_PARTICLES = 200;
     private final int EXPLOSION_OFFSET = 20; // per alzare il centro esplosione
     private final int MAX_LIVES = 3;
@@ -46,20 +47,19 @@ public class GameModel {
     private Player player;
     private int lives;
     private boolean isGameOver;
-    private int score;
-    private int stackedTime = 0;
     private boolean isInvulnerable = false;
+    private int score;
+    private int scoreTimer = 0;
     private int invulnTimer = 0;
+    private int spawnTimer = 0;
     private Random random;
-    private int frameCounter = 0;
-    private int spawnInterval_frames = Config.getInstance().getIntProperty("obstacle_spawn_rate_frames");
     private double currentFallSpeed;
     private int currentPhase = 1;
+    private int availableColorsCount = 2;
     private List<Obstacle> allEnemies;
     private List<Particle> allParticles = new ArrayList<>();
     private List<FloatingScore> floatingScores = new ArrayList<>();
     private List<Star> stars = new ArrayList<>();
-    private int availableColorsCount = 2;
     private StandardObstacle[] standardPool = new StandardObstacle[POOL_SIZE_STANDARD];
     private SpeedRacer[] speedRacerPool = new SpeedRacer[POOL_SIZE_SPECIAL];
     private SinusoidalMadness[] sinusoidalPool = new SinusoidalMadness[POOL_SIZE_SPECIAL];
@@ -163,9 +163,9 @@ public class GameModel {
     private void invulnerabilityHandler() {
 
         if (isInvulnerable) {
-            invulnTimer++;
+            invulnTimer += TICK_TIME;
 
-            if (invulnTimer >= MAX_INVULN_FRAMES) {
+            if (invulnTimer >= MAX_INVULN_TIME_MS) {
                 isInvulnerable = false;
                 invulnTimer = 0;
             }
@@ -173,11 +173,11 @@ public class GameModel {
     }// fine invulnerabilityHandler
 
     private void spawningHandler(int panelWidth) {
-        frameCounter++;
+        spawnTimer += TICK_TIME;
 
-        if (frameCounter >= spawnInterval_frames) {
+        if (spawnTimer >= SPAWN_INTERVAL_MS) {
             spawnRandomEnemy(panelWidth);
-            frameCounter = 0;
+            spawnTimer -= SPAWN_INTERVAL_MS;
         }
     }// fine handleSpawning
 
@@ -291,11 +291,11 @@ public class GameModel {
     }// fine checkDifficultyProgression
 
     private void updateSurvivalScore() {
-        this.stackedTime += TICK_TIME;
+        scoreTimer += TICK_TIME;
 
-        if (this.stackedTime >= SCORE_DELAY) {
-            addScore(DEFAULT_GAIN);
-            this.stackedTime -= SCORE_DELAY;
+        if (scoreTimer >= SCORE_DELAY_MS) {
+            addScore(DEFAULT_SCORE_GAIN);
+            scoreTimer -= SCORE_DELAY_MS;
         }
     }// fine scoreHandler
 
@@ -381,8 +381,8 @@ public class GameModel {
     }// fine checkCollisions
 
     private void resetScore() {
-        this.score = 0;
-        this.stackedTime = 0;
+        score = 0;
+        scoreTimer = 0;
     }// fine resetScore
 
     private void resetObstacles() {
