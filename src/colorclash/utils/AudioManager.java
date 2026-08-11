@@ -93,8 +93,7 @@ public class AudioManager {
             } catch (IOException ioe) {
                 ioe.printStackTrace();
             } finally {
-                // DOC: Closes the line, indicating that any system resources in use by the line
-                // can be released.
+
                 try {
                     if (ais != null) {
                         ais.close();

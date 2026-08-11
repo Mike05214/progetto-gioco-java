@@ -331,8 +331,7 @@ public class SaveManager {
     }// fine getHomeFolderForDistVersion
 
     private String getHomeFolderForDevVersion() throws URISyntaxException {
-        return System.getProperty("user.dir"); // restituisce automaticamente la cartella radice del progetto aperta
-                                               // nell'IDE.
+        return System.getProperty("user.dir"); 
     }// fine getHomeFolderForDevVersion
 
 }// fine classe SaveManager

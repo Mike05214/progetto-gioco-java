@@ -62,7 +62,7 @@ public class Config {
 
     private String getConfigFile() throws URISyntaxException {
         String configFile = null;
-        String relPath = "\\conf\\config.txt"; // il \\ viene convertito in / da java
+        String relPath = "\\conf\\config.txt";
 
         if (System.getProperty("os.name").startsWith("Linux")) {
             relPath = "/conf/config.txt";
@@ -94,7 +94,7 @@ public class Config {
     }//fine getHomeFolderForDistVersion
 
     private String getHomeFolderForDevVersion() throws URISyntaxException {
-        return System.getProperty("user.dir"); // restituisce automaticamente la cartella radice del progetto aperta nell'IDE
+        return System.getProperty("user.dir"); 
     }
 
     // getters di Config
