@@ -60,7 +60,7 @@ public abstract class BaseMenuPanel extends JPanel {
     protected void initTitleLabel(String text) {
         JLabel titleLabel = createRainbowLabel(text);
         titleLabel.setFont(new Font("Impact", Font.PLAIN, TITLE_SIZE));
-        add(titleLabel, BorderLayout.NORTH); //aggiunto a nord del BaseMenuPanel
+        add(titleLabel, BorderLayout.NORTH); 
     }// fine initTitleLabel
 
     protected void addComponentToCenter(Component comp, int row, boolean hasSpaceBelow) {

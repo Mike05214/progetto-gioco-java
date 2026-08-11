@@ -1,5 +1,7 @@
 package src.colorclash.view;
 
+import java.net.URL;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -109,7 +111,7 @@ public class HudPanel extends JPanel {
 
         try {// DOC: ImageIO containing static convenience methods for locating ImageReaders
              // and ImageWriters, and performing simple encoding and decoding.
-            java.net.URL imgUrl = getClass().getResource("/colorclash/resources/heart.png");
+            URL imgUrl = getClass().getResource("/colorclash/resources/heart.png");
             if (imgUrl == null) {
                 imgUrl = getClass().getResource("/src/colorclash/resources/heart.png");
             }

@@ -215,7 +215,7 @@ public class GameModel {
         double randomX = random.nextDouble(safeMinX, safeMaxX);
 
         obs.setX(randomX);
-        obs.setStartX(randomX); // Fondamentale per il calcolo del seno
+        obs.setStartX(randomX); 
         obs.setY(startY);
         obs.setFallSpeed(speed);
         obs.setColorId(colorId);
@@ -316,7 +316,6 @@ public class GameModel {
     private void createExplosion(double x, double y, int colorId) {
         int particlesToSpawn = 15;
         int spawned = 0;
-
         for (Particle p : allParticles) {
             if (!p.isActive()) {
                 p.spawn(x, y, colorId);
