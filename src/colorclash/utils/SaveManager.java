@@ -38,7 +38,8 @@ public class SaveManager {
 
             File savesFolder = new File(savesDirPath);
             if (!savesFolder.exists()) {
-                savesFolder.mkdirs();
+                savesFolder.mkdirs();//DOC:Creates the directory named by this abstract pathname,
+                                     // including any necessary but nonexistent parent directories.
             }
 
             boolean isLinux = System.getProperty("os.name").startsWith("Linux");
