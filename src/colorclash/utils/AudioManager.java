@@ -122,7 +122,6 @@ public class AudioManager {
             if (clips[index] != null) {
                 clips[index].stop();
                 clips[index].setFramePosition(0);
-                // DOC: Allows a line to engage in data I/O.
                 clips[index].start();
             }
 
