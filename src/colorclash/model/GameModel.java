@@ -8,10 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import java.awt.Shape;
-import java.awt.geom.Area;
-import java.awt.geom.Rectangle2D;
-
 public class GameModel {
 
     // costanti
@@ -128,7 +124,6 @@ public class GameModel {
     }// fine initStars
 
     private void updateEnemies(int panelHeight) {
-
         for (Obstacle obs : allEnemies) {
             if (obs.isActive()) {
                 obs.update();
@@ -161,7 +156,6 @@ public class GameModel {
     }// fine updateStarts
 
     private void invulnerabilityHandler() {
-
         if (isInvulnerable) {
             invulnTimer += TICK_TIME;
 
@@ -275,15 +269,11 @@ public class GameModel {
 
 
     private void checkDifficultyProgression(int currentScore) {
-
         if (currentScore >= SCORE_PHASE_2 && currentPhase == 1) {
             currentPhase = 2;
             currentFallSpeed *= SPEED_PHASE_MULTIPLIER;
             availableColorsCount = 3;
-
-        }
-
-        else if (currentScore >= SCORE_PHASE_3 && currentPhase == 2) {
+        } else if (currentScore >= SCORE_PHASE_3 && currentPhase == 2) {
             currentPhase = 3;
             currentFallSpeed *= SPEED_PHASE_MULTIPLIER;
             availableColorsCount = 4;
@@ -328,11 +318,8 @@ public class GameModel {
     }// fine createExplosion
 
     private void checkCollisions() {
-        Shape playerShape = player.getHitbox();
-        Rectangle2D playerBounds = playerShape.getBounds2D(); // DOC: Returns a high precision and more accurate
-                                                              // bounding box of the Shape
-                                                              // Returns an integer Rectangle that completely encloses
-                                                              // the Shape.
+        Hitbox playerHitbox = player.getHitbox();
+
         for (int i = 0; i < allEnemies.size(); i++) {
             Obstacle obs = allEnemies.get(i);
 
@@ -340,22 +327,10 @@ public class GameModel {
                 continue;
             }
 
-            Shape obsShape = obs.getHitbox();
-            Rectangle2D obsBounds = obsShape.getBounds2D();
+            Hitbox obsHitbox = obs.getHitbox();
 
-            if (!playerBounds.intersects(obsBounds)) {
-                continue;
-            }
-
-            // DOC: An Area object stores and manipulates a resolution-independent
-            // description of an enclosed area of 2-dimensional space
-            Area playerArea = new Area(playerShape); // The Area class creates an area geometry from the specified Shape
-                                                     // object.
-            Area obsArea = new Area(obsShape);
-            playerArea.intersect(obsArea); // Sets the shape of this Area to the intersection of its current shape and
-                                           // the shape of the specified Area.
-
-            if (!playerArea.isEmpty()) {
+            // Richiamo della classe separata CollisionChecker
+            if (CollisionChecker.checkCollision(playerHitbox, obsHitbox)) {
 
                 if (player.getColorId() == obs.getColorId()) {
                     AudioManager.getInstance().playSoundEffect("hit.wav");
@@ -417,13 +392,11 @@ public class GameModel {
 
     private void resetInvulnerability() {
         isInvulnerable = false;
-
     }// fine resetInvulnerability
 
     // METODI PUBBLICI
 
     public void update(int panelWidth, int panelHeight) {
-
         if (isGameOver) {
             return;
         }

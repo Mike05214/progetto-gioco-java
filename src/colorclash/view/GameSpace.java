@@ -16,10 +16,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.BasicStroke;
-import java.awt.RenderingHints; // DOC: The RenderingHints class defines and manages collections of keys and
-                                // associated values which allow an application to provide input
-                                // into the choice of algorithms used by other classes which perform rendering
-                                // and image manipulation services.
+import java.awt.RenderingHints;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -78,14 +75,8 @@ public class GameSpace extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); // DOC: Sets the value
-                                                                                                  // of a single
-                                                                                                  // preference for the
-                                                                                                  // rendering
-                                                                                                  // algorithms.
-                                                                                                  // setRenderingHint(RenderingHints.Key
-                                                                                                  // hintKey, Object
-                                                                                                  // hintValue)
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
         drawStars(g2d);
         showLegend(g2d);
         drawPlayer(g2d);
@@ -98,7 +89,6 @@ public class GameSpace extends JPanel {
 
     }// fine paintComponent
 
-    
     // METODI PRIVATI
 
     private void drawParticles(Graphics2D g2d) {
@@ -111,17 +101,15 @@ public class GameSpace extends JPanel {
                 g2d.setColor(new Color(baseColor.getRed(), baseColor.getGreen(), baseColor.getBlue(), p.getAlpha()));
                 particleRect.setRect(p.getX(),
                         p.getY(),
-                        p.getSize(), // larghezza
-                        p.getSize()); // altezza
+                        p.getSize(),
+                        p.getSize());
                 g2d.fill(particleRect);
             }
-
         }
     }// fine drawParticles
 
     private void drawFloatingScore(Graphics2D g2d) {
         for (FloatingScore fs : model.getFloatingScores()) {
-
             g2d.setColor(new Color(255, 255, 255, fs.getAlpha()));
             g2d.setFont(new Font("Impact", Font.PLAIN, 20));
             g2d.drawString(fs.getText(), (float) fs.getX(), (float) fs.getY());
@@ -138,17 +126,15 @@ public class GameSpace extends JPanel {
         }
 
         if (shouldDraw) {
-            Player player = model.getPlayer();
-            g2d.setColor(colorPalette[player.getColorId()]);
-            g2d.fill(player.getHitbox());
+            PlayerRenderer.render(g2d, model.getPlayer(), colorPalette[model.getPlayer().getColorId()]);
         }
     }// fine drawPlayer
 
     private void drawObstacles(Graphics2D g2d) {
         for (Obstacle obs : model.getEnemies()) {
             if (obs.isActive()) {
-                g2d.setColor(colorPalette[obs.getColorId()]);
-                g2d.fill(obs.getHitbox());
+                // Utilizzo del renderer per evitare allocazioni continue
+                ObstacleRenderer.render(g2d, obs, colorPalette[obs.getColorId()]);
             }
         }
     }// fine drawObstacles
@@ -158,13 +144,12 @@ public class GameSpace extends JPanel {
 
         for (Star s : model.getStars()) {
             g2d.setColor(new Color(255, 255, 255, s.getAlpha()));
-            starRect.setRect(s.getX(), s.getY(), s.getSize(), s.getSize()); //seguire questo esempio per disaccoppiare totalmente model da view
+            starRect.setRect(s.getX(), s.getY(), s.getSize(), s.getSize());
             g2d.fill(starRect);
         }
     }// fine drawStars
 
     private void showGameOver(Graphics2D g2d) {
-
         g2d.setColor(new Color(GAME_OVER_COLOR_R, GAME_OVER_COLOR_G, GAME_OVER_COLOR_B, GAME_OVER_OPACITY));
         g2d.fillRect(0, 0, getWidth(), getHeight());
         g2d.setColor(Color.WHITE);
@@ -200,10 +185,10 @@ public class GameSpace extends JPanel {
             if (i == currentColorId) {
                 g2d.setColor(Color.WHITE);
                 g2d.setStroke(new BasicStroke(LEGEND_STROKE_WIDTH));
-                g2d.drawRect(x - LEGEND_STROKE_NEW_START, 
-                            y - LEGEND_STROKE_NEW_START,
-                            elementSize + LEGEND_STROKE_RESIZE, 
-                            elementSize + LEGEND_STROKE_RESIZE);
+                g2d.drawRect(x - LEGEND_STROKE_NEW_START,
+                        y - LEGEND_STROKE_NEW_START,
+                        elementSize + LEGEND_STROKE_RESIZE,
+                        elementSize + LEGEND_STROKE_RESIZE);
             }
         }
     }// fine showLegend
@@ -214,10 +199,10 @@ public class GameSpace extends JPanel {
         return restartButton;
     }
 
-    //setters di GameSpace
-    
+    // setters di GameSpace
+
     public void setForceDrawPlayer(boolean force) {
         forceDrawPlayer = force;
     }
-    
+
 }// fine classe GameSpace

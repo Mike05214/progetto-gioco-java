@@ -1,7 +1,5 @@
 package colorclash.model;
 
-import java.awt.Shape;
-
 public abstract class Obstacle {
     
     // variabili d'istanza 
@@ -12,6 +10,7 @@ public abstract class Obstacle {
     protected double fallSpeed;
     protected int colorId;
     protected boolean isActive;
+    protected Hitbox hitbox; // Sostituisce Shape
 
 
     public Obstacle(double startX, double startY, double speed, int colorId, int width, int height) {
@@ -22,16 +21,17 @@ public abstract class Obstacle {
         fallSpeed = speed;
         this.colorId = colorId;
         isActive = true;
+        this.hitbox = new Hitbox(); // Inizializza la hitbox logica
     }// fine costruttore
 
     //METODI PUBBLICI
 
     public void update() {
         y += fallSpeed;
+        hitbox.updatePosition(this.x, this.y);
     }// fine fall
 
     public void checkOffScreen(int screenHeight) {
-
         if (y > screenHeight) {
             isActive = false;
         }
@@ -45,7 +45,9 @@ public abstract class Obstacle {
 
     // getters di Obstacle
 
-    public abstract Shape getHitbox();
+    public Hitbox getHitbox() {
+        return hitbox;
+    }
 
     public abstract String getType();
     
@@ -75,8 +77,6 @@ public abstract class Obstacle {
         return isActive;
     }
 
-
-    
     public double getFallSpeed(){
         return fallSpeed;
     }
@@ -85,7 +85,6 @@ public abstract class Obstacle {
 
     public void setActive(boolean active){
         isActive= active;
-
     }
 
     public void setY(double CordY ){
@@ -107,6 +106,4 @@ public abstract class Obstacle {
     public void setFallSpeed(double speed ){
         this.fallSpeed=speed;
     }
-
-    
 }// fine classe astratta Obstacle

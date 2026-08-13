@@ -1,8 +1,5 @@
 package colorclash.model;
 
-import java.awt.Shape;
-import java.awt.geom.Path2D;
-
 import colorclash.utils.Config;
 
 public class Player {
@@ -15,6 +12,7 @@ public class Player {
     private int colorId;
     private boolean isInvulnerable;
     private boolean movingUp, movingDown, movingLeft, movingRight;
+    private Hitbox hitbox; // Sostituisce java.awt.Shape
 
     //costanti
     private final double SCALE_FACTOR = 0.7071;// 1/sqtr(2)
@@ -29,6 +27,13 @@ public class Player {
         y = startY;
         colorId = startColorId;
         isInvulnerable = false;
+        
+        this.hitbox = new Hitbox();
+        // Approssimazione della navicella spaziale con 4 rettangoli logici sovrapposti
+        hitbox.addRect(PLAYER_WIDTH * 0.45, 0, PLAYER_WIDTH * 0.10, PLAYER_HEIGHT * 0.30); // Punta (stretta in alto)
+        hitbox.addRect(PLAYER_WIDTH * 0.40, PLAYER_HEIGHT * 0.30, PLAYER_WIDTH * 0.20, PLAYER_HEIGHT * 0.30); // Corpo centrale
+        hitbox.addRect(0, PLAYER_HEIGHT * 0.60, PLAYER_WIDTH, PLAYER_HEIGHT * 0.20); // Ali laterali (massima larghezza)
+        hitbox.addRect(PLAYER_WIDTH * 0.30, PLAYER_HEIGHT * 0.80, PLAYER_WIDTH * 0.40, PLAYER_HEIGHT * 0.20); // Motori inferiori
     }// fine costruttore
 
 
@@ -59,6 +64,9 @@ public class Player {
         if (movingRight && !movingLeft) {
             x += speedVector;
         }
+        
+        // Aggiorna le coordinate della hitbox logica
+        hitbox.updatePosition(this.x, this.y);
     }// fine update
 
     public void constrainX(int minX, int maxX) {
@@ -82,7 +90,7 @@ public class Player {
     }// fine constrainY
 
     public void colorCooldown(int availableColorsCount, boolean forward) {
-        currentTime = System.currentTimeMillis();//DOC: Returns the current time in milliseconds.
+        currentTime = System.currentTimeMillis();
         if (currentTime - lastColorChange >= COLOR_COOLDOWN) {
             switchColor(availableColorsCount, forward);
         }
@@ -101,6 +109,7 @@ public class Player {
         x = startX;
         y = startY;
         colorId = startColorId;
+        hitbox.updatePosition(this.x, this.y); // Forza l'aggiornamento della hitbox al reset
     }// fine resetToInitialSettings
 
     public void resetMovementFlags() {
@@ -110,20 +119,8 @@ public class Player {
         movingRight = false;
     }// fine resetMovementFlags
 
-    public Shape getHitbox() {
-        Path2D.Double navicella = new Path2D.Double();
-        navicella.moveTo( x + (PLAYER_WIDTH * 0.5), y);
-        navicella.lineTo( x + (PLAYER_WIDTH * 0.6), y + (PLAYER_HEIGHT * 0.3));
-        navicella.lineTo( x + PLAYER_WIDTH, y + (PLAYER_HEIGHT * 0.8));
-        navicella.lineTo( x + (PLAYER_WIDTH * 0.7), y + (PLAYER_HEIGHT * 0.8));
-        navicella.lineTo( x + (PLAYER_WIDTH * 0.7), y + PLAYER_HEIGHT);
-        navicella.lineTo( x + (PLAYER_WIDTH * 0.5), y + (PLAYER_HEIGHT * 0.85));
-        navicella.lineTo( x + (PLAYER_WIDTH * 0.3), y + PLAYER_HEIGHT);
-        navicella.lineTo( x + (PLAYER_WIDTH * 0.3), y + (PLAYER_HEIGHT * 0.8));
-        navicella.lineTo( x, y + (PLAYER_HEIGHT * 0.8));
-        navicella.lineTo( x + (PLAYER_WIDTH * 0.4), y + (PLAYER_HEIGHT * 0.3));
-        navicella.closePath();
-        return navicella;
+    public Hitbox getHitbox() {
+        return hitbox;
     }// fine getHitbox
 
 
