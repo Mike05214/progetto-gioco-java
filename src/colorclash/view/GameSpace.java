@@ -158,7 +158,7 @@ public class GameSpace extends JPanel {
 
         for (Star s : model.getStars()) {
             g2d.setColor(new Color(255, 255, 255, s.getAlpha()));
-            starRect.setRect(s.getX(), s.getY(), s.getSize(), s.getSize());
+            starRect.setRect(s.getX(), s.getY(), s.getSize(), s.getSize()); //seguire questo esempio per disaccoppiare totalmente model da view
             g2d.fill(starRect);
         }
     }// fine drawStars
