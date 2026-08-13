@@ -1,4 +1,4 @@
-package src.colorclash.utils;
+package colorclash.utils;
 
 import javax.sound.sampled.AudioSystem; //DOC: The AudioSystem class acts as the entry point to the sampled-audio system resources.
 import javax.sound.sampled.AudioInputStream;

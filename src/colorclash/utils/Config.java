@@ -1,4 +1,4 @@
-package src.colorclash.utils;
+package colorclash.utils;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;

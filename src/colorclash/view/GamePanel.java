@@ -1,7 +1,7 @@
-package src.colorclash.view;
+package colorclash.view;
 
-import src.colorclash.model.GameModel;
-import src.colorclash.utils.AudioManager;
+import colorclash.model.GameModel;
+import colorclash.utils.AudioManager;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;

@@ -1,7 +1,7 @@
-package src.colorclash.main;
+package colorclash;
 
-import src.colorclash.view.MainFrame;
-import src.colorclash.utils.AudioManager;
+import colorclash.view.MainFrame;
+import colorclash.utils.AudioManager;
 
 import javax.swing.BorderFactory;
 import javax.swing.UIManager;

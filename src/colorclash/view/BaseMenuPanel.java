@@ -1,7 +1,7 @@
-package src.colorclash.view;
+package colorclash.view;
 
-import src.colorclash.model.GameModel;
-import src.colorclash.model.Star;
+import colorclash.model.GameModel;
+import colorclash.model.Star;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

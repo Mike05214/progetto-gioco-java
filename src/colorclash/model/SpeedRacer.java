@@ -1,9 +1,9 @@
-package src.colorclash.model;
+package colorclash.model;
 
 import java.awt.geom.Path2D;
 import java.awt.Shape;
 
-import src.colorclash.utils.Config;
+import colorclash.utils.Config;
 
 public class SpeedRacer extends Obstacle {
 

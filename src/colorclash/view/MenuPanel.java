@@ -1,4 +1,4 @@
-package src.colorclash.view;
+package colorclash.view;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -11,9 +11,9 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.border.Border;
 
-import src.colorclash.model.GameModel;
-import src.colorclash.utils.AudioManager;
-import src.colorclash.utils.SaveManager;
+import colorclash.model.GameModel;
+import colorclash.utils.AudioManager;
+import colorclash.utils.SaveManager;
 
 import java.io.File;//DOC: An abstract representation of file and directory pathnames.
 

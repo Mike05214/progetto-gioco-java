@@ -1,4 +1,4 @@
-package src.colorclash.model;
+package colorclash.model;
 
 public class FloatingScore {
 

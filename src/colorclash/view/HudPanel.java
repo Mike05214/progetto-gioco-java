@@ -1,4 +1,4 @@
-package src.colorclash.view;
+package colorclash.view;
 
 import java.net.URL;
 

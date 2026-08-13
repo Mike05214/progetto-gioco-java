@@ -1,4 +1,4 @@
-package src.colorclash.utils;
+package colorclash.utils;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -15,12 +15,12 @@ import java.net.URISyntaxException;
 
 import java.util.List;
 
-import src.colorclash.model.Player;
-import src.colorclash.model.GameModel;
-import src.colorclash.model.Obstacle;
-import src.colorclash.model.SinusoidalMadness;
-import src.colorclash.model.SpeedRacer;
-import src.colorclash.model.StandardObstacle;
+import colorclash.model.Player;
+import colorclash.model.GameModel;
+import colorclash.model.Obstacle;
+import colorclash.model.SinusoidalMadness;
+import colorclash.model.SpeedRacer;
+import colorclash.model.StandardObstacle;
 
 public class SaveManager {
     // costanti

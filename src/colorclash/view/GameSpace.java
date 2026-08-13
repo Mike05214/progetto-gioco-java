@@ -1,11 +1,11 @@
-package src.colorclash.view;
+package colorclash.view;
 
-import src.colorclash.model.GameModel;
-import src.colorclash.model.Obstacle;
-import src.colorclash.model.Particle;
-import src.colorclash.model.Player;
-import src.colorclash.model.Star;
-import src.colorclash.model.FloatingScore;
+import colorclash.model.GameModel;
+import colorclash.model.Obstacle;
+import colorclash.model.Particle;
+import colorclash.model.Player;
+import colorclash.model.Star;
+import colorclash.model.FloatingScore;
 
 import java.awt.GridBagLayout;
 import java.awt.Dimension;

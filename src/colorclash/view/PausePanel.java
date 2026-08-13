@@ -1,8 +1,8 @@
-package src.colorclash.view;
+package colorclash.view;
 
-import src.colorclash.model.GameModel;
-import src.colorclash.utils.AudioManager;
-import src.colorclash.utils.SaveManager;
+import colorclash.model.GameModel;
+import colorclash.utils.AudioManager;
+import colorclash.utils.SaveManager;
 
 import java.awt.Color;
 import java.awt.Dimension;

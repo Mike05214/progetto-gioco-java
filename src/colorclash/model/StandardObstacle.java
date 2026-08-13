@@ -1,9 +1,9 @@
-package src.colorclash.model;
+package colorclash.model;
 
 import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
 
-import src.colorclash.utils.Config;
+import colorclash.utils.Config;
 
 public class StandardObstacle extends Obstacle {
     

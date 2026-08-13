@@ -1,4 +1,4 @@
-package src.colorclash.model;
+package colorclash.model;
 
 import java.awt.Shape;
 
