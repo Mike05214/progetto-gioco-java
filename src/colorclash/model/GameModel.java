@@ -25,13 +25,12 @@ public class GameModel {
     private final double SPEED_PHASE_MULTIPLIER = Config.getInstance().getDoubleProperty("speed_phase_multiplier");
     private final double SPEEDRACER_MULTIPLIER = Config.getInstance().getDoubleProperty("speed_racer_multiplier");
     private final int SPAWN_INTERVAL_MS = Config.getInstance().getIntProperty("obstacle_spawn_interval_ms");
-    private final int MAX_INVULN_TIME_MS = 1000; 
-    private final int DEFAULT_SCORE_GAIN = 100; 
+    private final int MAX_INVULN_TIME_MS = 1000;
+    private final int DEFAULT_SCORE_GAIN = 100;
     private final int MAX_CHANCE = 100;
     private final int SPEEDRACER_CHANCE_PHASE_2 = 30;
     private final int SPEEDRACER_CHANCE_PHASE_3 = 40;
     private final int SINUSOIDALMADNESS_CHANCE = 15;
-    private final int MIN_PARTICLES = 5; 
     private final int MAX_PARTICLES = 200;
     private final int EXPLOSION_OFFSET = 20; // per alzare il centro esplosione
     private final int MAX_LIVES = 3;
@@ -209,7 +208,7 @@ public class GameModel {
         double randomX = random.nextDouble(safeMinX, safeMaxX);
 
         obs.setX(randomX);
-        obs.setStartX(randomX); 
+        obs.setStartX(randomX);
         obs.setY(startY);
         obs.setFallSpeed(speed);
         obs.setColorId(colorId);
@@ -267,7 +266,6 @@ public class GameModel {
         }
     }// fine spawnRandomEnemy
 
-
     private void checkDifficultyProgression(int currentScore) {
         if (currentScore >= SCORE_PHASE_2 && currentPhase == 1) {
             currentPhase = 2;
@@ -320,39 +318,41 @@ public class GameModel {
     private void checkCollisions() {
         Hitbox playerHitbox = player.getHitbox();
 
-        for (int i = 0; i < allEnemies.size(); i++) {
-            Obstacle obs = allEnemies.get(i);
-
-            if (!obs.isActive()) {
+        for (Obstacle obs : allEnemies) {
+            if (!obs.isActive() || !CollisionChecker.checkCollision(playerHitbox, obs.getHitbox())) {
                 continue;
             }
 
-            Hitbox obsHitbox = obs.getHitbox();
-
-            // Richiamo della classe separata CollisionChecker
-            if (CollisionChecker.checkCollision(playerHitbox, obsHitbox)) {
-
-                if (player.getColorId() == obs.getColorId()) {
-                    AudioManager.getInstance().playSoundEffect("hit.wav");
-                    createExplosion(obs.getX(), obs.getY() - EXPLOSION_OFFSET, obs.getColorId());
-                    floatingScores.add(new FloatingScore(obs.getX(), obs.getY(), obs.getPoints()));
-                    addScore(obs.getPoints());
-                    obs.setActive(false);
-                    obs.setY(-2000);
-
-                } else {
-
-                    if (!isInvulnerable) {
-                        decreaseLives();
-                        if (!isGameOver) {
-                            AudioManager.getInstance().playSoundEffect("hurt.wav");
-                        }
-                        isInvulnerable = true;
-                    }
-                }
+            // 2. Logica piatta e leggibile
+            if (player.getColorId() == obs.getColorId()) {
+                handlePositiveCollision(obs);
+            } else {
+                handleNegativeCollision();
             }
         }
     }// fine checkCollisions
+
+    private void handlePositiveCollision(Obstacle obs) {
+        AudioManager.getInstance().playSoundEffect("hit.wav");
+        createExplosion(obs.getX(), obs.getY() - EXPLOSION_OFFSET, obs.getColorId());
+        floatingScores.add(new FloatingScore(obs.getX(), obs.getY(), obs.getPoints()));
+        addScore(obs.getPoints());
+        obs.setActive(false);
+        obs.setY(-2000);
+    }// fine handlePositiveCollision
+
+    private void handleNegativeCollision() {
+        // Early exit per l'invulnerabilità
+        if (isInvulnerable) {
+            return;
+        }
+
+        decreaseLives();
+        if (!isGameOver) {
+            AudioManager.getInstance().playSoundEffect("hurt.wav");
+        }
+        isInvulnerable = true;
+    }// fine handle NegativeCollision
 
     private void resetScore() {
         score = 0;
