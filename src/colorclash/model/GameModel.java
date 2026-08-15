@@ -43,7 +43,10 @@ public class GameModel {
     private int lives;
     private boolean isGameOver;
     private boolean isInvulnerable = false;
+    private boolean isPlayerDead = false;
     private int score;
+
+    private int deathTimer = 0;
     private int scoreTimer = 0;
     private int invulnTimer = 0;
     private int spawnTimer = 0;
@@ -292,14 +295,34 @@ public class GameModel {
         checkDifficultyProgression(this.score);
     }// fine addScore
 
-    private void decreaseLives() {
-        if (lives > 0) {
-            lives--;
-        }
+    public void decreaseLives() {
+        lives--;
         if (lives <= 0) {
-            isGameOver = true;
+            isPlayerDead = true;
+            AudioManager.getInstance().stopBackgroundMusic();
         }
-    }// fine decreaseLives
+    }
+
+    private void createPlayerExplosion(double x, double y, int colorId) {
+        int particlesToSpawn = 25;
+        int spawned = 0;
+
+        // Calcola il centro esatto della navicella da cui far partire l'esplosione
+        double centerX = x + (player.getWidth() / 2.0);
+        double centerY = y + (player.getHeight() / 2.0);
+
+        for (Particle p : allParticles) {
+            if (!p.isActive()) {
+                p.spawn(centerX, centerY, colorId); // Ricicla la particella
+                p.setTriangle(true); // La fa diventare un triangolo
+
+                spawned++;
+                if (spawned >= particlesToSpawn) {
+                    break; // Ferma il ciclo quando abbiamo spawnato 40 particelle
+                }
+            }
+        }
+    }
 
     private void createExplosion(double x, double y, int colorId) {
         int particlesToSpawn = 15;
@@ -307,6 +330,7 @@ public class GameModel {
         for (Particle p : allParticles) {
             if (!p.isActive()) {
                 p.spawn(x, y, colorId);
+                p.setTriangle(false);
                 spawned++;
                 if (spawned >= particlesToSpawn) {
                     break;
@@ -342,17 +366,21 @@ public class GameModel {
     }// fine handlePositiveCollision
 
     private void handleNegativeCollision() {
-        // Early exit per l'invulnerabilità
-        if (isInvulnerable) {
+        if (isInvulnerable || isPlayerDead) {
             return;
         }
 
         decreaseLives();
-        if (!isGameOver) {
+
+        if (isPlayerDead) {
+            AudioManager.getInstance().playSoundEffect("hit.wav");
+            createPlayerExplosion(player.getX(), player.getY(), player.getColorId());
+            player.setY(-2000); // Sposta fuori schermo
+        } else {
             AudioManager.getInstance().playSoundEffect("hurt.wav");
+            isInvulnerable = true;
         }
-        isInvulnerable = true;
-    }// fine handle NegativeCollision
+    }
 
     private void resetScore() {
         score = 0;
@@ -394,34 +422,77 @@ public class GameModel {
         isInvulnerable = false;
     }// fine resetInvulnerability
 
+    private void resetDeathDelay() {
+        isPlayerDead = false;
+        deathTimer = 0;
+    }// fine resetInvulnerability
+
     // METODI PUBBLICI
 
     public void update(int panelWidth, int panelHeight) {
+        
+        // Early exit: se il gioco è finito, non fare nulla
         if (isGameOver) {
             return;
         }
+
+        // Se il giocatore è morto, gestisci solo l'animazione di fine partita ed esci
+        if (isPlayerDead) {
+            handleDeathSequence();
+            return;
+        }
+
+        // Altrimenti, esegui il normale game loop
+        updateGameplayCore(panelWidth, panelHeight);
+    }// fine update
+
+    // --- METODI HELPER ESTRATTI PER L'UPDATE ---
+
+    private void handleDeathSequence() {
+        deathTimer++;
+
+        // Continua a muovere solo le particelle dell'esplosione
+        for (Particle p : allParticles) {
+            if (p.isActive()) {
+                p.update();
+            }
+        }
+
+        // Quando il timer scade (circa 4 secondi a 60fps), chiudi la partita
+        if (deathTimer >= 125) {
+            triggerGameOver();
+        }
+    }// fine handleDeathSequence
+
+    private void triggerGameOver() {
+        isGameOver = true;
+        AudioManager.getInstance().playSoundEffect("game_over.wav");
+
+        if (score > saveManager.getHighscore()) {
+            saveManager.writeHighscore(score);
+        }
+    }// fine triggerGameOver
+
+    private void updateGameplayCore(int panelWidth, int panelHeight) {
         invulnerabilityHandler();
+
         player.update();
         player.constrainX(MIN_X, panelWidth);
         player.constrainY(MIN_Y, panelHeight);
+
         spawningHandler(panelWidth);
         updateEnemies(panelHeight);
+
         updateParticles();
         updateFloatingScore();
+        updateStars(panelWidth, panelHeight);
+
         checkCollisions();
         updateSurvivalScore();
-        updateStars(panelWidth, panelHeight);
-        if (isGameOver) {
-            AudioManager.getInstance().stopBackgroundMusic();
-            AudioManager.getInstance().playSoundEffect("game_over.wav");
-
-            if (score > saveManager.getHighscore()) {
-                saveManager.writeHighscore(score);
-            }
-        }
-    }// fine update
+    }// fine updateGameplayCore
 
     public void resetGame() {
+        resetDeathDelay();
         getPlayer().resetToInitialSettings(getStartX(), getStartY(), getStartColorId());
         resetScore();
         resetObstacles();
@@ -508,6 +579,10 @@ public class GameModel {
 
     public int getHighscore() {
         return saveManager.getHighscore();
+    }
+
+    public boolean isPlayerDead() {
+        return isPlayerDead;
     }
 
     // setters del GameModel

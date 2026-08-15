@@ -15,6 +15,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.BorderFactory;
 
 import javax.imageio.ImageIO;
@@ -70,9 +71,21 @@ public class HudPanel extends JPanel {
     private void initCenterPanel() {
         JPanel centerPanel = new JPanel();
         centerPanel.setOpaque(false);
-        scoreLabel = new JLabel("SCORE:   0");
+        
+        scoreLabel = new JLabel("SCORE:    0");
         scoreLabel.setForeground(Color.BLACK);
         scoreLabel.setFont(new Font("Impact", Font.PLAIN, SCORE_LABEL_FONT_SIZE));
+        
+        // --- MODIFICHE PER BLOCCARE LA SCRITTA ---
+        // 1. Impostiamo una dimensione fissa (larghezza 200, altezza 50).
+        // Se il font è molto grande e i numeri vengono tagliati, aumenta il 200.
+        scoreLabel.setPreferredSize(new Dimension(190, 25));
+        
+        // 2. Ancoriamo il testo a sinistra dentro la sua "scatola" fissa.
+        // In questo modo la 'S' di SCORE non si muoverà di un millimetro.
+        scoreLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        // -----------------------------------------
+        
         centerPanel.add(scoreLabel);
         add(centerPanel, BorderLayout.CENTER);
     }// fine initCenterPanel

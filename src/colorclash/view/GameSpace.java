@@ -3,7 +3,6 @@ package colorclash.view;
 import colorclash.model.GameModel;
 import colorclash.model.Obstacle;
 import colorclash.model.Particle;
-import colorclash.model.Player;
 import colorclash.model.Star;
 import colorclash.model.FloatingScore;
 
@@ -12,6 +11,7 @@ import java.awt.Dimension;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -93,16 +93,33 @@ public class GameSpace extends JPanel {
 
     private void drawParticles(Graphics2D g2d) {
         Rectangle2D.Double particleRect = new Rectangle2D.Double();
+        Path2D.Double triangle = new Path2D.Double();
 
         for (Particle p : model.getParticles()) {
-            if (p.isActive()) {
-                int colorId = p.getColorId();
-                Color baseColor = colorPalette[colorId];
-                g2d.setColor(new Color(baseColor.getRed(), baseColor.getGreen(), baseColor.getBlue(), p.getAlpha()));
-                particleRect.setRect(p.getX(),
-                        p.getY(),
-                        p.getSize(),
-                        p.getSize());
+
+            // Early continue: se la particella è inattiva, passa subito alla successiva
+            if (!p.isActive()) {
+                continue;
+            }
+
+            // 1. Impostazione Colore e Trasparenza
+            int colorId = p.getColorId();
+            Color baseColor = colorPalette[colorId];
+            g2d.setColor(new Color(baseColor.getRed(), baseColor.getGreen(), baseColor.getBlue(), p.getAlpha()));
+
+            // 2. Disegno della Forma (Triangolo o Rettangolo)
+            if (p.isTriangle()) {
+                double s = p.getSize();
+                triangle.reset();
+                triangle.moveTo(p.getX(), p.getY() - s);
+                triangle.lineTo(p.getX() - s, p.getY() + s);
+                triangle.lineTo(p.getX() + s, p.getY() + s);
+                triangle.closePath();
+
+                g2d.fill(triangle);
+            } else {
+                particleRect.setRect(p.getX(), p.getY(), p.getSize(), p.getSize());
+
                 g2d.fill(particleRect);
             }
         }
@@ -117,17 +134,21 @@ public class GameSpace extends JPanel {
     }// fine drawFloatingScore
 
     private void drawPlayer(Graphics2D g2d) {
-        boolean shouldDraw = true;
 
-        if (model.isInvulnerable() && !forceDrawPlayer) {
+        if (model.isPlayerDead()) {
+            return; // Nasconde la navicella e lo scudo
+        }
+        boolean drawShipBody = true;
+        boolean isInvuln = model.isInvulnerable();
+
+        if (isInvuln && !forceDrawPlayer) {
             if (model.getInvulnTimer() % 150 < 75) {
-                shouldDraw = false;
+                drawShipBody = false;
             }
         }
 
-        if (shouldDraw) {
-            PlayerRenderer.render(g2d, model.getPlayer(), colorPalette[model.getPlayer().getColorId()]);
-        }
+        PlayerRenderer.render(g2d, model.getPlayer(), colorPalette[model.getPlayer().getColorId()], isInvuln,
+                drawShipBody);
     }// fine drawPlayer
 
     private void drawObstacles(Graphics2D g2d) {

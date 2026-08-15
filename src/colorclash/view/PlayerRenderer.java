@@ -6,29 +6,79 @@ import colorclash.utils.Config;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Path2D;
+import java.awt.GradientPaint;
+import java.awt.RadialGradientPaint;
+import java.awt.BasicStroke;
 
 public class PlayerRenderer {
 
-    // 1. CACHE DELLA FORMA
     private static final Path2D.Double PLAYER_SHAPE = createPlayerShape();
-    
 
-    public static void render(Graphics2D g2d, Player player, Color playerColor) {
-    if (player.isInvulnerable() && (System.currentTimeMillis() % 200 < 100)) {
-        return; 
-    }
-    g2d.setColor(playerColor); // Usa il colore passato da GameSpace
-    g2d.translate(player.getX(), player.getY());
-    g2d.fill(PLAYER_SHAPE);
-    g2d.translate(-player.getX(), -player.getY());
+    public static void render(Graphics2D g2d, Player player, Color playerColor, boolean isInvulnerable,
+            boolean drawShipBody) {
+        int w = player.getWidth();
+        int h = player.getHeight();
+
+        g2d.translate(player.getX(), player.getY());
+
+        // 1. Effetto Scudo di Invulnerabilità (disegnato SEMPRE se isInvulnerable è
+        // true)
+        if (isInvulnerable) {
+            int margin = 15;
+            int shieldW = w + margin * 2;
+            int shieldH = h + margin * 2;
+
+            RadialGradientPaint shieldPaint = new RadialGradientPaint(
+                    w / 2f, h / 2f, shieldW / 2f,
+                    new float[] { 0.7f, 1f },
+                    new Color[] { new Color(255, 255, 255, 0), new Color(0, 255, 255, 150) });
+            g2d.setPaint(shieldPaint);
+            g2d.fillOval(-margin, -margin, shieldW, shieldH);
+
+            g2d.setColor(new Color(0, 255, 255, 200));
+            g2d.setStroke(new BasicStroke(2f));
+            g2d.drawOval(-margin, -margin, shieldW, shieldH);
+        }
+
+        // 2. Se in questo frame la navicella non deve vedersi (lampeggio), ci fermiamo
+        // qui
+        if (!drawShipBody) {
+            g2d.translate(-player.getX(), -player.getY());
+            return;
+        }
+
+        // --- Da qui in poi si disegna il corpo della navicella ---
+
+        // 3. Ombra proiettata a terra
+        g2d.translate(5, 5);
+        g2d.setColor(new Color(0, 0, 0, 150));
+        g2d.fill(PLAYER_SHAPE);
+        g2d.translate(-5, -5);
+
+        // 4. Riempimento base con gradiente 3D
+        Color darkerColor = playerColor.darker().darker();
+        GradientPaint gp = new GradientPaint(0, 0, playerColor, 0, h, darkerColor);
+        g2d.setPaint(gp);
+        g2d.fill(PLAYER_SHAPE);
+
+        // 5. Bordo riflettente
+        g2d.setColor(new Color(255, 255, 255, 200));
+        g2d.setStroke(new BasicStroke(2f));
+        g2d.draw(PLAYER_SHAPE);
+
+        // 6. Abitacolo
+        g2d.setColor(new Color(180, 230, 255, 220));
+        g2d.fillOval((int) (w * 0.45), (int) (h * 0.35), (int) (w * 0.1), (int) (h * 0.2));
+
+        // Ripristino finale
+        g2d.translate(-player.getX(), -player.getY());
     }
 
     private static Path2D.Double createPlayerShape() {
         int width = Config.getInstance().getIntProperty("player_width");
         int height = Config.getInstance().getIntProperty("player_height");
-        
+
         Path2D.Double navicella = new Path2D.Double();
-        // Le coordinate sono state slegate da X e Y, partendo da 0
         navicella.moveTo(width * 0.5, 0);
         navicella.lineTo(width * 0.6, height * 0.3);
         navicella.lineTo(width, height * 0.8);
@@ -40,7 +90,7 @@ public class PlayerRenderer {
         navicella.lineTo(0, height * 0.8);
         navicella.lineTo(width * 0.4, height * 0.3);
         navicella.closePath();
-        
+
         return navicella;
     }
 }

@@ -10,12 +10,11 @@ public class Player {
     private long lastColorChange = 0;
     private long currentTime = 0;
     private int colorId;
-    private boolean isInvulnerable;
     private boolean movingUp, movingDown, movingLeft, movingRight;
-    private Hitbox hitbox; // Sostituisce java.awt.Shape
+    private Hitbox hitbox; 
 
     //costanti
-    private final double SCALE_FACTOR = 0.7071;// 1/sqtr(2)
+    private final double SCALE_FACTOR = 0.7071;
     private final long COLOR_COOLDOWN = Config.getInstance().getIntProperty("color_cooldown");
     private final double PLAYER_SPEED = Config.getInstance().getDoubleProperty("player_speed"); 
     private final int PLAYER_WIDTH = Config.getInstance().getIntProperty("player_width");
@@ -26,14 +25,25 @@ public class Player {
         x = startX;
         y = startY;
         colorId = startColorId;
-        isInvulnerable = false;
         
         this.hitbox = new Hitbox();
-        // Approssimazione della navicella spaziale con 4 rettangoli logici sovrapposti
-        hitbox.addRect(PLAYER_WIDTH * 0.45, 0, PLAYER_WIDTH * 0.10, PLAYER_HEIGHT * 0.30); // Punta (stretta in alto)
-        hitbox.addRect(PLAYER_WIDTH * 0.40, PLAYER_HEIGHT * 0.30, PLAYER_WIDTH * 0.20, PLAYER_HEIGHT * 0.30); // Corpo centrale
-        hitbox.addRect(0, PLAYER_HEIGHT * 0.60, PLAYER_WIDTH, PLAYER_HEIGHT * 0.20); // Ali laterali (massima larghezza)
-        hitbox.addRect(PLAYER_WIDTH * 0.30, PLAYER_HEIGHT * 0.80, PLAYER_WIDTH * 0.40, PLAYER_HEIGHT * 0.20); // Motori inferiori
+        
+        // 1. Punta anteriore
+        hitbox.addRect(PLAYER_WIDTH * 0.45, 0, PLAYER_WIDTH * 0.10, PLAYER_HEIGHT * 0.15);
+        // 2. Muso superiore
+        hitbox.addRect(PLAYER_WIDTH * 0.40, PLAYER_HEIGHT * 0.15, PLAYER_WIDTH * 0.20, PLAYER_HEIGHT * 0.15);
+        // 3. Attacco ali alto
+        hitbox.addRect(PLAYER_WIDTH * 0.32, PLAYER_HEIGHT * 0.30, PLAYER_WIDTH * 0.36, PLAYER_HEIGHT * 0.15);
+        // 4. Centro fusoliera / ali medie
+        hitbox.addRect(PLAYER_WIDTH * 0.20, PLAYER_HEIGHT * 0.45, PLAYER_WIDTH * 0.60, PLAYER_HEIGHT * 0.15);
+        // 5. Ali basse
+        hitbox.addRect(PLAYER_WIDTH * 0.10, PLAYER_HEIGHT * 0.60, PLAYER_WIDTH * 0.80, PLAYER_HEIGHT * 0.10);
+        // 6. Punte esterne delle ali
+        hitbox.addRect(0, PLAYER_HEIGHT * 0.70, PLAYER_WIDTH, PLAYER_HEIGHT * 0.10);
+        // 7. Base motori posteriore
+        hitbox.addRect(PLAYER_WIDTH * 0.30, PLAYER_HEIGHT * 0.80, PLAYER_WIDTH * 0.40, PLAYER_HEIGHT * 0.20);
+        
+        hitbox.updatePosition(this.x, this.y);
     }// fine costruttore
 
 
@@ -65,7 +75,6 @@ public class Player {
             x += speedVector;
         }
         
-        // Aggiorna le coordinate della hitbox logica
         hitbox.updatePosition(this.x, this.y);
     }// fine update
 
@@ -98,7 +107,7 @@ public class Player {
 
     public void switchColor(int availableColorsCount, boolean forward) {
         if (forward) {
-            colorId = (colorId + 1) % availableColorsCount; // se è in avanti aumenta verso destra
+            colorId = (colorId + 1) % availableColorsCount; 
         } else {
             colorId = (colorId - 1 + availableColorsCount) % availableColorsCount;
         }
@@ -109,7 +118,7 @@ public class Player {
         x = startX;
         y = startY;
         colorId = startColorId;
-        hitbox.updatePosition(this.x, this.y); // Forza l'aggiornamento della hitbox al reset
+        hitbox.updatePosition(this.x, this.y); 
     }// fine resetToInitialSettings
 
     public void resetMovementFlags() {
@@ -127,7 +136,7 @@ public class Player {
     // metodi getters per il player
 
     public double getX() {
-        return  x;
+        return x;
     }
 
     public double getY() {
@@ -146,15 +155,7 @@ public class Player {
         return colorId;
     }
 
-    public boolean isInvulnerable() {
-        return isInvulnerable;
-    }
-
     // metodi setters per il player
-    
-    public void setInvulnerable(boolean invulnerable) {
-        this.isInvulnerable = invulnerable;
-    }
 
     public void setMovingUp(boolean movingUp) {
         this.movingUp = movingUp;

@@ -64,6 +64,10 @@ public class GamePanel extends JPanel {
                     newColorUnlockedCountdown();
                 }
 
+                if(model.isPlayerDead()){
+                    resetGamePanel();
+                }
+                
                 if (model.isGameOver()) {
                     hudPanel.getPauseButton().setEnabled(false);
                     hudPanel.getScoreLabel().setVisible(false);
