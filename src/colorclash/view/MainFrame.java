@@ -3,6 +3,7 @@ package colorclash.view;
 import colorclash.utils.AudioManager;
 import colorclash.utils.Config;
 import colorclash.model.GameModel;
+import colorclash.model.IGameModel;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -25,14 +26,15 @@ public class MainFrame extends JFrame {
     private GamePanel gamePanel;
     private MenuPanel menuPanel;
     private PausePanel pausePanel;
-    private GameModel model;
+    private IGameModel model; // <-- USO L'INTERFACCIA
 
     // costanti
     private final int FRAME_WIDTH = Config.getInstance().getIntProperty("frame_width");
     private final int FRAME_HEIGHT = Config.getInstance().getIntProperty("frame_height");
 
     public MainFrame() {
-        model = GameModel.getInstance();
+        // UNICO PUNTO IN CUI SI CHIAMA IL SINGLETON
+        model = GameModel.getInstance(); 
         initialSettings();
         frameStructureBuilder();
     }// fine costruttore
@@ -89,9 +91,12 @@ public class MainFrame extends JFrame {
         Container contPane = getContentPane();
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
-        menuPanel = new MenuPanel(this);
-        gamePanel = new GamePanel(this);
-        pausePanel = new PausePanel(this);
+        
+        // INIEZIONE DEL MODEL NEI PANNELLI
+        menuPanel = new MenuPanel(this, model);
+        gamePanel = new GamePanel(this, model);
+        pausePanel = new PausePanel(this, model);
+        
         mainPanel.add(menuPanel, "MENU");
         mainPanel.add(gamePanel, "GAME");
         mainPanel.add(pausePanel, "PAUSE");

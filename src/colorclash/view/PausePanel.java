@@ -1,6 +1,6 @@
 package colorclash.view;
 
-import colorclash.model.GameModel;
+import colorclash.model.IGameModel;
 import colorclash.utils.AudioManager;
 import colorclash.utils.SaveManager;
 
@@ -16,7 +16,7 @@ import javax.swing.JButton;
 public class PausePanel extends BaseMenuPanel {
 
     // variabili d'istanza
-    private GameModel model;
+    private IGameModel model; // <-- USO L'INTERFACCIA
     private JButton backToMenuButton;
     private JButton saveAndExitButton;
     private JButton resumeButton;
@@ -26,9 +26,9 @@ public class PausePanel extends BaseMenuPanel {
     private final int ROW_1 = 1;
     private final int ROW_2 = 2;
 
-    public PausePanel(MainFrame mainFrame) {
-        super(mainFrame);
-        model = GameModel.getInstance();
+    public PausePanel(MainFrame mainFrame, IGameModel injectedModel) {
+        super(mainFrame, injectedModel);
+        this.model = injectedModel;
         setBackground(new Color(10, 10, 20));
         initTitleLabel("PAUSE");
         initButtons();

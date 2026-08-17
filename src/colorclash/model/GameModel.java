@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class GameModel {
+public class GameModel implements IGameModel {
 
     // costanti
     private final double START_X = Config.getInstance().getDoubleProperty("player_start_x");
@@ -295,14 +295,6 @@ public class GameModel {
         checkDifficultyProgression(this.score);
     }// fine addScore
 
-    public void decreaseLives() {
-        lives--;
-        if (lives <= 0) {
-            isPlayerDead = true;
-            AudioManager.getInstance().stopBackgroundMusic();
-        }
-    }
-
     private void createPlayerExplosion(double x, double y, int colorId) {
         int particlesToSpawn = 25;
         int spawned = 0;
@@ -427,8 +419,18 @@ public class GameModel {
         deathTimer = 0;
     }// fine resetInvulnerability
 
-    // METODI PUBBLICI
+    // METODI PUBBLICI OVERRIDE DA IGameModel
 
+    @Override
+    public void decreaseLives() {
+        lives--;
+        if (lives <= 0) {
+            isPlayerDead = true;
+            AudioManager.getInstance().stopBackgroundMusic();
+        }
+    }
+
+    @Override
     public void update(int panelWidth, int panelHeight) {
         
         // Early exit: se il gioco è finito, non fare nulla
@@ -491,6 +493,7 @@ public class GameModel {
         updateSurvivalScore();
     }// fine updateGameplayCore
 
+    @Override
     public void resetGame() {
         resetDeathDelay();
         getPlayer().resetToInitialSettings(getStartX(), getStartY(), getStartColorId());
@@ -504,6 +507,7 @@ public class GameModel {
         resetFloatingScore();
     }// fine resetGame
 
+    @Override
     public void autoSave() {
         if (!this.isGameOver) {
             saveManager.writeGameState(this.score, this.lives, this.currentPhase, this.currentFallSpeed,
@@ -511,98 +515,121 @@ public class GameModel {
         }
     }// fine autoSave
 
-    // getters del GameModel
+    // getters del GameModel OVERRIDE
 
+    @Override
     public boolean isInvulnerable() {
         return isInvulnerable;
     }// fine isInvulnerable
-
+    
+    @Override
     public int getInvulnTimer() {
         return invulnTimer;
     }
 
+    @Override
     public Player getPlayer() {
         return player;
     }
 
+    @Override
     public List<Obstacle> getEnemies() {
         return allEnemies;
     }
 
+    @Override
     public int getScore() {
         return this.score;
     }
 
+    @Override
     public int getLives() {
         return lives;
     }
 
+    @Override
     public boolean isGameOver() {
         return isGameOver;
     }
 
+    @Override
     public double getStartX() {
         return this.START_X;
     }
 
+    @Override
     public double getStartY() {
         return this.START_Y;
     }
 
+    @Override
     public int getStartColorId() {
         return this.START_COLOR_ID;
     }
 
+    @Override
     public int getAvailableColorsCount() {
         return this.availableColorsCount;
     }
 
+    @Override
     public int getPhase() {
         return this.currentPhase;
     }
 
+    @Override
     public double getCurrentSpeed() {
         return this.currentFallSpeed;
     }
 
+    @Override
     public List<Particle> getParticles() {
         return allParticles;
     }
 
+    @Override
     public List<FloatingScore> getFloatingScores() {
         return this.floatingScores;
     }
 
+    @Override
     public List<Star> getStars() {
         return this.stars;
     }
 
+    @Override
     public int getHighscore() {
         return saveManager.getHighscore();
     }
 
+    @Override
     public boolean isPlayerDead() {
         return isPlayerDead;
     }
 
-    // setters del GameModel
+    // setters del GameModel OVERRIDE
 
+    @Override
     public void setScore(int score) {
         this.score = score;
     }
 
+    @Override
     public void setLives(int lives) {
         this.lives = lives;
     }
 
+    @Override
     public void setPhase(int phase) {
         this.currentPhase = phase;
     }
 
+    @Override
     public void setCurrentSpeed(double currentSpeed) {
         this.currentFallSpeed = currentSpeed;
     }
 
+    @Override
     public void setAvaibleColors(int avaibleColors) {
         this.availableColorsCount = avaibleColors;
     }

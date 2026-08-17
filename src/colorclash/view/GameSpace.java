@@ -1,6 +1,6 @@
 package colorclash.view;
 
-import colorclash.model.GameModel;
+import colorclash.model.IGameModel;
 import colorclash.model.Obstacle;
 import colorclash.model.Particle;
 import colorclash.model.Star;
@@ -27,7 +27,7 @@ public class GameSpace extends JPanel {
     // variabili d'istanza
     private JButton restartButton;
     private boolean forceDrawPlayer = false;
-    private GameModel model;
+    private IGameModel model; // <-- USO L'INTERFACCIA
     private Color[] colorPalette = {
             Color.RED,
             Color.GREEN,
@@ -50,9 +50,9 @@ public class GameSpace extends JPanel {
     private final int GAME_OVER_HEIGHT_OFFSET = 80;
     private final int GAME_OVER_SCORE_HEIGHT_OFFSET = 35;
 
-    public GameSpace() {
+    public GameSpace(IGameModel injectedModel) {
         setBackground(new Color(10, 10, 20));
-        model = GameModel.getInstance();
+        this.model = injectedModel; // <-- INIEZIONE
         setLayout(new GridBagLayout());
         restartButton = new JButton("BACK TO MENU");
         restartButton.setFont(new Font("Impact", Font.PLAIN, RESTART_BUTTON_FONT_SIZE));

@@ -1,6 +1,6 @@
 package colorclash.view;
 
-import colorclash.model.GameModel;
+import colorclash.model.IGameModel;
 import colorclash.utils.AudioManager;
 
 import java.awt.BorderLayout;
@@ -26,7 +26,7 @@ public class GamePanel extends JPanel {
     private int lastPhase;
     private int currentPhase;
     private Timer alertTimer;
-    private GameModel model;
+    private IGameModel model; // <-- USO L'INTERFACCIA
 
     // costanti
     private final int DELAY = 8;
@@ -34,8 +34,8 @@ public class GamePanel extends JPanel {
     private final int COUNT_LEFT = 3;
     private final int NEW_COLOR_LABEL_VISIBLE_DELAY = 500;
 
-    public GamePanel(MainFrame mainframe) {
-        model = GameModel.getInstance();
+    public GamePanel(MainFrame mainframe, IGameModel injectedModel) {
+        this.model = injectedModel; // <-- INIEZIONE
         frame = mainframe;
         lastPhase = model.getPhase();
         setLayout(new BorderLayout());
@@ -80,7 +80,7 @@ public class GamePanel extends JPanel {
     }// fine initGameLoop
 
     private void initGameSpace() {
-        gameSpace = new GameSpace();
+        gameSpace = new GameSpace(model); // <-- PASSO IL MODEL AL GAMESPACE
         gameSpace.getRestarButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

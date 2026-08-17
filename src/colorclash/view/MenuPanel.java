@@ -11,7 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.border.Border;
 
-import colorclash.model.GameModel;
+import colorclash.model.IGameModel;
 import colorclash.utils.AudioManager;
 import colorclash.utils.SaveManager;
 
@@ -24,7 +24,7 @@ public class MenuPanel extends BaseMenuPanel {
     private JButton playButton;
     private JButton deleteSaveButton;
     private JButton soundButton;
-    private GameModel model;
+    private IGameModel model; // <-- USO L'INTERFACCIA
 
     // costanti
     private final int TEXT_LABEL_SIZE = 18;
@@ -40,9 +40,9 @@ public class MenuPanel extends BaseMenuPanel {
     private final int HI_LABEL_LINE_THICKNESS = 2;
     private final int SOUND_BUTTON_FONT_SIZE = 25;
 
-    public MenuPanel(MainFrame mainFrame) {
-        super(mainFrame);
-        model = GameModel.getInstance();
+    public MenuPanel(MainFrame mainFrame, IGameModel injectedModel) {
+        super(mainFrame, injectedModel);
+        this.model = injectedModel;
         setBackground(new Color(10, 10, 20));
         initButtons();
         initHighScoreLabel();

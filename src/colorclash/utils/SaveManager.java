@@ -16,7 +16,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 import colorclash.model.Player;
-import colorclash.model.GameModel;
+import colorclash.model.IGameModel; // <-- IMPORTA L'INTERFACCIA
 import colorclash.model.Obstacle;
 import colorclash.model.SinusoidalMadness;
 import colorclash.model.SpeedRacer;
@@ -173,7 +173,8 @@ public class SaveManager {
         }
     }// fine deleteGameState
 
-    public boolean loadGameState(GameModel model) {
+    // <-- MODIFICA: Ora richiede l'interfaccia IGameModel
+    public boolean loadGameState(IGameModel model) {
         File file = new File(gameStatePath);
 
         if (!file.exists()) {
@@ -214,14 +215,16 @@ public class SaveManager {
 
     // METODI PRIVATI
 
-    private void resetEnemyPool(GameModel model) {
+    // <-- MODIFICA: Ora richiede IGameModel
+    private void resetEnemyPool(IGameModel model) {
         for (Obstacle obs : model.getEnemies()) {
             obs.setActive(false);
             obs.setY(-2000);
         }
     }
 
-    private void processSaveLine(String line, GameModel model) throws NumberFormatException {
+    // <-- MODIFICA: Ora richiede IGameModel
+    private void processSaveLine(String line, IGameModel model) throws NumberFormatException {
         String[] parts = line.split(":");
         if (parts.length < 2)
             return;
@@ -254,14 +257,16 @@ public class SaveManager {
         }
     }
 
-    private void loadPlayerData(String data, GameModel model) throws NumberFormatException {
+    // <-- MODIFICA: Ora richiede IGameModel
+    private void loadPlayerData(String data, IGameModel model) throws NumberFormatException {
         String[] playerData = data.split(";");
         model.getPlayer().setX(Double.valueOf(playerData[0]));
         model.getPlayer().setY(Double.valueOf(playerData[1]));
         model.getPlayer().setColorId(Integer.valueOf(playerData[2]));
     }
 
-    private void loadObstacleData(String data, GameModel model) throws NumberFormatException {
+    // <-- MODIFICA: Ora richiede IGameModel
+    private void loadObstacleData(String data, IGameModel model) throws NumberFormatException {
         String[] obsData = data.split(";");
 
         String type = obsData[0];

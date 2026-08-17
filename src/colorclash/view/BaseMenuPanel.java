@@ -1,6 +1,6 @@
 package colorclash.view;
 
-import colorclash.model.GameModel;
+import colorclash.model.IGameModel;
 import colorclash.model.Star;
 
 import java.awt.BorderLayout;
@@ -25,8 +25,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-
-
 public abstract class BaseMenuPanel extends JPanel {
 
     // costanti protette
@@ -43,12 +41,12 @@ public abstract class BaseMenuPanel extends JPanel {
 
     // variabili d'istanza
     protected JPanel centerPanel;
-    protected GameModel model;
+    protected IGameModel model; // <-- USO L'INTERFACCIA
     protected MainFrame frame;
 
-    public BaseMenuPanel(MainFrame mainFrame) {
+    public BaseMenuPanel(MainFrame mainFrame, IGameModel injectedModel) {
         frame = mainFrame;
-        model = GameModel.getInstance();
+        model = injectedModel; // <-- INIEZIONE
         setLayout(new BorderLayout());
         centerPanel = new JPanel(new GridBagLayout());
         centerPanel.setOpaque(false);
