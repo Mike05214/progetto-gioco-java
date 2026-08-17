@@ -19,6 +19,7 @@ public class GameModel implements IGameModel {
     private final int START_COLOR_ID = 0;
     private final double BASE_SPEED = Config.getInstance().getDoubleProperty("obstacle_base_speed");
     private final int TICK_TIME = 8;
+    private final int DEATH_DELAY_MS =1500;
     private final int SCORE_DELAY_MS = Config.getInstance().getIntProperty("score_delay_ms");
     private final int SCORE_PHASE_2 = Config.getInstance().getIntProperty("phase_2_score_threshold");
     private final int SCORE_PHASE_3 = Config.getInstance().getIntProperty("phase_3_score_threshold");
@@ -451,7 +452,7 @@ public class GameModel implements IGameModel {
     // --- METODI HELPER ESTRATTI PER L'UPDATE ---
 
     private void handleDeathSequence() {
-        deathTimer++;
+        deathTimer+=TICK_TIME;
 
         // Continua a muovere solo le particelle dell'esplosione
         for (Particle p : allParticles) {
@@ -461,7 +462,7 @@ public class GameModel implements IGameModel {
         }
 
         // Quando il timer scade (circa 4 secondi a 60fps), chiudi la partita
-        if (deathTimer >= 125) {
+        if (deathTimer >= DEATH_DELAY_MS) {
             triggerGameOver();
         }
     }// fine handleDeathSequence
