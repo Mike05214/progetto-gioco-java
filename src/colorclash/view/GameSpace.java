@@ -1,10 +1,13 @@
 package colorclash.view;
 
 import colorclash.model.IGameModel;
-import colorclash.model.Obstacle;
+import colorclash.model.LogicalRect;
 import colorclash.model.Particle;
 import colorclash.model.Star;
 import colorclash.model.FloatingScore;
+import colorclash.model.Hitbox;
+import colorclash.model.Obstacle;
+
 
 import java.awt.GridBagLayout;
 import java.awt.Dimension;
@@ -27,13 +30,14 @@ public class GameSpace extends JPanel {
     // variabili d'istanza
     private JButton restartButton;
     private boolean forceDrawPlayer = false;
-    private IGameModel model; // <-- USO L'INTERFACCIA
+    private IGameModel model;
     private Color[] colorPalette = {
             Color.RED,
             Color.GREEN,
             Color.CYAN,
             Color.ORANGE
     };
+    boolean debugMode = true;
 
     // costanti
     private final int RESTART_BUTTON_FONT_SIZE = 20;
@@ -81,6 +85,19 @@ public class GameSpace extends JPanel {
         showLegend(g2d);
         drawPlayer(g2d);
         drawObstacles(g2d);
+
+        if (debugMode) {
+            // Disegna la hitbox del Player
+            drawDebugHitbox(g2d, model.getPlayer().getHitbox());
+
+            // Disegna le hitbox degli Ostacoli attivi
+            for (Obstacle obs : model.getEnemies()) {
+                if (obs.isActive()) {
+                    drawDebugHitbox(g2d, obs.getHitbox());
+                }
+            }
+        }
+
         drawParticles(g2d);
         drawFloatingScore(g2d);
         if (model.isGameOver()) {
@@ -97,17 +114,14 @@ public class GameSpace extends JPanel {
 
         for (Particle p : model.getParticles()) {
 
-            // Early continue: se la particella è inattiva, passa subito alla successiva
             if (!p.isActive()) {
                 continue;
             }
 
-            // 1. Impostazione Colore e Trasparenza
             int colorId = p.getColorId();
             Color baseColor = colorPalette[colorId];
             g2d.setColor(new Color(baseColor.getRed(), baseColor.getGreen(), baseColor.getBlue(), p.getAlpha()));
 
-            // 2. Disegno della Forma (Triangolo o Rettangolo)
             if (p.isTriangle()) {
                 double s = p.getSize();
                 triangle.reset();
@@ -213,6 +227,21 @@ public class GameSpace extends JPanel {
             }
         }
     }// fine showLegend
+
+    private void drawDebugHitbox(Graphics2D g2d, Hitbox hitbox) {
+        // Colore rosso acceso e linea spessa 1 pixel
+        g2d.setColor(Color.RED);
+        g2d.setStroke(new BasicStroke(1f));
+
+        // Disegna il perimetro di ogni LogicalRect
+        for (LogicalRect rect : hitbox.getRectangles()) {
+            g2d.drawRect(
+                    (int) rect.getX(),
+                    (int) rect.getY(),
+                    (int) rect.getWidth(),
+                    (int) rect.getHeight()); 
+        }
+    }
 
     // getters di GameSpace
 

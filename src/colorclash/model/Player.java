@@ -28,19 +28,19 @@ public class Player {
         
         this.hitbox = new Hitbox();
         
-        // 1. Punta anteriore
+        // Punta anteriore
         hitbox.addRect(PLAYER_WIDTH * 0.45, 0, PLAYER_WIDTH * 0.10, PLAYER_HEIGHT * 0.15);
-        // 2. Muso superiore
+        // Muso superiore
         hitbox.addRect(PLAYER_WIDTH * 0.40, PLAYER_HEIGHT * 0.15, PLAYER_WIDTH * 0.20, PLAYER_HEIGHT * 0.15);
-        // 3. Attacco ali alto
+        // Attacco ali alto
         hitbox.addRect(PLAYER_WIDTH * 0.32, PLAYER_HEIGHT * 0.30, PLAYER_WIDTH * 0.36, PLAYER_HEIGHT * 0.15);
-        // 4. Centro fusoliera / ali medie
+        // Centro fusoliera / ali medie
         hitbox.addRect(PLAYER_WIDTH * 0.20, PLAYER_HEIGHT * 0.45, PLAYER_WIDTH * 0.60, PLAYER_HEIGHT * 0.15);
-        // 5. Ali basse
+        // Ali basse
         hitbox.addRect(PLAYER_WIDTH * 0.10, PLAYER_HEIGHT * 0.60, PLAYER_WIDTH * 0.80, PLAYER_HEIGHT * 0.10);
-        // 6. Punte esterne delle ali
+        // Punte esterne delle ali
         hitbox.addRect(0, PLAYER_HEIGHT * 0.70, PLAYER_WIDTH, PLAYER_HEIGHT * 0.10);
-        // 7. Base motori posteriore
+        // Base motori posteriore
         hitbox.addRect(PLAYER_WIDTH * 0.30, PLAYER_HEIGHT * 0.80, PLAYER_WIDTH * 0.40, PLAYER_HEIGHT * 0.20);
         
         hitbox.updatePosition(this.x, this.y);

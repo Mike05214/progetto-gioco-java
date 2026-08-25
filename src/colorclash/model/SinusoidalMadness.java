@@ -9,7 +9,6 @@ public class SinusoidalMadness extends Obstacle {
     protected static final int HEIGHT = 70;
     protected static final int AMPLITUDE = Config.getInstance().getIntProperty("sinusoidal_madness_amplitude");
     
-
     // costanti
     private final int COLOR_CHANGE_INTERVAL_MS = Config.getInstance().getIntProperty("sinusoidal_madness_color_change_interval_ms");
     private final int CURRENT_MAX_COLORS = 4;
@@ -28,15 +27,27 @@ public class SinusoidalMadness extends Obstacle {
         this.colorTimer = 0;
         this.setActive(false);
         
-        // Approssimazione della forma circolare con 5 rettangoli logici 
-        hitbox.addRect(WIDTH * 0.20, 0,             WIDTH * 0.60, HEIGHT * 0.20); // Fascia alta
-        hitbox.addRect(WIDTH * 0.05, HEIGHT * 0.20, WIDTH * 0.90, HEIGHT * 0.20); // Fascia medio-alta
-        hitbox.addRect(0,            HEIGHT * 0.40, WIDTH,        HEIGHT * 0.20); // Fascia centrale (massima)
-        hitbox.addRect(WIDTH * 0.05, HEIGHT * 0.60, WIDTH * 0.90, HEIGHT * 0.20); // Fascia medio-bassa
-        hitbox.addRect(WIDTH * 0.20, HEIGHT * 0.80, WIDTH * 0.60, HEIGHT * 0.20); // Fascia bassa
+        updateHitbox(); // Inizializza la hitbox dinamica
     }// fine costruttore
 
     //METODI PUBBLICI
+
+    /**
+     * Ricostruisce la hitbox circolare adattandola proporzionalmente 
+     * alla larghezza e altezza correnti.
+     */
+    public void updateHitbox() {
+        hitbox.getRectangles().clear();
+        hitbox.getOffsetX().clear();
+        hitbox.getOffsetY().clear();
+        
+        // Approssimazione della forma circolare con 5 rettangoli logici 
+        hitbox.addRect(width * 0.20, 0, width * 0.60, height * 0.20); // Fascia alta
+        hitbox.addRect(width * 0.05, height * 0.20, width * 0.90, height * 0.20); // Fascia medio-alta
+        hitbox.addRect(0, height * 0.40, width, height * 0.20); // Fascia centrale (massima)
+        hitbox.addRect(width * 0.05, height * 0.60, width * 0.90, height * 0.20); // Fascia medio-bassa
+        hitbox.addRect(width * 0.20, height * 0.80, width * 0.60, height * 0.20); // Fascia bassa
+    }
 
     @Override
     public void update() {
@@ -69,6 +80,6 @@ public class SinusoidalMadness extends Obstacle {
 
     // setters di SinusoidalMadness
     public void setStartX(double startX){
-        this.startX=startX;
+        this.startX = startX;
     }
 }// fine classe SinusoidalMadness

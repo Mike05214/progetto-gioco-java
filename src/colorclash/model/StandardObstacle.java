@@ -14,15 +14,25 @@ public class StandardObstacle extends Obstacle {
     public StandardObstacle() {
         super(0, -2000, 0, 0, MIN_SIZE, MIN_SIZE);
         this.setActive(false);
-        
-        // Il contorno rettangolare è descritto da un solo rettangolo logico
-        hitbox.addRect(0, 0, width, height);
+        updateHitbox(); // Usa il metodo per inizializzarla
     }// fine costruttore
 
     //METODI PUBBLICI
 
-    // getters di StandardObstacle
-    
+    /**
+     * Aggiorna o ricostruisce la hitbox in base alle dimensioni attuali dell'ostacolo.
+     */
+    public void updateHitbox() {
+        // Pulisce i rettangoli esistenti (supponendo che tu aggiunga un metodo clear() in Hitbox, 
+        // oppure puoi ricreare l'oggetto Hitbox se preferisci: this.hitbox = new Hitbox();)
+        hitbox.getRectangles().clear();
+        hitbox.getOffsetX().clear();
+        hitbox.getOffsetY().clear();
+        
+        // Aggiunge il rettangolo proporzionale alla dimensione corrente
+        hitbox.addRect(0, 0, width, height);
+    }
+
     @Override
     public int getPoints() {
         return STANDARD_OBSTACLE_POINTS;

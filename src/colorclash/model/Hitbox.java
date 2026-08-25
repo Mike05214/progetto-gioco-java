@@ -4,25 +4,44 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Hitbox {
-    private List<LogicalRect> rectangles = new ArrayList<>();
-    private List<Double> offsetX = new ArrayList<>();
-    private List<Double> offsetY = new ArrayList<>();
+    
+    //variabili d'istanza
+    private List<LogicalRect> rectangles;
+    private List<Double> offsetX;
+    private List<Double> offsetY;
+    
+    public Hitbox() {
+        this.rectangles = new ArrayList<>();
+        this.offsetX = new ArrayList<>();
+        this.offsetY = new ArrayList<>();
+    }// fine costruttore
 
-    // Aggiunge un rettangolo specificando la sua distanza relativa dall'ostacolo
+    
     public void addRect(double offX, double offY, double width, double height) {
         rectangles.add(new LogicalRect(0, 0, width, height));
         offsetX.add(offX);
         offsetY.add(offY);
-    }
+    }//fine addRect
 
-    // Aggiorna le coordinate fisiche di tutti i rettangoli quando l'ostacolo si muove
+    
     public void updatePosition(double baseX, double baseY) {
         for (int i = 0; i < rectangles.size(); i++) {
             rectangles.get(i).setPosition(baseX + offsetX.get(i), baseY + offsetY.get(i));
         }
+    }// fine updatePosition
+
+    //getters hitbox
+
+    public List<LogicalRect> getRectangles() {
+        return rectangles;
+    }
+    
+    public List<Double> getOffsetX() {
+        return offsetX;
     }
 
-    public List<LogicalRect> getRectangles() { 
-        return rectangles; 
+    public List<Double> getOffsetY() {
+        return offsetY;
     }
-}
+    
+}// fine classe Hitbox

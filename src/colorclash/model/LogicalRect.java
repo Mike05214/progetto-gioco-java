@@ -1,7 +1,8 @@
-package colorclash.model; // Assicurati che sia nel package del model
+package colorclash.model; 
 
 public class LogicalRect {
     
+    //variabili d'istanza
     private double x;
     private double y;
     private double width;
@@ -12,24 +13,21 @@ public class LogicalRect {
         this.y = y;
         this.width = width;
         this.height = height;
-    }
+    }// fine costruttore
 
-    // Metodo fondamentale: i rettangoli devono muoversi in sincrono con l'ostacolo
+    //METODI PUBBLICI
+
     public void setPosition(double x, double y) {
         this.x = x;
         this.y = y;
-    }
+    }// fine setPosition
     
-    // Metodo per spostare il rettangolo rispetto alla sua posizione attuale 
-    // (utile per i componenti secondari di una hitbox complessa)
-    public void translate(double dx, double dy) {
-        this.x += dx;
-        this.y += dy;
-    }
 
-    // Getters necessari per il CollisionChecker
+    //getters di LogicalRect
+
     public double getX() { return x; }
     public double getY() { return y; }
     public double getWidth() { return width; }
     public double getHeight() { return height; }
-}
+
+}// fine classe LogicalRect

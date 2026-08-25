@@ -189,6 +189,7 @@ public class GameModel implements IGameModel {
         obs.setColorId(colorId);
         obs.setWidth(randomWidth);
         obs.setHeight(randomHeight);
+        obs.updateHitbox();
 
         obs.setActive(true);
     }// fine spawnStandard
@@ -317,7 +318,7 @@ public class GameModel implements IGameModel {
         }
     }
 
-    private void createExplosion(double x, double y, int colorId) {
+    private void createObstaclesExplosion(double x, double y, int colorId) {
         int particlesToSpawn = 15;
         int spawned = 0;
         for (Particle p : allParticles) {
@@ -351,7 +352,7 @@ public class GameModel implements IGameModel {
 
     private void handlePositiveCollision(Obstacle obs) {
         AudioManager.getInstance().playSoundEffect("hit.wav");
-        createExplosion(obs.getX(), obs.getY() - EXPLOSION_OFFSET, obs.getColorId());
+        createObstaclesExplosion(obs.getX(), obs.getY() - EXPLOSION_OFFSET, obs.getColorId());
         floatingScores.add(new FloatingScore(obs.getX(), obs.getY(), obs.getPoints()));
         addScore(obs.getPoints());
         obs.setActive(false);
@@ -434,34 +435,28 @@ public class GameModel implements IGameModel {
     @Override
     public void update(int panelWidth, int panelHeight) {
         
-        // Early exit: se il gioco è finito, non fare nulla
         if (isGameOver) {
             return;
         }
 
-        // Se il giocatore è morto, gestisci solo l'animazione di fine partita ed esci
         if (isPlayerDead) {
             handleDeathSequence();
             return;
         }
 
-        // Altrimenti, esegui il normale game loop
         updateGameplayCore(panelWidth, panelHeight);
-    }// fine update
 
-    // --- METODI HELPER ESTRATTI PER L'UPDATE ---
+    }// fine update
 
     private void handleDeathSequence() {
         deathTimer+=TICK_TIME;
 
-        // Continua a muovere solo le particelle dell'esplosione
         for (Particle p : allParticles) {
             if (p.isActive()) {
                 p.update();
             }
         }
-
-        // Quando il timer scade (circa 4 secondi a 60fps), chiudi la partita
+        
         if (deathTimer >= DEATH_DELAY_MS) {
             triggerGameOver();
         }

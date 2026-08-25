@@ -22,11 +22,10 @@ public class ObstacleRenderer {
         int w = obs.getWidth();
         int h = obs.getHeight();
 
-        // Traslazione sulle coordinate dell'ostacolo
         g2d.translate(obs.getX(), obs.getY());
 
         // Colore scuro per il volume 3D
-        Color darkerColor = obsColor.darker().darker();
+        Color darkerColor = obsColor.darker().darker().darker();
 
         if (obs instanceof StandardObstacle) {
             // 1. Ombra
@@ -84,7 +83,7 @@ public class ObstacleRenderer {
             g2d.draw(SINUSOIDAL_SHAPE);
         }
 
-        // Ripristino origine
+        
         g2d.translate(-obs.getX(), -obs.getY());
     }
 
@@ -95,4 +94,5 @@ public class ObstacleRenderer {
         triangle.lineTo(50 / 2.0, 100); 
         return triangle;
     }
+
 }

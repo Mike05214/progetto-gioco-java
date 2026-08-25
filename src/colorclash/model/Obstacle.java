@@ -10,7 +10,7 @@ public abstract class Obstacle {
     protected double fallSpeed;
     protected int colorId;
     protected boolean isActive;
-    protected Hitbox hitbox; // Sostituisce Shape
+    protected Hitbox hitbox;
 
 
     public Obstacle(double startX, double startY, double speed, int colorId, int width, int height) {
@@ -21,7 +21,7 @@ public abstract class Obstacle {
         fallSpeed = speed;
         this.colorId = colorId;
         isActive = true;
-        this.hitbox = new Hitbox(); // Inizializza la hitbox logica
+        this.hitbox = new Hitbox(); 
     }// fine costruttore
 
     //METODI PUBBLICI

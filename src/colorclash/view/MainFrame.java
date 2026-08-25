@@ -2,6 +2,7 @@ package colorclash.view;
 
 import colorclash.utils.AudioManager;
 import colorclash.utils.Config;
+
 import colorclash.model.GameModel;
 import colorclash.model.IGameModel;
 
