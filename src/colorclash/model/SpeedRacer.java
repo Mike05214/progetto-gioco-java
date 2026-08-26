@@ -15,20 +15,13 @@ public class SpeedRacer extends Obstacle {
         super(0, -2000, 0, 0, WIDTH, HEIGHT);
         this.setActive(false);
         
-        updateHitbox(); // Inizializza la hitbox in base alle dimensioni attuali
+        createHitbox(); // Inizializza la hitbox in base alle dimensioni attuali
     }// fine costruttore
 
-    //METODI PUBBLICI
+    //METODI PROTETTI
     
-    /**
-     * Aggiorna o ricostruisce la hitbox per approssimare la forma a triangolo,
-     * adattandola proporzionalmente alla larghezza e altezza correnti.
-     */
-    public void updateHitbox() {
-        // Pulisce i rettangoli precedenti
-        hitbox.getRectangles().clear();
-        hitbox.getOffsetX().clear();
-        hitbox.getOffsetY().clear();
+    @Override
+    protected void createHitbox() {
         
         // Approssimazione della forma a triangolo (punta verso il basso) con 5 rettangoli logici
         hitbox.addRect(0, 0, width, height * 0.20); // Fascia alta (larga, base del triangolo)
@@ -37,6 +30,8 @@ public class SpeedRacer extends Obstacle {
         hitbox.addRect(width * 0.30, height * 0.60, width * 0.40, height * 0.20); // Fascia medio-bassa
         hitbox.addRect(width * 0.40, height * 0.80, width * 0.20, height * 0.20); // Fascia bassa (stretta, punta del triangolo)
     }
+
+    //METODI PUBBLICI
 
     // getters di SpeedRacer
 

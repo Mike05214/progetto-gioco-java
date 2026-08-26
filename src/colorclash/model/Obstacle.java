@@ -37,6 +37,10 @@ public abstract class Obstacle {
         }
     }// fine checkOffScreen
 
+    //METODI PROTETTI
+    protected abstract void createHitbox();
+
+
     // setters di Obstacle
     
     public void setColorId(int colorId) {

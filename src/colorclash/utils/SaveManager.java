@@ -38,7 +38,7 @@ public class SaveManager {
 
             File savesFolder = new File(savesDirPath);
             if (!savesFolder.exists()) {
-                savesFolder.mkdirs();//DOC:Creates the directory named by this abstract pathname,
+                savesFolder.mkdirs();// DOC:Creates the directory named by this abstract pathname,
                                      // including any necessary but nonexistent parent directories.
             }
 
@@ -292,6 +292,10 @@ public class SaveManager {
                     obs.setWidth(width);
                     obs.setHeight(height);
 
+                    if (obs instanceof StandardObstacle) {
+                        ((StandardObstacle) obs).updateHitbox();
+                    }
+
                     if (obs instanceof SinusoidalMadness) {
                         ((SinusoidalMadness) obs).setStartX(x);
                     }
@@ -337,7 +341,7 @@ public class SaveManager {
     }// fine getHomeFolderForDistVersion
 
     private String getHomeFolderForDevVersion() throws URISyntaxException {
-        return System.getProperty("user.dir"); 
+        return System.getProperty("user.dir");
     }// fine getHomeFolderForDevVersion
 
 }// fine classe SaveManager
