@@ -1,6 +1,6 @@
 package colorclash.view;
 
-import colorclash.model.Player;
+import colorclash.model.IPlayer;
 import colorclash.utils.Config;
 
 import java.awt.Color;
@@ -14,15 +14,14 @@ public class PlayerRenderer {
 
     private static final Path2D.Double PLAYER_SHAPE = createPlayerShape();
 
-    public static void render(Graphics2D g2d, Player player, Color playerColor, boolean isInvulnerable,
+    public static void render(Graphics2D g2d, IPlayer player, Color playerColor, boolean isInvulnerable,
             boolean drawShipBody) {
         int w = player.getWidth();
         int h = player.getHeight();
 
         g2d.translate(player.getX(), player.getY());
 
-        // 1. Effetto Scudo di Invulnerabilità (disegnato SEMPRE se isInvulnerable è
-        // true)
+        // 1. Effetto Scudo di Invulnerabilità (disegnato SEMPRE se isInvulnerable è true)
         if (isInvulnerable) {
             int margin = 15;
             int shieldW = w + margin * 2;
@@ -40,8 +39,7 @@ public class PlayerRenderer {
             g2d.drawOval(-margin, -margin, shieldW, shieldH);
         }
 
-        // 2. Se in questo frame la navicella non deve vedersi (lampeggio), ci fermiamo
-        // qui
+        // 2. Se in questo frame la navicella non deve vedersi (lampeggio), ci fermiamo qui
         if (!drawShipBody) {
             g2d.translate(-player.getX(), -player.getY());
             return;

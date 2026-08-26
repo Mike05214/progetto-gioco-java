@@ -1,6 +1,6 @@
 package colorclash.model;
 
-public abstract class Obstacle {
+public abstract class Obstacle implements IObstacle {
     
     // variabili d'istanza 
     protected double x;
@@ -12,102 +12,72 @@ public abstract class Obstacle {
     protected boolean isActive;
     protected Hitbox hitbox;
 
-
     public Obstacle(double startX, double startY, double speed, int colorId, int width, int height) {
-        x = startX;
-        y = startY;
+        this.x = startX;
+        this.y = startY;
         this.width = width;
         this.height = height;
-        fallSpeed = speed;
+        this.fallSpeed = speed;
         this.colorId = colorId;
-        isActive = true;
+        this.isActive = true;
         this.hitbox = new Hitbox(); 
     }// fine costruttore
 
-    //METODI PUBBLICI
+    // METODI PUBBLICI DI LOGICA
 
     public void update() {
         y += fallSpeed;
         hitbox.updatePosition(this.x, this.y);
-    }// fine fall
+    }// fine update
 
     public void checkOffScreen(int screenHeight) {
         if (y > screenHeight) {
             isActive = false;
         }
     }// fine checkOffScreen
+    
+    // Ricalcola la hitbox ai cambi di dimensione (spawn/caricamento salvataggi)
+    public abstract void updateHitbox();
 
-    //METODI PROTETTI
+    // METODI PROTETTI
     protected abstract void createHitbox();
 
-
-    // setters di Obstacle
+    // GETTERS IMPLEMENTATI DALL'INTERFACCIA IObstacle
     
-    public void setColorId(int colorId) {
-        this.colorId = colorId;
-    }
+    @Override
+    public double getX() { return x; }
 
-    // getters di Obstacle
+    @Override
+    public double getY() { return y; }
 
-    public Hitbox getHitbox() {
-        return hitbox;
-    }
+    @Override
+    public int getWidth() { return width; }
+
+    @Override
+    public int getHeight() { return height; }
+
+    @Override
+    public int getColorId() { return colorId; }
+
+    @Override
+    public boolean isActive() { return isActive; }
+
+    @Override
+    public Hitbox getHitbox() { return hitbox;  }
+
+    // ALTRI GETTERS E METODI ASTRATTI
 
     public abstract String getType();
-    
     public abstract int getPoints();
+    public double getFallSpeed() { return fallSpeed; }
 
-    public double getX() {
-        return x;
-    }
+    // SETTERS (Usati dal Model/Controller)
 
-    public double getY() {
-        return y;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public int getColorId() {
-        return colorId;
-    }
-
-    public boolean isActive() {
-        return isActive;
-    }
-
-    public double getFallSpeed(){
-        return fallSpeed;
-    }
-
-    // setters di Obstacle
-
-    public void setActive(boolean active){
-        isActive= active;
-    }
-
-    public void setY(double CordY ){
-        y=CordY;
-    }
-
-    public void setX(double CordX ){
-        x=CordX;
-    }
-
-    public void setWidth(int width ){
-        this.width=width;
-    }
-
-    public void setHeight(int height ){
-        this.height=height;
-    }
-
-    public void setFallSpeed(double speed ){
-        this.fallSpeed=speed;
-    }
+    public void setActive(boolean active) { this.isActive = active; }
+    public void setY(double CordY) { this.y = CordY; }
+    public void setX(double CordX) { this.x = CordX; }
+    public void setWidth(int width) { this.width = width; }
+    public void setHeight(int height) { this.height = height; }
+    public void setFallSpeed(double speed) { this.fallSpeed = speed; }
+    public void setColorId(int colorId) { this.colorId = colorId; }
 }// fine classe astratta Obstacle

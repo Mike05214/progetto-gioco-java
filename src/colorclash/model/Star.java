@@ -2,16 +2,16 @@ package colorclash.model;
 
 import java.util.Random;
 
-public class Star {
+public class Star implements IStar {
 
-    //variabili di stato
+    // variabili di stato
     private double x, y;
     private int size;
     private double speed;
     private int alpha;
     private Random rand;
 
-    //costanti
+    // costanti
     private final int MIN_SIZE = 1;
     private final int MIN_OPACITY = 100;
     private final int MAX_SIZE = 4;
@@ -23,7 +23,7 @@ public class Star {
         reset(screenWidth, rand.nextInt(0, (screenHeight + 1)));
     }// fine costruttore
 
-    //METODI PUBBLICI 
+    // METODI PUBBLICI DI LOGICA
 
     public void reset(int screenWidth, int startY) {
         size = rand.nextInt(MIN_SIZE, (MAX_SIZE + 1));
@@ -40,21 +40,18 @@ public class Star {
         }
     }// fine update
 
-    // getters di Star
-    public double getX() { 
-        return x; 
-    }
+    // GETTERS IMPLEMENTATI DALL'INTERFACCIA IStar
     
-    public double getY() { 
-        return y; 
-    }
+    @Override
+    public double getX() { return x; }
     
-    public int getSize() { 
-        return size; 
-    }
+    @Override
+    public double getY() { return y; }
     
-    public int getAlpha() { 
-        return alpha; 
-    }
+    @Override
+    public int getSize() { return size; }
+    
+    @Override
+    public int getAlpha() { return alpha; }
     
 }// fine classe Star

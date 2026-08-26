@@ -17,24 +17,23 @@ public class StandardObstacle extends Obstacle {
         createHitbox(); // Usa il metodo per inizializzarla
     }// fine costruttore
 
-    //METODI PROTETTI
+    // METODI PROTETTI
 
     @Override
     protected void createHitbox(){
         hitbox.addRect(0, 0, width, height);
     }
 
+    // METODI PUBBLICI
 
-    //METODI PUBBLICI
-
+    @Override
     public void updateHitbox() {
-        
         hitbox.getRectangles().clear();
         hitbox.getOffsetX().clear();
         hitbox.getOffsetY().clear();
         
         // Aggiunge il rettangolo proporzionale alla dimensione corrente
-        hitbox.addRect(0, 0, width, height);
+        createHitbox(); 
     }
 
     @Override

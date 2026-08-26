@@ -1,6 +1,6 @@
 package colorclash.model;
 
-public class FloatingScore {
+public class FloatingScore implements IFloatingScore {
 
     // variabili d'istanza
     private double x, y;
@@ -13,7 +13,7 @@ public class FloatingScore {
         text = "+" + points;
     }// fine costruttore
 
-    //METODI PUBBLICI
+    // METODI PUBBLICI DI LOGICA
 
     public void update() {
         y -= 1.5;
@@ -24,31 +24,23 @@ public class FloatingScore {
         }
     }// fine update
 
+    // GETTERS IMPLEMENTATI DALL'INTERFACCIA IFloatingScore
+
+    @Override
     public boolean isDead() {
-        if (alpha <= 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return alpha <= 0; // Semplificato: ritorna direttamente il booleano senza if/else
     }// fine isDead
     
+    @Override
+    public double getX() { return x; }
 
-    // getters di FloatingScore
+    @Override
+    public double getY() { return y; }
 
-    public double getX() {
-        return x;
-    }
+    @Override
+    public String getText() { return text; }
 
-    public double getY() {
-        return y;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public int getAlpha() {
-        return alpha;
-    }
+    @Override
+    public int getAlpha() { return alpha; }
     
 }// fine classe FloatingScore

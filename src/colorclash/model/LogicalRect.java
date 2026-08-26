@@ -1,8 +1,8 @@
 package colorclash.model; 
 
-public class LogicalRect {
+public class LogicalRect implements ILogicalRect {
     
-    //variabili d'istanza
+    // variabili d'istanza
     private double x;
     private double y;
     private double width;
@@ -15,19 +15,25 @@ public class LogicalRect {
         this.height = height;
     }// fine costruttore
 
-    //METODI PUBBLICI
+    // METODI PUBBLICI DI LOGICA
 
     public void setPosition(double x, double y) {
         this.x = x;
         this.y = y;
     }// fine setPosition
     
+    // GETTERS IMPLEMENTATI DALL'INTERFACCIA ILogicalRect
 
-    //getters di LogicalRect
-
+    @Override
     public double getX() { return x; }
+
+    @Override
     public double getY() { return y; }
+
+    @Override
     public double getWidth() { return width; }
+
+    @Override
     public double getHeight() { return height; }
 
 }// fine classe LogicalRect

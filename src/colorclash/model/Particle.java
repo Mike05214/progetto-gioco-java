@@ -2,7 +2,8 @@ package colorclash.model;
 
 import java.util.Random;
 
-public class Particle {
+public class Particle implements IParticle {
+    
     // variabili d'istanza
     private double x, y, dirX, dirY;
     private int colorId;
@@ -22,10 +23,9 @@ public class Particle {
         this.colorId = 0;
         this.rand = new Random();
         this.isActive = false;
-
     }// fine costruttore
 
-    // METODI PUBBLICI
+    // METODI PUBBLICI DI LOGICA
 
     public void spawn(double startX, double startY, int colorId) {
         this.x = startX;
@@ -49,43 +49,32 @@ public class Particle {
         }
     }// fine update
 
-    // getters di Particle
+    // GETTERS IMPLEMENTATI DALL'INTERFACCIA IParticle
 
-    public double getX() {
-        return x;
-    }
+    @Override
+    public double getX() { return x; }
 
-    public double getY() {
-        return y;
-    }
+    @Override
+    public double getY() { return y; }
 
-    public int getSize() {
-        return size;
-    }
+    @Override
+    public int getSize() { return size; }
 
-    public int getAlpha() {
-        return alpha;
-    }
+    @Override
+    public int getAlpha() { return alpha; }
 
-    public int getColorId() {
-        return colorId;
-    }
+    @Override
+    public int getColorId() { return colorId; }
 
-    public boolean isActive() {
-        return isActive;
-    }
+    @Override
+    public boolean isActive() { return isActive; }
 
-    public boolean isTriangle() {
-        return isTriangle;
-    }
+    @Override
+    public boolean isTriangle() { return isTriangle; }
 
-    // setters di Particle
+    // SETTERS (Usati dal Model/Controller)
 
-    public void setActive(boolean active) {
-        this.isActive = active;
-    }
-
-    public void setTriangle(boolean isTriangle) {
-        this.isTriangle = isTriangle;
-    }
+    public void setActive(boolean active) { this.isActive = active; }
+    public void setTriangle(boolean isTriangle) { this.isTriangle = isTriangle; }
+    
 }// fine classe Particle

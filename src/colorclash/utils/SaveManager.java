@@ -15,8 +15,9 @@ import java.net.URISyntaxException;
 
 import java.util.List;
 
-import colorclash.model.Player;
-import colorclash.model.IGameModel; // <-- IMPORTA L'INTERFACCIA
+import colorclash.model.IPlayer;
+import colorclash.model.IGameModel;
+import colorclash.model.IObstacle;
 import colorclash.model.Obstacle;
 import colorclash.model.SinusoidalMadness;
 import colorclash.model.SpeedRacer;
@@ -38,8 +39,7 @@ public class SaveManager {
 
             File savesFolder = new File(savesDirPath);
             if (!savesFolder.exists()) {
-                savesFolder.mkdirs();// DOC:Creates the directory named by this abstract pathname,
-                                     // including any necessary but nonexistent parent directories.
+                savesFolder.mkdirs();
             }
 
             boolean isLinux = System.getProperty("os.name").startsWith("Linux");
@@ -121,8 +121,8 @@ public class SaveManager {
         }
     }// fine writeHighscore
 
-    public void writeGameState(int score, int lives, int phase, double speed, int avaibleColors, Player player,
-            List<Obstacle> enemies) {
+    public void writeGameState(int score, int lives, int phase, double speed, int avaibleColors, IPlayer player,
+            List<? extends IObstacle> enemies) {
         PrintWriter printWriter = null;
 
         try {
@@ -139,8 +139,7 @@ public class SaveManager {
             printWriter.print("AVAIBLE_COLORS:" + avaibleColors + "\r\n");
             printWriter.print("PLAYER:" + player.getX() + ";" + player.getY() + ";" + player.getColorId() + "\r\n");
 
-            for (Obstacle obs : enemies) {
-                // SALVA SOLO GLI OSTACOLI ATTIVI
+            for (IObstacle obs : enemies) {
                 if (obs.isActive()) {
                     printWriter.print("OBSTACLE:" + obs.getType() + ";" +
                             obs.getX() + ";" +
@@ -173,7 +172,6 @@ public class SaveManager {
         }
     }// fine deleteGameState
 
-    // <-- MODIFICA: Ora richiede l'interfaccia IGameModel
     public boolean loadGameState(IGameModel model) {
         File file = new File(gameStatePath);
 
@@ -215,15 +213,14 @@ public class SaveManager {
 
     // METODI PRIVATI
 
-    // <-- MODIFICA: Ora richiede IGameModel
     private void resetEnemyPool(IGameModel model) {
-        for (Obstacle obs : model.getEnemies()) {
+        for (IObstacle iObs : model.getEnemies()) {
+            Obstacle obs = (Obstacle) iObs;
             obs.setActive(false);
             obs.setY(-2000);
         }
     }
 
-    // <-- MODIFICA: Ora richiede IGameModel
     private void processSaveLine(String line, IGameModel model) throws NumberFormatException {
         String[] parts = line.split(":");
         if (parts.length < 2)
@@ -257,15 +254,15 @@ public class SaveManager {
         }
     }
 
-    // <-- MODIFICA: Ora richiede IGameModel
     private void loadPlayerData(String data, IGameModel model) throws NumberFormatException {
         String[] playerData = data.split(";");
-        model.getPlayer().setX(Double.valueOf(playerData[0]));
-        model.getPlayer().setY(Double.valueOf(playerData[1]));
-        model.getPlayer().setColorId(Integer.valueOf(playerData[2]));
+        colorclash.model.Player p = (colorclash.model.Player) model.getPlayer();
+        p.setX(Double.valueOf(playerData[0]));
+        p.setY(Double.valueOf(playerData[1]));
+        p.setColorId(Integer.valueOf(playerData[2]));
+        p.getHitbox().updatePosition(p.getX(), p.getY());
     }
 
-    // <-- MODIFICA: Ora richiede IGameModel
     private void loadObstacleData(String data, IGameModel model) throws NumberFormatException {
         String[] obsData = data.split(";");
 
@@ -277,9 +274,10 @@ public class SaveManager {
         int width = Integer.valueOf(obsData[5]);
         int height = Integer.valueOf(obsData[6]);
 
-        for (Obstacle obs : model.getEnemies()) {
+        for (IObstacle iObs : model.getEnemies()) {
+            Obstacle obs = (Obstacle) iObs;
+            
             if (!obs.isActive()) {
-
                 boolean isMatchingType = (type.equals("StandardObstacle") && obs instanceof StandardObstacle) ||
                         (type.equals("SpeedRacer") && obs instanceof SpeedRacer) ||
                         (type.equals("SinusoidalMadness") && obs instanceof SinusoidalMadness);
@@ -292,9 +290,7 @@ public class SaveManager {
                     obs.setWidth(width);
                     obs.setHeight(height);
 
-                    if (obs instanceof StandardObstacle) {
-                        ((StandardObstacle) obs).updateHitbox();
-                    }
+                    obs.updateHitbox();
 
                     if (obs instanceof SinusoidalMadness) {
                         ((SinusoidalMadness) obs).setStartX(x);
@@ -324,7 +320,6 @@ public class SaveManager {
     }// fine getSaveDirectory
 
     private String getHomeFolderForDistVersion() throws URISyntaxException {
-        // Metodo del professore per il file .jar
         String homeDir = null;
         String jarPath = SaveManager.class.getResource("SaveManager.class").toURI().toString();
         int indexOfExclamationMark = jarPath.indexOf("!");

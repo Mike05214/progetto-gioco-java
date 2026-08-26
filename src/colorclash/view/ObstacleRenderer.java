@@ -1,6 +1,6 @@
 package colorclash.view;
 
-import colorclash.model.Obstacle;
+import colorclash.model.IObstacle;
 import colorclash.model.SpeedRacer;
 import colorclash.model.SinusoidalMadness;
 import colorclash.model.StandardObstacle;
@@ -18,7 +18,7 @@ public class ObstacleRenderer {
     private static final Path2D.Double SPEED_RACER_SHAPE = createSpeedRacerShape();
     private static final Ellipse2D.Double SINUSOIDAL_SHAPE = new Ellipse2D.Double(0, 0, 70, 70); 
 
-    public static void render(Graphics2D g2d, Obstacle obs, Color obsColor) {
+    public static void render(Graphics2D g2d, IObstacle obs, Color obsColor) {
         int w = obs.getWidth();
         int h = obs.getHeight();
 
@@ -83,7 +83,6 @@ public class ObstacleRenderer {
             g2d.draw(SINUSOIDAL_SHAPE);
         }
 
-        
         g2d.translate(-obs.getX(), -obs.getY());
     }
 

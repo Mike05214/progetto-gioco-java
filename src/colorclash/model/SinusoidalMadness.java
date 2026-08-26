@@ -26,15 +26,13 @@ public class SinusoidalMadness extends Obstacle {
         this.angle = 0;
         this.colorTimer = 0;
         this.setActive(false);
-        
         createHitbox(); // Inizializza la hitbox dinamica
     }// fine costruttore
 
-    //METODI PROTETTI
+    // METODI PROTETTI
 
     @Override
     protected void createHitbox() {
-        
         // Approssimazione della forma circolare con 5 rettangoli logici 
         hitbox.addRect(width * 0.20, 0, width * 0.60, height * 0.20); // Fascia alta
         hitbox.addRect(width * 0.05, height * 0.20, width * 0.90, height * 0.20); // Fascia medio-alta
@@ -43,7 +41,16 @@ public class SinusoidalMadness extends Obstacle {
         hitbox.addRect(width * 0.20, height * 0.80, width * 0.60, height * 0.20); // Fascia bassa
     }
 
-    //METODI PUBBLICI
+    // METODI PUBBLICI
+    
+    @Override
+    public void updateHitbox() {
+        hitbox.getRectangles().clear();
+        hitbox.getOffsetX().clear();
+        hitbox.getOffsetY().clear();
+        
+        createHitbox();
+    }
 
     @Override
     public void update() {

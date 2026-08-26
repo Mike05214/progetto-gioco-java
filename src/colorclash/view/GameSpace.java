@@ -1,13 +1,12 @@
 package colorclash.view;
 
 import colorclash.model.IGameModel;
-import colorclash.model.LogicalRect;
-import colorclash.model.Particle;
-import colorclash.model.Star;
-import colorclash.model.FloatingScore;
-import colorclash.model.Hitbox;
-import colorclash.model.Obstacle;
-
+import colorclash.model.ILogicalRect;
+import colorclash.model.IParticle;
+import colorclash.model.IStar;
+import colorclash.model.IFloatingScore;
+import colorclash.model.IHitbox;
+import colorclash.model.IObstacle;
 
 import java.awt.GridBagLayout;
 import java.awt.Dimension;
@@ -56,7 +55,7 @@ public class GameSpace extends JPanel {
 
     public GameSpace(IGameModel injectedModel) {
         setBackground(new Color(10, 10, 20));
-        this.model = injectedModel; // <-- INIEZIONE
+        this.model = injectedModel; 
         setLayout(new GridBagLayout());
         restartButton = new JButton("BACK TO MENU");
         restartButton.setFont(new Font("Impact", Font.PLAIN, RESTART_BUTTON_FONT_SIZE));
@@ -87,11 +86,11 @@ public class GameSpace extends JPanel {
         drawObstacles(g2d);
 
         if (debugMode) {
-            // Disegna la hitbox del Player
+            // Disegna la hitbox del Player tramite interfaccia
             drawDebugHitbox(g2d, model.getPlayer().getHitbox());
 
-            // Disegna le hitbox degli Ostacoli attivi
-            for (Obstacle obs : model.getEnemies()) {
+            // Disegna le hitbox degli Ostacoli attivi tramite interfaccia
+            for (IObstacle obs : model.getEnemies()) {
                 if (obs.isActive()) {
                     drawDebugHitbox(g2d, obs.getHitbox());
                 }
@@ -112,7 +111,7 @@ public class GameSpace extends JPanel {
         Rectangle2D.Double particleRect = new Rectangle2D.Double();
         Path2D.Double triangle = new Path2D.Double();
 
-        for (Particle p : model.getParticles()) {
+        for (IParticle p : model.getParticles()) {
 
             if (!p.isActive()) {
                 continue;
@@ -140,7 +139,7 @@ public class GameSpace extends JPanel {
     }// fine drawParticles
 
     private void drawFloatingScore(Graphics2D g2d) {
-        for (FloatingScore fs : model.getFloatingScores()) {
+        for (IFloatingScore fs : model.getFloatingScores()) {
             g2d.setColor(new Color(255, 255, 255, fs.getAlpha()));
             g2d.setFont(new Font("Impact", Font.PLAIN, 20));
             g2d.drawString(fs.getText(), (float) fs.getX(), (float) fs.getY());
@@ -150,7 +149,7 @@ public class GameSpace extends JPanel {
     private void drawPlayer(Graphics2D g2d) {
 
         if (model.isPlayerDead()) {
-            return; // Nasconde la navicella e lo scudo
+            return; 
         }
         boolean drawShipBody = true;
         boolean isInvuln = model.isInvulnerable();
@@ -166,9 +165,8 @@ public class GameSpace extends JPanel {
     }// fine drawPlayer
 
     private void drawObstacles(Graphics2D g2d) {
-        for (Obstacle obs : model.getEnemies()) {
+        for (IObstacle obs : model.getEnemies()) {
             if (obs.isActive()) {
-                // Utilizzo del renderer per evitare allocazioni continue
                 ObstacleRenderer.render(g2d, obs, colorPalette[obs.getColorId()]);
             }
         }
@@ -177,7 +175,7 @@ public class GameSpace extends JPanel {
     private void drawStars(Graphics2D g2d) {
         Rectangle2D.Double starRect = new Rectangle2D.Double();
 
-        for (Star s : model.getStars()) {
+        for (IStar s : model.getStars()) {
             g2d.setColor(new Color(255, 255, 255, s.getAlpha()));
             starRect.setRect(s.getX(), s.getY(), s.getSize(), s.getSize());
             g2d.fill(starRect);
@@ -228,13 +226,11 @@ public class GameSpace extends JPanel {
         }
     }// fine showLegend
 
-    private void drawDebugHitbox(Graphics2D g2d, Hitbox hitbox) {
-        // Colore rosso acceso e linea spessa 1 pixel
+    private void drawDebugHitbox(Graphics2D g2d, IHitbox hitbox) {
         g2d.setColor(Color.RED);
         g2d.setStroke(new BasicStroke(1f));
 
-        // Disegna il perimetro di ogni LogicalRect
-        for (LogicalRect rect : hitbox.getRectangles()) {
+        for (ILogicalRect rect : hitbox.getRectangles()) {
             g2d.drawRect(
                     (int) rect.getX(),
                     (int) rect.getY(),

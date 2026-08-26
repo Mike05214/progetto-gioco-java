@@ -27,12 +27,12 @@ public interface IGameModel {
     double getStartY();
     int getStartColorId();
 
-    // Getters degli oggetti di gioco
-    Player getPlayer();
-    List<Obstacle> getEnemies();
-    List<Particle> getParticles();
-    List<FloatingScore> getFloatingScores();
-    List<Star> getStars();
+    // MODIFICA QUI: Getters degli oggetti di gioco tramite interfacce
+    IPlayer getPlayer();
+    List<? extends IObstacle> getEnemies();
+    List<? extends IParticle> getParticles();
+    List<? extends IFloatingScore> getFloatingScores();
+    List<? extends IStar> getStars();
 
     // Setters usati dal SaveManager per ripristinare la partita
     void setScore(int score);

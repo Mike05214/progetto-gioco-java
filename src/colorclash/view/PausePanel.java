@@ -15,8 +15,7 @@ import javax.swing.JButton;
 
 public class PausePanel extends BaseMenuPanel {
 
-    // variabili d'istanza
-    private IGameModel model; // <-- USO L'INTERFACCIA
+    // VARIABILE MODEL RIMOSSA (ereditata correttamente da BaseMenuPanel)
     private JButton backToMenuButton;
     private JButton saveAndExitButton;
     private JButton resumeButton;
@@ -28,7 +27,6 @@ public class PausePanel extends BaseMenuPanel {
 
     public PausePanel(MainFrame mainFrame, IGameModel injectedModel) {
         super(mainFrame, injectedModel);
-        this.model = injectedModel;
         setBackground(new Color(10, 10, 20));
         initTitleLabel("PAUSE");
         initButtons();
@@ -37,7 +35,7 @@ public class PausePanel extends BaseMenuPanel {
         addComponentToCenter(saveAndExitButton, ROW_2, false);
     }// fine costruttore
 
-    //METODI PRIVATI
+    // METODI PRIVATI
 
     private void initButtons(){
         initResumeButton();
@@ -58,7 +56,6 @@ public class PausePanel extends BaseMenuPanel {
                 frame.changeFrame("GAME");
             }
         });
-        
     }// fine initResumeButton
 
     private void initBackToMenuButton() {
@@ -89,10 +86,8 @@ public class PausePanel extends BaseMenuPanel {
                 model.resetGame();
                 frame.getMenuPanel().refreshSavingButtons();
                 frame.changeFrame("MENU");
-
             }
         });
-
     }// fine initSaveAndExitButton
 
 }// fine classe PausePanel

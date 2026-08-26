@@ -493,7 +493,7 @@ public class GameModel implements IGameModel {
     @Override
     public void resetGame() {
         resetDeathDelay();
-        getPlayer().resetToInitialSettings(getStartX(), getStartY(), getStartColorId());
+        this.player.resetToInitialSettings(getStartX(), getStartY(), getStartColorId());
         resetScore();
         resetObstacles();
         resetParticles();
@@ -524,15 +524,33 @@ public class GameModel implements IGameModel {
         return invulnTimer;
     }
 
+    // MODIFICA DA QUI IN GIÙ: Restituiscono le interfacce invece delle classi concrete
     @Override
-    public Player getPlayer() {
+    public IPlayer getPlayer() {
         return player;
     }
 
     @Override
-    public List<Obstacle> getEnemies() {
+    public List<? extends IObstacle> getEnemies() {
         return allEnemies;
     }
+
+    @Override
+    public List<? extends IParticle> getParticles() {
+        return allParticles;
+    }
+
+    @Override
+    public List<? extends IFloatingScore> getFloatingScores() {
+        return floatingScores;
+    }
+
+    @Override
+    public List<? extends IStar> getStars() {
+        return stars;
+    }
+
+    // ... Il resto rimane invariato ...
 
     @Override
     public int getScore() {
@@ -577,21 +595,6 @@ public class GameModel implements IGameModel {
     @Override
     public double getCurrentSpeed() {
         return this.currentFallSpeed;
-    }
-
-    @Override
-    public List<Particle> getParticles() {
-        return allParticles;
-    }
-
-    @Override
-    public List<FloatingScore> getFloatingScores() {
-        return this.floatingScores;
-    }
-
-    @Override
-    public List<Star> getStars() {
-        return this.stars;
     }
 
     @Override

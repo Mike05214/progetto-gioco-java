@@ -26,7 +26,7 @@ public class GamePanel extends JPanel {
     private int lastPhase;
     private int currentPhase;
     private Timer alertTimer;
-    private IGameModel model; // <-- USO L'INTERFACCIA
+    private IGameModel model; 
 
     // costanti
     private final int DELAY = 8;
@@ -35,7 +35,7 @@ public class GamePanel extends JPanel {
     private final int NEW_COLOR_LABEL_VISIBLE_DELAY = 500;
 
     public GamePanel(MainFrame mainframe, IGameModel injectedModel) {
-        this.model = injectedModel; // <-- INIEZIONE
+        this.model = injectedModel; 
         frame = mainframe;
         lastPhase = model.getPhase();
         setLayout(new BorderLayout());
@@ -43,7 +43,6 @@ public class GamePanel extends JPanel {
         initHudPanel();
         initGameSpace();
         initListeners();
-
     }// fine costruttore
 
     // METODI PRIVATI
@@ -80,7 +79,7 @@ public class GamePanel extends JPanel {
     }// fine initGameLoop
 
     private void initGameSpace() {
-        gameSpace = new GameSpace(model); // <-- PASSO IL MODEL AL GAMESPACE
+        gameSpace = new GameSpace(model); 
         gameSpace.getRestarButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -109,9 +108,7 @@ public class GamePanel extends JPanel {
     }// fine initHudPanel
 
     private void initListeners() {
-        addKeyListener(new KeyAdapter() { // DOC : An abstract adapter class for receiving keyboard events.
-                                          // The methods in this class are empty.
-                                          // This class exists as convenience for creating listener objects.
+        addKeyListener(new KeyAdapter() { 
             public void keyPressed(KeyEvent e) {
                 if (isResuming) {
                     return;
@@ -140,7 +137,6 @@ public class GamePanel extends JPanel {
                 if (key == KeyEvent.VK_LEFT) {
                     ColorSwitchLogic(false);
                 }
-
             }
 
             @Override
@@ -171,15 +167,14 @@ public class GamePanel extends JPanel {
                 }
             }
         });
-
-    }// fine initSetupListeners
+    }// fine initListeners
 
     private void ColorSwitchLogic(boolean forward) {
         if (!colorSwitchLocked) {
             model.getPlayer().colorCooldown(model.getAvailableColorsCount(), forward);
             colorSwitchLocked = true; 
         }
-    }// fine spaceKeyLogic
+    }// fine ColorSwitchLogic
 
     private void resetKeyLogic() {
         colorSwitchLocked = false; 
@@ -230,7 +225,6 @@ public class GamePanel extends JPanel {
         });
         AudioManager.getInstance().playSoundEffect("race_countdown.wav");
         countdown.start();
-
     }// fine resumeCountdown
 
     public void newColorUnlockedCountdown() {
@@ -258,12 +252,10 @@ public class GamePanel extends JPanel {
                     isScoreUpdateBlocked = false;
                     hudPanel.restoreScoreLabel(model.getScore());
                 }
-
             }
         });
         alertTimer.setInitialDelay(0); 
         alertTimer.start();
-
     }// fine newColorUnlockedCountdown
 
     public void stopBlinking() {

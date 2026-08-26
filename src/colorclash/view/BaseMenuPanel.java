@@ -1,7 +1,7 @@
 package colorclash.view;
 
 import colorclash.model.IGameModel;
-import colorclash.model.Star;
+import colorclash.model.IStar; // <-- Importa l'interfaccia invece della classe concreta
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -10,10 +10,7 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GridBagLayout;// DOC: The GridBagLayout class is a flexible layout manager that aligns components vertically, 
-                              // horizontally or along their baseline without requiring that the components be of the same size. 
-                              // Each GridBagLayout object maintains a dynamic, rectangular grid of cells,
-                              // with each component occupying one or more cells, called its display area.
+import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.RenderingHints;
@@ -41,12 +38,12 @@ public abstract class BaseMenuPanel extends JPanel {
 
     // variabili d'istanza
     protected JPanel centerPanel;
-    protected IGameModel model; // <-- USO L'INTERFACCIA
+    protected IGameModel model; 
     protected MainFrame frame;
 
     public BaseMenuPanel(MainFrame mainFrame, IGameModel injectedModel) {
         frame = mainFrame;
-        model = injectedModel; // <-- INIEZIONE
+        model = injectedModel; 
         setLayout(new BorderLayout());
         centerPanel = new JPanel(new GridBagLayout());
         centerPanel.setOpaque(false);
@@ -62,10 +59,6 @@ public abstract class BaseMenuPanel extends JPanel {
     }// fine initTitleLabel
 
     protected void addComponentToCenter(Component comp, int row, boolean hasSpaceBelow) {
-        // DOC: The constraints object specifies where a component's display area should be located on the grid
-        // and how the component should be positioned within its display area. 
-        // In addition to its constraints object,
-        // the GridBagLayout also considers each component's minimum and preferred sizes in order to determine a component's size.
         GridBagConstraints gbc = new GridBagConstraints(); 
         gbc.gridx = ONE_COLUMN;
         gbc.gridy = row;
@@ -88,14 +81,13 @@ public abstract class BaseMenuPanel extends JPanel {
     private void drawRainbowText(Graphics2D g2d, JLabel label) {
         g2d.setFont(label.getFont());
         String text = label.getText();
-        FontMetrics fm = g2d.getFontMetrics(); // DOC: The FontMetrics class defines a font metrics object, 
-                                                //which encapsulates information about the rendering of a particular font on a particular screen.
+        FontMetrics fm = g2d.getFontMetrics(); 
         Color[] rainbowColors = {
                 Color.RED, Color.ORANGE, Color.YELLOW, Color.GREEN,
                 Color.CYAN, Color.BLUE, Color.MAGENTA
         };
-        int y = (label.getHeight() - fm.getHeight()) / 2 + fm.getAscent();//Determines the font ascent of the Font described by this FontMetrics object.
-        int currentX = (label.getWidth() - fm.stringWidth(text)) / 2; //Returns the total advance width for showing the specified String in this Font.
+        int y = (label.getHeight() - fm.getHeight()) / 2 + fm.getAscent();
+        int currentX = (label.getWidth() - fm.stringWidth(text)) / 2; 
 
         for (int i = 0; i < text.length(); i++) {
             char c = text.charAt(i);
@@ -112,7 +104,7 @@ public abstract class BaseMenuPanel extends JPanel {
         }
     }// fine drawRainbowText
 
-    //METODI PUBBLICI
+    // METODI PUBBLICI
 
     @Override
     public void paintComponent(Graphics g) {
@@ -122,12 +114,13 @@ public abstract class BaseMenuPanel extends JPanel {
         g2d.setColor(new Color(10, 10, 20));
         g2d.fillRect(0, 0, getWidth(), getHeight());
 
-        List<Star> stelle = model.getStars();
+        // MODIFICA: Utilizzo di List<? extends IStar> per compatibilità con il wildcard del Model
+        List<? extends IStar> stelle = model.getStars();
         if (stelle != null) {
             Rectangle2D.Double starRect = new Rectangle2D.Double();
             int offsetY = frame.getGamePanel().getHudPanel().getHudPanelHeight();
 
-            for (Star s : stelle) {
+            for (IStar s : stelle) {
                 g2d.setColor(new Color(255, 255, 255, s.getAlpha()));
                 starRect.setRect(s.getX(), s.getY() + offsetY, s.getSize(), s.getSize());
                 g2d.fill(starRect);
