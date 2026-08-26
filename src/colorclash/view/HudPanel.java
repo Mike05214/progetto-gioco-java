@@ -39,14 +39,14 @@ public class HudPanel extends JPanel {
 
     // variabili d'istanza
     private JButton pauseButton;
-    private JLabel scoreLabel;
+    private JLabel titleScoreLabel;
+    private JLabel valueScoreLabel;
     private JPanel livesContainer;
     private int lastLives = -1;
     private int lastScore = -1;
     private JLabel[] heartLabels = new JLabel[MAX_LIVES];
     private Icon saveIcon;
 
-    
     public HudPanel() {
         setLayout(new BorderLayout());
         setBackground(Color.LIGHT_GRAY);
@@ -71,33 +71,32 @@ public class HudPanel extends JPanel {
     private void initCenterPanel() {
         JPanel centerPanel = new JPanel();
         centerPanel.setOpaque(false);
-        
-        scoreLabel = new JLabel("SCORE:    0");
-        scoreLabel.setForeground(Color.BLACK);
-        scoreLabel.setFont(new Font("Impact", Font.PLAIN, SCORE_LABEL_FONT_SIZE));
-        
-        // --- MODIFICHE PER BLOCCARE LA SCRITTA ---
-        // 1. Impostiamo una dimensione fissa (larghezza 200, altezza 50).
-        // Se il font è molto grande e i numeri vengono tagliati, aumenta il 200.
-        scoreLabel.setPreferredSize(new Dimension(190, 25));
-        
-        // 2. Ancoriamo il testo a sinistra dentro la sua "scatola" fissa.
-        // In questo modo la 'S' di SCORE non si muoverà di un millimetro.
-        scoreLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        // -----------------------------------------
-        
-        centerPanel.add(scoreLabel);
+
+        // 1. Label fissa per la scritta SCORE
+        titleScoreLabel = new JLabel("SCORE: ");
+        titleScoreLabel.setForeground(Color.BLACK);
+        titleScoreLabel.setFont(new Font("Impact", Font.PLAIN, SCORE_LABEL_FONT_SIZE));
+
+        // 2. Label a larghezza fissa per il solo valore numerico
+        valueScoreLabel = new JLabel("0");
+        valueScoreLabel.setForeground(Color.BLACK);
+        valueScoreLabel.setFont(new Font("Impact", Font.PLAIN, SCORE_LABEL_FONT_SIZE));
+        valueScoreLabel.setPreferredSize(new Dimension(80, 25)); // Spazio riservato ai numeri
+        valueScoreLabel.setHorizontalAlignment(SwingConstants.LEFT);
+
+        centerPanel.add(titleScoreLabel);
+        centerPanel.add(valueScoreLabel);
         add(centerPanel, BorderLayout.CENTER);
     }// fine initCenterPanel
 
     private void initLivesContainer() {
         livesContainer = new JPanel(new FlowLayout(FlowLayout.RIGHT, HGAP, VGAP));// DOC: A flow layout arranges
-                                                                                  // components in a directional flow,
-                                                                                  // much like lines of text in a
-                                                                                  // paragraph.
-                                                                                  // The flow direction is determined by
-                                                                                  // the container's
-                                                                                  // componentOrientation property
+                                                // components in a directional flow,
+                                                // much like lines of text in a
+                                                // paragraph.
+                                                // The flow direction is determined by
+                                                // the container's
+                                                // componentOrientation property
         livesContainer.setOpaque(true);
         livesContainer.setBackground(new Color(0, 100, 0));
         livesContainer.setBorder(
@@ -150,7 +149,6 @@ public class HudPanel extends JPanel {
         }
     }// fine loadImage
 
-
     // METODI PUBBLICI
 
     public void updateLivesView(int currentLives) {
@@ -177,40 +175,42 @@ public class HudPanel extends JPanel {
         if (currentScore == lastScore) {
             return;
         }
-
-        scoreLabel.setText("SCORE:  " + currentScore);
+        titleScoreLabel.setText("SCORE: ");
+        valueScoreLabel.setText(String.valueOf(currentScore));
         lastScore = currentScore;
-
     }// fine updateScoreText
 
-    
-
     public void showCountdown(int secondsLeft) {
-        scoreLabel.setText("GAME RESTARTS IN: " + secondsLeft);
+        titleScoreLabel.setText("GAME RESTARTS IN: " + secondsLeft);
+        valueScoreLabel.setVisible(false);
     }// fine showCountdown
 
     public void showNewColorUnlocked() {
-        scoreLabel.setText("NEW COLOR UNLOCKED!");
+        titleScoreLabel.setText("NEW COLOR UNLOCKED!");
+        valueScoreLabel.setVisible(false);
     }// fine showNewColorUnlocked
 
     public void restoreScoreLabel(int currentScore) {
-        scoreLabel.setText("SCORE:  " + currentScore);
-
+        titleScoreLabel.setText("SCORE: ");
+        valueScoreLabel.setText(String.valueOf(currentScore));
+        valueScoreLabel.setVisible(true);
+        lastScore = currentScore;
     }// fine restoreScoreLabel
 
     public void hideNewColorUnlocked() {
-        scoreLabel.setText("");
-
+        titleScoreLabel.setText("");
+        valueScoreLabel.setVisible(false);
     }// fine hideNewColorUnloccked
+
+    public void setScoreVisible(boolean visible) {
+        titleScoreLabel.setVisible(visible);
+        valueScoreLabel.setVisible(visible);
+    }
 
     // getters di HudPanel
 
     public JButton getPauseButton() {
         return pauseButton;
-    }
-
-    public JLabel getScoreLabel() {
-        return scoreLabel;
     }
 
     public int getHudPanelHeight() {

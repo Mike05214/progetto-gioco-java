@@ -66,7 +66,7 @@ public class GamePanel extends JPanel {
                 if(model.isPlayerDead()){
                     resetGamePanel();
                     hudPanel.getPauseButton().setEnabled(false);
-                    hudPanel.getScoreLabel().setVisible(false);
+                    hudPanel.setScoreVisible(false);
                 }
                 
                 if (model.isGameOver()) {
@@ -84,7 +84,7 @@ public class GamePanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 frame.changeFrame("MENU");
-                hudPanel.getScoreLabel().setVisible(true);
+                hudPanel.setScoreVisible(true);
                 frame.getMenuPanel().updateHighScoreDisplay();
                 model.resetGame();
                 resetGamePanel();
