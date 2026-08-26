@@ -38,6 +38,7 @@ public class GameModel implements IGameModel {
     private final int NUM_STARS = 100;
     private final int POOL_SIZE_STANDARD = 15;
     private final int POOL_SIZE_SPECIAL = 10;
+    private final int DEFAULT_POSITION = -2000;
 
     // Variabili di stato del gioco
     private Player player;
@@ -356,7 +357,7 @@ public class GameModel implements IGameModel {
         floatingScores.add(new FloatingScore(obs.getX(), obs.getY(), obs.getPoints()));
         addScore(obs.getPoints());
         obs.setActive(false);
-        obs.setY(-2000);
+        obs.setY(DEFAULT_POSITION);
     }// fine handlePositiveCollision
 
     private void handleNegativeCollision() {
@@ -369,7 +370,7 @@ public class GameModel implements IGameModel {
         if (isPlayerDead) {
             AudioManager.getInstance().playSoundEffect("hit.wav");
             createPlayerExplosion(player.getX(), player.getY(), player.getColorId());
-            player.setY(-2000); // Sposta fuori schermo
+            player.setY(DEFAULT_POSITION); // Sposta fuori schermo
         } else {
             AudioManager.getInstance().playSoundEffect("hurt.wav");
             isInvulnerable = true;
@@ -384,7 +385,7 @@ public class GameModel implements IGameModel {
     private void resetObstacles() {
         for (Obstacle obs : allEnemies) {
             obs.setActive(false);
-            obs.setY(-2000);
+            obs.setY(DEFAULT_POSITION);
         }
     }// fine resetObstacles
 
@@ -419,7 +420,7 @@ public class GameModel implements IGameModel {
     private void resetDeathDelay() {
         isPlayerDead = false;
         deathTimer = 0;
-    }// fine resetInvulnerability
+    }// fine resetDeathDelay
 
     // METODI PUBBLICI OVERRIDE DA IGameModel
 
