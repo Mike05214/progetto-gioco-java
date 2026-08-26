@@ -1,7 +1,7 @@
 package colorclash.view;
 
 import colorclash.model.IGameModel;
-import colorclash.model.IStar; // <-- Importa l'interfaccia invece della classe concreta
+import colorclash.model.IStar;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -113,8 +113,6 @@ public abstract class BaseMenuPanel extends JPanel {
         super.paintComponent(g2d);
         g2d.setColor(new Color(10, 10, 20));
         g2d.fillRect(0, 0, getWidth(), getHeight());
-
-        // MODIFICA: Utilizzo di List<? extends IStar> per compatibilità con il wildcard del Model
         List<? extends IStar> stelle = model.getStars();
         if (stelle != null) {
             Rectangle2D.Double starRect = new Rectangle2D.Double();

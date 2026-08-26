@@ -37,6 +37,7 @@ public class AudioManager {
             instance = new AudioManager();
         }
         return instance;
+
     }// fine getInstance
 
 
@@ -109,6 +110,7 @@ public class AudioManager {
 
         soundPool.put(fileName, clips);
         soundIndexes.put(fileName, 0);
+
     } // fine preloadSoundEffect
 
     public void playSoundEffect(String fileName) {
@@ -130,6 +132,7 @@ public class AudioManager {
         } else {
             System.err.println("WARNING: Sound not preloaded in memory -> " + fileName);
         }
+        
     }// fine playSoundEffect
 
     public void playBackgroundMusic(String fileName) {

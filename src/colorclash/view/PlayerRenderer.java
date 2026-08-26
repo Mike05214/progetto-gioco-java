@@ -1,6 +1,7 @@
 package colorclash.view;
 
 import colorclash.model.IPlayer;
+
 import colorclash.utils.Config;
 
 import java.awt.Color;
@@ -12,7 +13,10 @@ import java.awt.BasicStroke;
 
 public class PlayerRenderer {
 
+    // costanti statiche
     private static final Path2D.Double PLAYER_SHAPE = createPlayerShape();
+
+    //METODI PUBBLICI
 
     public static void render(Graphics2D g2d, IPlayer player, Color playerColor, boolean isInvulnerable,
             boolean drawShipBody) {
@@ -21,7 +25,6 @@ public class PlayerRenderer {
 
         g2d.translate(player.getX(), player.getY());
 
-        // 1. Effetto Scudo di Invulnerabilità (disegnato SEMPRE se isInvulnerable è true)
         if (isInvulnerable) {
             int margin = 15;
             int shieldW = w + margin * 2;
@@ -39,38 +42,28 @@ public class PlayerRenderer {
             g2d.drawOval(-margin, -margin, shieldW, shieldH);
         }
 
-        // 2. Se in questo frame la navicella non deve vedersi (lampeggio), ci fermiamo qui
         if (!drawShipBody) {
             g2d.translate(-player.getX(), -player.getY());
             return;
         }
 
-        // --- Da qui in poi si disegna il corpo della navicella ---
-
-        // 3. Ombra proiettata a terra
         g2d.translate(5, 5);
         g2d.setColor(new Color(0, 0, 0, 150));
         g2d.fill(PLAYER_SHAPE);
         g2d.translate(-5, -5);
-
-        // 4. Riempimento base con gradiente 3D
         Color darkerColor = playerColor.darker().darker();
         GradientPaint gp = new GradientPaint(0, 0, playerColor, 0, h, darkerColor);
         g2d.setPaint(gp);
         g2d.fill(PLAYER_SHAPE);
-
-        // 5. Bordo riflettente
         g2d.setColor(new Color(255, 255, 255, 200));
         g2d.setStroke(new BasicStroke(2f));
         g2d.draw(PLAYER_SHAPE);
-
-        // 6. Abitacolo
         g2d.setColor(new Color(180, 230, 255, 220));
         g2d.fillOval((int) (w * 0.45), (int) (h * 0.35), (int) (w * 0.1), (int) (h * 0.2));
-
-        // Ripristino finale
         g2d.translate(-player.getX(), -player.getY());
-    }
+    }// fine render
+
+    // METODI PRIVATO
 
     private static Path2D.Double createPlayerShape() {
         int width = Config.getInstance().getIntProperty("player_width");
@@ -90,5 +83,6 @@ public class PlayerRenderer {
         navicella.closePath();
 
         return navicella;
-    }
-}
+    }// fine createPlayerShape
+
+}// fine classe PlayerRenderer

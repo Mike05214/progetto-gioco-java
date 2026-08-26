@@ -27,14 +27,13 @@ public class MainFrame extends JFrame {
     private GamePanel gamePanel;
     private MenuPanel menuPanel;
     private PausePanel pausePanel;
-    private IGameModel model; // <-- USO L'INTERFACCIA
+    private IGameModel model;
 
     // costanti
     private final int FRAME_WIDTH = Config.getInstance().getIntProperty("frame_width");
     private final int FRAME_HEIGHT = Config.getInstance().getIntProperty("frame_height");
 
     public MainFrame() {
-        // UNICO PUNTO IN CUI SI CHIAMA IL SINGLETON
         model = GameModel.getInstance(); 
         initialSettings();
         frameStructureBuilder();
@@ -92,8 +91,6 @@ public class MainFrame extends JFrame {
         Container contPane = getContentPane();
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
-        
-        // INIEZIONE DEL MODEL NEI PANNELLI
         menuPanel = new MenuPanel(this, model);
         gamePanel = new GamePanel(this, model);
         pausePanel = new PausePanel(this, model);

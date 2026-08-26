@@ -13,7 +13,7 @@ public class FloatingScore implements IFloatingScore {
         text = "+" + points;
     }// fine costruttore
 
-    // METODI PUBBLICI DI LOGICA
+    // METODI PUBBLICI 
 
     public void update() {
         y -= 1.5;
@@ -24,11 +24,11 @@ public class FloatingScore implements IFloatingScore {
         }
     }// fine update
 
-    // GETTERS IMPLEMENTATI DALL'INTERFACCIA IFloatingScore
+    // getters
 
-    @Override
+    
     public boolean isDead() {
-        return alpha <= 0; // Semplificato: ritorna direttamente il booleano senza if/else
+        return alpha <= 0;
     }// fine isDead
     
     @Override

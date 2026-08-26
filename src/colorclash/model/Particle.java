@@ -25,7 +25,7 @@ public class Particle implements IParticle {
         this.isActive = false;
     }// fine costruttore
 
-    // METODI PUBBLICI DI LOGICA
+    // METODI PUBBLICI
 
     public void spawn(double startX, double startY, int colorId) {
         this.x = startX;
@@ -45,11 +45,11 @@ public class Particle implements IParticle {
 
         if (alpha <= 0) {
             alpha = 0;
-            this.isActive = false; // La particella si "autodistrugge" e torna disponibile nel pool
+            this.isActive = false;
         }
     }// fine update
 
-    // GETTERS IMPLEMENTATI DALL'INTERFACCIA IParticle
+    // GETTERS
 
     @Override
     public double getX() { return x; }
@@ -72,9 +72,10 @@ public class Particle implements IParticle {
     @Override
     public boolean isTriangle() { return isTriangle; }
 
-    // SETTERS (Usati dal Model/Controller)
+    //SETTERS
 
     public void setActive(boolean active) { this.isActive = active; }
+    
     public void setTriangle(boolean isTriangle) { this.isTriangle = isTriangle; }
     
 }// fine classe Particle

@@ -84,21 +84,20 @@ public class GameSpace extends JPanel {
         showLegend(g2d);
         drawPlayer(g2d);
         drawObstacles(g2d);
+        drawParticles(g2d);
+        drawFloatingScore(g2d);
 
         if (debugMode) {
-            // Disegna la hitbox del Player tramite interfaccia
+        
             drawDebugHitbox(g2d, model.getPlayer().getHitbox());
-
-            // Disegna le hitbox degli Ostacoli attivi tramite interfaccia
+            
             for (IObstacle obs : model.getEnemies()) {
                 if (obs.isActive()) {
                     drawDebugHitbox(g2d, obs.getHitbox());
                 }
             }
-        }
-
-        drawParticles(g2d);
-        drawFloatingScore(g2d);
+        }//fine debug
+        
         if (model.isGameOver()) {
             showGameOver(g2d);
         }
@@ -237,7 +236,7 @@ public class GameSpace extends JPanel {
                     (int) rect.getWidth(),
                     (int) rect.getHeight()); 
         }
-    }
+    }// fine drawDebugHitbox
 
     // getters di GameSpace
 

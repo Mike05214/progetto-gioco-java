@@ -2,7 +2,7 @@ package colorclash.model;
 
 public abstract class Obstacle implements IObstacle {
     
-    // variabili d'istanza 
+    //variabili d'istanza 
     protected double x;
     protected double y;
     protected int width;
@@ -23,7 +23,7 @@ public abstract class Obstacle implements IObstacle {
         this.hitbox = new Hitbox(); 
     }// fine costruttore
 
-    // METODI PUBBLICI DI LOGICA
+    //METODI PUBBLICI
 
     public void update() {
         y += fallSpeed;
@@ -36,13 +36,12 @@ public abstract class Obstacle implements IObstacle {
         }
     }// fine checkOffScreen
     
-    // Ricalcola la hitbox ai cambi di dimensione (spawn/caricamento salvataggi)
     public abstract void updateHitbox();
 
-    // METODI PROTETTI
+    //METODI PROTETTI
     protected abstract void createHitbox();
 
-    // GETTERS IMPLEMENTATI DALL'INTERFACCIA IObstacle
+    //GETTERS
     
     @Override
     public double getX() { return x; }
@@ -64,14 +63,11 @@ public abstract class Obstacle implements IObstacle {
 
     @Override
     public Hitbox getHitbox() { return hitbox;  }
-
-    // ALTRI GETTERS E METODI ASTRATTI
-
     public abstract String getType();
     public abstract int getPoints();
     public double getFallSpeed() { return fallSpeed; }
 
-    // SETTERS (Usati dal Model/Controller)
+    // SETTERS
 
     public void setActive(boolean active) { this.isActive = active; }
     public void setY(double CordY) { this.y = CordY; }
@@ -80,4 +76,5 @@ public abstract class Obstacle implements IObstacle {
     public void setHeight(int height) { this.height = height; }
     public void setFallSpeed(double speed) { this.fallSpeed = speed; }
     public void setColorId(int colorId) { this.colorId = colorId; }
+
 }// fine classe astratta Obstacle

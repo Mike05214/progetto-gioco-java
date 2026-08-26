@@ -1,6 +1,7 @@
 package colorclash.view;
 
 import colorclash.model.IGameModel;
+
 import colorclash.utils.AudioManager;
 
 import java.awt.BorderLayout;
@@ -15,7 +16,6 @@ import javax.swing.Timer;
 public class GamePanel extends JPanel {
 
     // variabili d'istanza
-
     private Timer gameLoop;
     private MainFrame frame;
     private GameSpace gameSpace;
@@ -179,6 +179,43 @@ public class GamePanel extends JPanel {
     private void resetKeyLogic() {
         colorSwitchLocked = false; 
     }// fine resetKeyLogic
+    
+    private void stopBlinking() {
+        if (alertTimer != null && alertTimer.isRunning()) {
+            alertTimer.stop();
+        }
+    }// fine stopBlinking
+    
+    private void newColorUnlockedCountdown() {
+        isScoreUpdateBlocked = true;
+        alertTimer = new Timer(NEW_COLOR_LABEL_VISIBLE_DELAY, new ActionListener() {
+            int tickCount = 0;
+            boolean visible = false;
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                tickCount++;
+                visible = !visible;
+                if (visible && !model.isGameOver()) {
+                    hudPanel.showNewColorUnlocked();
+                    AudioManager.getInstance().playSoundEffect("notification.wav");
+                    gameSpace.createBorder(model.getPhase());
+                } else {
+                    hudPanel.hideNewColorUnlocked();
+                    gameSpace.deleteBorder();
+                }
+
+                if (tickCount >= 8) {
+                    ((Timer) e.getSource()).stop();
+                    gameSpace.deleteBorder();
+                    isScoreUpdateBlocked = false;
+                    hudPanel.restoreScoreLabel(model.getScore());
+                }
+            }
+        });
+        alertTimer.setInitialDelay(0); 
+        alertTimer.start();
+    }// fine newColorUnlockedCountdown
 
     // METODI PUBBLICI
 
@@ -227,42 +264,7 @@ public class GamePanel extends JPanel {
         countdown.start();
     }// fine resumeCountdown
 
-    public void newColorUnlockedCountdown() {
-        isScoreUpdateBlocked = true;
-        alertTimer = new Timer(NEW_COLOR_LABEL_VISIBLE_DELAY, new ActionListener() {
-            int tickCount = 0;
-            boolean visible = false;
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                tickCount++;
-                visible = !visible;
-                if (visible && !model.isGameOver()) {
-                    hudPanel.showNewColorUnlocked();
-                    AudioManager.getInstance().playSoundEffect("notification.wav");
-                    gameSpace.createBorder(model.getPhase());
-                } else {
-                    hudPanel.hideNewColorUnlocked();
-                    gameSpace.deleteBorder();
-                }
-
-                if (tickCount >= 8) {
-                    ((Timer) e.getSource()).stop();
-                    gameSpace.deleteBorder();
-                    isScoreUpdateBlocked = false;
-                    hudPanel.restoreScoreLabel(model.getScore());
-                }
-            }
-        });
-        alertTimer.setInitialDelay(0); 
-        alertTimer.start();
-    }// fine newColorUnlockedCountdown
-
-    public void stopBlinking() {
-        if (alertTimer != null && alertTimer.isRunning()) {
-            alertTimer.stop();
-        }
-    }// fine stopBlinking
+    
 
     public void resetGamePanel() {
         this.lastPhase = model.getPhase();

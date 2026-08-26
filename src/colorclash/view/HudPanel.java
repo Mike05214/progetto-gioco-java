@@ -71,13 +71,11 @@ public class HudPanel extends JPanel {
     private void initCenterPanel() {
         JPanel centerPanel = new JPanel();
         centerPanel.setOpaque(false);
-
-        // 1. Label fissa per la scritta SCORE
+        
         titleScoreLabel = new JLabel("SCORE: ");
         titleScoreLabel.setForeground(Color.BLACK);
         titleScoreLabel.setFont(new Font("Impact", Font.PLAIN, SCORE_LABEL_FONT_SIZE));
-
-        // 2. Label a larghezza fissa per il solo valore numerico
+        
         valueScoreLabel = new JLabel("0");
         valueScoreLabel.setForeground(Color.BLACK);
         valueScoreLabel.setFont(new Font("Impact", Font.PLAIN, SCORE_LABEL_FONT_SIZE));

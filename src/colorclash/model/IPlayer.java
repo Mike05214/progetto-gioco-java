@@ -1,6 +1,7 @@
 package colorclash.model;
 
 public interface IPlayer {
+    
     double getX();
     double getY();
     int getWidth();
@@ -13,4 +14,5 @@ public interface IPlayer {
     void setMovingRight(boolean movingRight);
     void colorCooldown(int availableColorsCount, boolean forward);
     void resetMovementFlags();
-}
+
+}// fine IPlayer

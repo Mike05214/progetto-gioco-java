@@ -5,4 +5,5 @@ public interface ILogicalRect {
     double getY();
     double getWidth();
     double getHeight();
-}
+    
+}// fine ILogicalRect

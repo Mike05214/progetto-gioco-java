@@ -8,7 +8,6 @@ public interface IGameModel {
     void update(int panelWidth, int panelHeight);
     void resetGame();
     void autoSave();
-    void decreaseLives();
 
     // Getters di stato del gioco
     boolean isInvulnerable();
@@ -21,11 +20,6 @@ public interface IGameModel {
     double getCurrentSpeed();
     int getAvailableColorsCount();
     int getHighscore();
-
-    // Getters per il setup iniziale
-    double getStartX();
-    double getStartY();
-    int getStartColorId();
 
     // Getters degli oggetti di gioco tramite interfacce
     IPlayer getPlayer();
@@ -40,4 +34,5 @@ public interface IGameModel {
     void setPhase(int phase);
     void setCurrentSpeed(double currentSpeed);
     void setAvaibleColors(int avaibleColors);
-}
+    
+}// fine IGameModel

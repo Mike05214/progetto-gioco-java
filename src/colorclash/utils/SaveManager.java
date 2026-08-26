@@ -19,11 +19,9 @@ import colorclash.model.IPlayer;
 import colorclash.model.IGameModel;
 import colorclash.model.IObstacle;
 import colorclash.model.Obstacle;
-import colorclash.model.SinusoidalMadness;
-import colorclash.model.SpeedRacer;
-import colorclash.model.StandardObstacle;
 
 public class SaveManager {
+
     // costanti
     private final static boolean IS_DIST_VERSION = false;
 
@@ -209,7 +207,7 @@ public class SaveManager {
                 e.printStackTrace();
             }
         }
-    }
+    }// fine loadGameState
 
     // METODI PRIVATI
 
@@ -219,7 +217,7 @@ public class SaveManager {
             obs.setActive(false);
             obs.setY(-2000);
         }
-    }
+    }// fine resetEnemyPool
 
     private void processSaveLine(String line, IGameModel model) throws NumberFormatException {
         String[] parts = line.split(":");
@@ -252,7 +250,7 @@ public class SaveManager {
                 loadObstacleData(value, model);
                 break;
         }
-    }
+    }// fine processSaveLine
 
     private void loadPlayerData(String data, IGameModel model) throws NumberFormatException {
         String[] playerData = data.split(";");
@@ -261,7 +259,7 @@ public class SaveManager {
         p.setY(Double.valueOf(playerData[1]));
         p.setColorId(Integer.valueOf(playerData[2]));
         p.getHitbox().updatePosition(p.getX(), p.getY());
-    }
+    }// fine loadPlayerData
 
     private void loadObstacleData(String data, IGameModel model) throws NumberFormatException {
         String[] obsData = data.split(";");
@@ -278,11 +276,7 @@ public class SaveManager {
             Obstacle obs = (Obstacle) iObs;
             
             if (!obs.isActive()) {
-                boolean isMatchingType = (type.equals("StandardObstacle") && obs instanceof StandardObstacle) ||
-                        (type.equals("SpeedRacer") && obs instanceof SpeedRacer) ||
-                        (type.equals("SinusoidalMadness") && obs instanceof SinusoidalMadness);
-
-                if (isMatchingType) {
+                if (type.equals(obs.getType())) {
                     obs.setX(x);
                     obs.setY(y);
                     obs.setFallSpeed(speed);
@@ -292,16 +286,12 @@ public class SaveManager {
 
                     obs.updateHitbox();
 
-                    if (obs instanceof SinusoidalMadness) {
-                        ((SinusoidalMadness) obs).setStartX(x);
-                    }
-
                     obs.setActive(true);
                     break;
                 }
             }
         }
-    }
+    }// fine loadObstacleData
 
     private String getSavesDirectory() throws URISyntaxException {
         String savesDir = null;

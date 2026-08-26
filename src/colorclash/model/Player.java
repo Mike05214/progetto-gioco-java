@@ -48,7 +48,7 @@ public class Player implements IPlayer {
         hitbox.updatePosition(this.x, this.y);
     }
 
-    // METODI PUBBLICI DI LOGICA
+    // METODI PUBBLICI
 
     public void update() {
         boolean diagonalMovement = (movingLeft ^ movingRight) && (movingUp ^ movingDown);
@@ -103,7 +103,7 @@ public class Player implements IPlayer {
     }// fine resetMovementFlags
 
 
-    // GETTERS IMPLEMENTATI DALL'INTERFACCIA IPlayer
+    //GETTERS
 
     @Override
     public double getX() { return x; }
@@ -126,13 +126,12 @@ public class Player implements IPlayer {
     }
 
 
-    // SETTERS (Usati solo dal Model/Controller)
+    //SETTERS
 
     public void setMovingUp(boolean movingUp) { this.movingUp = movingUp; }
     public void setMovingDown(boolean movingDown) { this.movingDown = movingDown; }
     public void setMovingLeft(boolean movingLeft) { this.movingLeft = movingLeft; }
     public void setMovingRight(boolean movingRight) { this.movingRight = movingRight; }
-    
     public void setColorId(int colorId){ this.colorId = colorId; }
     public void setX(double x) { this.x = x; }
     public void setY(double y) { this.y = y; }

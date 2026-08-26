@@ -1,6 +1,7 @@
 package colorclash.view;
 
 import colorclash.model.IGameModel;
+
 import colorclash.utils.AudioManager;
 import colorclash.utils.SaveManager;
 
@@ -15,7 +16,7 @@ import javax.swing.JButton;
 
 public class PausePanel extends BaseMenuPanel {
 
-    // VARIABILE MODEL RIMOSSA (ereditata correttamente da BaseMenuPanel)
+    // variabili d'istanza
     private JButton backToMenuButton;
     private JButton saveAndExitButton;
     private JButton resumeButton;

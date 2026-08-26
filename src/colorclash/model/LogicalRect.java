@@ -15,14 +15,14 @@ public class LogicalRect implements ILogicalRect {
         this.height = height;
     }// fine costruttore
 
-    // METODI PUBBLICI DI LOGICA
+    // METODI PUBBLICI
 
     public void setPosition(double x, double y) {
         this.x = x;
         this.y = y;
     }// fine setPosition
     
-    // GETTERS IMPLEMENTATI DALL'INTERFACCIA ILogicalRect
+    // GETTERS
 
     @Override
     public double getX() { return x; }

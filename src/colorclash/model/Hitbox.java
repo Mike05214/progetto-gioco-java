@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Hitbox implements IHitbox {
     
-    //variabili d'istanza
+    // variabili d'istanza
     private List<LogicalRect> rectangles;
     private List<Double> offsetX;
     private List<Double> offsetY;
@@ -16,13 +16,14 @@ public class Hitbox implements IHitbox {
         this.offsetY = new ArrayList<>();
     }// fine costruttore
 
-    // METODI PUBBLICI DI LOGICA
+
+    // METODI PUBBLICI 
     
     public void addRect(double offX, double offY, double width, double height) {
         rectangles.add(new LogicalRect(0, 0, width, height));
         offsetX.add(offX);
         offsetY.add(offY);
-    }//fine addRect
+    }// fine addRect
     
     public void updatePosition(double baseX, double baseY) {
         for (int i = 0; i < rectangles.size(); i++) {
@@ -30,14 +31,12 @@ public class Hitbox implements IHitbox {
         }
     }// fine updatePosition
 
-    // GETTER IMPLEMENTATO DALL'INTERFACCIA IHitbox
+    // GETTERS
     
     @Override
     public List<LogicalRect> getRectangles() {
         return rectangles;
     }
-    
-    // ALTRI GETTERS (Usati internamente dal Model per la logica/aggiornamenti)
     
     public List<Double> getOffsetX() {
         return offsetX;

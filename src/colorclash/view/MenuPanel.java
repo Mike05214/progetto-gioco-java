@@ -24,7 +24,7 @@ public class MenuPanel extends BaseMenuPanel {
     private JButton playButton;
     private JButton deleteSaveButton;
     private JButton soundButton;
-    private IGameModel model; // <-- USO L'INTERFACCIA
+    private IGameModel model; 
 
     // costanti
     private final int TEXT_LABEL_SIZE = 18;

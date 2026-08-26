@@ -7,14 +7,15 @@ public class StandardObstacle extends Obstacle {
     // costanti statiche
     protected static final int MIN_SIZE = 50;
     protected static final int MAX_SIZE = 100;
+    protected static final int DEFAULT_POSITION = -2000;
 
     // costanti
     private final int STANDARD_OBSTACLE_POINTS = Config.getInstance().getIntProperty("default_obstacle_points");
 
     public StandardObstacle() {
-        super(0, -2000, 0, 0, MIN_SIZE, MIN_SIZE);
+        super(0, DEFAULT_POSITION, 0, 0, MIN_SIZE, MIN_SIZE);
         this.setActive(false);
-        createHitbox(); // Usa il metodo per inizializzarla
+        createHitbox();
     }// fine costruttore
 
     // METODI PROTETTI
@@ -22,7 +23,7 @@ public class StandardObstacle extends Obstacle {
     @Override
     protected void createHitbox(){
         hitbox.addRect(0, 0, width, height);
-    }
+    }// fine createHitbox
 
     // METODI PUBBLICI
 
@@ -31,10 +32,8 @@ public class StandardObstacle extends Obstacle {
         hitbox.getRectangles().clear();
         hitbox.getOffsetX().clear();
         hitbox.getOffsetY().clear();
-        
-        // Aggiunge il rettangolo proporzionale alla dimensione corrente
         createHitbox(); 
-    }
+    }// fine updateHitbox
 
     @Override
     public int getPoints() {

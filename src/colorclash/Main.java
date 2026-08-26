@@ -1,11 +1,10 @@
 package colorclash;
 
 import colorclash.view.MainFrame;
+
 import colorclash.utils.AudioManager;
 
-
 import javax.swing.UIManager;
-
 
 import java.awt.Color;
 import java.awt.Font;
@@ -17,7 +16,6 @@ public class Main {
                                                                             // should be used by the Java 2D text renderer.
         System.setProperty("swing.aatext", "true");// DOC: Globally enables anti-aliasing for text rendering across all Swing components.
 
-        // --- INIZIO IMPOSTAZIONI LOOK AND FEEL ---
         try {
             String osName = System.getProperty("os.name").toLowerCase();
 
@@ -35,11 +33,9 @@ public class Main {
         } catch (Exception e) {
             System.err.println("Error setting the Look and Feel.");
             e.printStackTrace();
-        }
-        // --- FINE IMPOSTAZIONI LOOK AND FEEL ---
-
-
-        // --- INIZIO INIZIALIZZAZIONE SUONO ---
+            
+        }// fine LookAndFeel
+        
 
         AudioManager.getInstance().preloadSoundEffect("game_over.wav", 1);
         AudioManager.getInstance().preloadSoundEffect("hit.wav", 5);
@@ -47,11 +43,6 @@ public class Main {
         AudioManager.getInstance().preloadSoundEffect("notification.wav", 4);
         AudioManager.getInstance().preloadSoundEffect("race_countdown.wav", 1);
         AudioManager.getInstance().playBackgroundMusic("menu.wav");
-        
-        // --- FINE INIZIALIZZAZIONE SUONO ---
-
-        
-        // --- AVVIO FINESTRA GRAFICA ---
 
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -60,7 +51,6 @@ public class Main {
             }
         });
        
-
     }// fine main
     
 }// fine classe Main

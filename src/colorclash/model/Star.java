@@ -23,7 +23,7 @@ public class Star implements IStar {
         reset(screenWidth, rand.nextInt(0, (screenHeight + 1)));
     }// fine costruttore
 
-    // METODI PUBBLICI DI LOGICA
+    // METODI PUBBLICI
 
     public void reset(int screenWidth, int startY) {
         size = rand.nextInt(MIN_SIZE, (MAX_SIZE + 1));
@@ -40,7 +40,7 @@ public class Star implements IStar {
         }
     }// fine update
 
-    // GETTERS IMPLEMENTATI DALL'INTERFACCIA IStar
+    // GETTERS
     
     @Override
     public double getX() { return x; }

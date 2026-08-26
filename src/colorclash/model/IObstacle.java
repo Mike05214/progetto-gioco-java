@@ -1,6 +1,7 @@
 package colorclash.model;
 
 public interface IObstacle {
+    
     boolean isActive();
     String getType();
     double getX();
@@ -10,4 +11,5 @@ public interface IObstacle {
     int getWidth();
     int getHeight();
     IHitbox getHitbox();
-}
+    
+}// fine IObstacle

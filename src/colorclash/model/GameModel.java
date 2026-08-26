@@ -19,7 +19,7 @@ public class GameModel implements IGameModel {
     private final int START_COLOR_ID = 0;
     private final double BASE_SPEED = Config.getInstance().getDoubleProperty("obstacle_base_speed");
     private final int TICK_TIME = 8;
-    private final int DEATH_DELAY_MS =1500;
+    private final int DEATH_DELAY_MS = 1500;
     private final int SCORE_DELAY_MS = Config.getInstance().getIntProperty("score_delay_ms");
     private final int SCORE_PHASE_2 = Config.getInstance().getIntProperty("phase_2_score_threshold");
     private final int SCORE_PHASE_3 = Config.getInstance().getIntProperty("phase_3_score_threshold");
@@ -301,23 +301,20 @@ public class GameModel implements IGameModel {
     private void createPlayerExplosion(double x, double y, int colorId) {
         int particlesToSpawn = 25;
         int spawned = 0;
-
-        // Calcola il centro esatto della navicella da cui far partire l'esplosione
         double centerX = x + (player.getWidth() / 2.0);
         double centerY = y + (player.getHeight() / 2.0);
 
         for (Particle p : allParticles) {
             if (!p.isActive()) {
-                p.spawn(centerX, centerY, colorId); // Ricicla la particella
-                p.setTriangle(true); // La fa diventare un triangolo
-
+                p.spawn(centerX, centerY, colorId);
+                p.setTriangle(true);
                 spawned++;
                 if (spawned >= particlesToSpawn) {
-                    break; // Ferma il ciclo quando abbiamo spawnato 40 particelle
+                    break;
                 }
             }
         }
-    }
+    }// fine createPlayerExplosion
 
     private void createObstaclesExplosion(double x, double y, int colorId) {
         int particlesToSpawn = 15;
@@ -342,7 +339,6 @@ public class GameModel implements IGameModel {
                 continue;
             }
 
-            // 2. Logica piatta e leggibile
             if (player.getColorId() == obs.getColorId()) {
                 handlePositiveCollision(obs);
             } else {
@@ -370,12 +366,12 @@ public class GameModel implements IGameModel {
         if (isPlayerDead) {
             AudioManager.getInstance().playSoundEffect("hit.wav");
             createPlayerExplosion(player.getX(), player.getY(), player.getColorId());
-            player.setY(DEFAULT_POSITION); // Sposta fuori schermo
+            player.setY(DEFAULT_POSITION);
         } else {
             AudioManager.getInstance().playSoundEffect("hurt.wav");
             isInvulnerable = true;
         }
-    }
+    }// fine handleNegativeCollision
 
     private void resetScore() {
         score = 0;
@@ -422,42 +418,23 @@ public class GameModel implements IGameModel {
         deathTimer = 0;
     }// fine resetDeathDelay
 
-    // METODI PUBBLICI OVERRIDE DA IGameModel
-
-    @Override
-    public void decreaseLives() {
+    private void decreaseLives() {
         lives--;
         if (lives <= 0) {
             isPlayerDead = true;
             AudioManager.getInstance().stopBackgroundMusic();
         }
-    }
-
-    @Override
-    public void update(int panelWidth, int panelHeight) {
-        
-        if (isGameOver) {
-            return;
-        }
-
-        if (isPlayerDead) {
-            handleDeathSequence();
-            return;
-        }
-
-        updateGameplayCore(panelWidth, panelHeight);
-
-    }// fine update
+    }// fine decreaseLives
 
     private void handleDeathSequence() {
-        deathTimer+=TICK_TIME;
+        deathTimer += TICK_TIME;
 
         for (Particle p : allParticles) {
             if (p.isActive()) {
                 p.update();
             }
         }
-        
+
         if (deathTimer >= DEATH_DELAY_MS) {
             triggerGameOver();
         }
@@ -490,10 +467,28 @@ public class GameModel implements IGameModel {
         updateSurvivalScore();
     }// fine updateGameplayCore
 
+    // METODI PUBBLICI
+
+    @Override
+    public void update(int panelWidth, int panelHeight) {
+
+        if (isGameOver) {
+            return;
+        }
+
+        if (isPlayerDead) {
+            handleDeathSequence();
+            return;
+        }
+
+        updateGameplayCore(panelWidth, panelHeight);
+
+    }// fine update
+
     @Override
     public void resetGame() {
         resetDeathDelay();
-        this.player.resetToInitialSettings(getStartX(), getStartY(), getStartColorId());
+        this.player.resetToInitialSettings(START_X, START_Y, START_COLOR_ID);
         resetScore();
         resetObstacles();
         resetParticles();
@@ -512,19 +507,20 @@ public class GameModel implements IGameModel {
         }
     }// fine autoSave
 
-    // getters del GameModel OVERRIDE
+
+
+    // getters del GameModel 
 
     @Override
     public boolean isInvulnerable() {
         return isInvulnerable;
     }// fine isInvulnerable
-    
+
     @Override
     public int getInvulnTimer() {
         return invulnTimer;
     }
 
-    // MODIFICA DA QUI IN GIÙ: Restituiscono le interfacce invece delle classi concrete
     @Override
     public IPlayer getPlayer() {
         return player;
@@ -550,7 +546,6 @@ public class GameModel implements IGameModel {
         return stars;
     }
 
-    // ... Il resto rimane invariato ...
 
     @Override
     public int getScore() {
@@ -567,20 +562,6 @@ public class GameModel implements IGameModel {
         return isGameOver;
     }
 
-    @Override
-    public double getStartX() {
-        return this.START_X;
-    }
-
-    @Override
-    public double getStartY() {
-        return this.START_Y;
-    }
-
-    @Override
-    public int getStartColorId() {
-        return this.START_COLOR_ID;
-    }
 
     @Override
     public int getAvailableColorsCount() {
@@ -607,7 +588,7 @@ public class GameModel implements IGameModel {
         return isPlayerDead;
     }
 
-    // setters del GameModel OVERRIDE
+    // setters del GameModel 
 
     @Override
     public void setScore(int score) {
