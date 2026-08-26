@@ -27,7 +27,7 @@ public interface IGameModel {
     double getStartY();
     int getStartColorId();
 
-    // MODIFICA QUI: Getters degli oggetti di gioco tramite interfacce
+    // Getters degli oggetti di gioco tramite interfacce
     IPlayer getPlayer();
     List<? extends IObstacle> getEnemies();
     List<? extends IParticle> getParticles();

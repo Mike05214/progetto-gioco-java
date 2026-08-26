@@ -65,11 +65,11 @@ public class GamePanel extends JPanel {
 
                 if(model.isPlayerDead()){
                     resetGamePanel();
+                    hudPanel.getPauseButton().setEnabled(false);
+                    hudPanel.getScoreLabel().setVisible(false);
                 }
                 
                 if (model.isGameOver()) {
-                    hudPanel.getPauseButton().setEnabled(false);
-                    hudPanel.getScoreLabel().setVisible(false);
                     gameSpace.getRestarButton().setVisible(true);
                     gameLoop.stop();
                 }

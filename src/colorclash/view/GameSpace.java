@@ -36,7 +36,7 @@ public class GameSpace extends JPanel {
             Color.CYAN,
             Color.ORANGE
     };
-    boolean debugMode = true;
+    boolean debugMode = false;
 
     // costanti
     private final int RESTART_BUTTON_FONT_SIZE = 20;
