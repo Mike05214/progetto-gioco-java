@@ -255,6 +255,7 @@ public class HudPanel extends JPanel {
     }// fine setScoreVisible
 
     // getters di HudPanel
+    
     public JButton getPauseButton() {
         return pauseButton;
     }
