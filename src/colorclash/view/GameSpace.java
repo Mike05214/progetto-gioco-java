@@ -81,11 +81,11 @@ public class GameSpace extends JPanel {
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         drawStars(g2d);
-        showLegend(g2d);
         drawPlayer(g2d);
         drawObstacles(g2d);
         drawParticles(g2d);
         drawFloatingScore(g2d);
+        showLegend(g2d);
 
         if (debugMode) {
         

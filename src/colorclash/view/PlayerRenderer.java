@@ -63,7 +63,7 @@ public class PlayerRenderer {
         g2d.translate(-player.getX(), -player.getY());
     }// fine render
 
-    // METODI PRIVATO
+    // METODI PRIVATI
 
     private static Path2D.Double createPlayerShape() {
         int width = Config.getInstance().getIntProperty("player_width");
