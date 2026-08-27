@@ -47,9 +47,6 @@ public class GameSpace extends JPanel {
     private final int GAME_OVER_COLOR_B = 0;
     private final int GAME_OVER_OPACITY = 150;
     private final int GAME_OVER_FONT_SIZE = 100;
-    private final int LEGEND_STROKE_WIDTH = 3;
-    private final int LEGEND_STROKE_NEW_START = 2;
-    private final int LEGEND_STROKE_RESIZE = 4;
     private final int GAME_OVER_HEIGHT_OFFSET = 80;
     private final int GAME_OVER_SCORE_HEIGHT_OFFSET = 35;
 
@@ -85,7 +82,6 @@ public class GameSpace extends JPanel {
         drawObstacles(g2d);
         drawParticles(g2d);
         drawFloatingScore(g2d);
-        showLegend(g2d);
 
         if (debugMode) {
         
@@ -197,34 +193,6 @@ public class GameSpace extends JPanel {
                 getHeight() / 2 - GAME_OVER_SCORE_HEIGHT_OFFSET);
     }// fine showGameOver
 
-    private void showLegend(Graphics2D g2d) {
-        int elementSize = 20;
-        int elementDistance = 10;
-        int marginX = 20;
-        int marginY = 20;
-        int currentPhaseColors = model.getAvailableColorsCount();
-        int currentColorId = model.getPlayer().getColorId();
-        int totalWidth = (currentPhaseColors * elementSize) + (elementDistance * (currentPhaseColors - 1));
-        int startX = getWidth() - totalWidth - marginX;
-        int startY = getHeight() - elementSize - marginY;
-
-        for (int i = 0; i < currentPhaseColors; i++) {
-            int x = startX + (i * (elementSize + elementDistance));
-            int y = startY;
-            g2d.setColor(colorPalette[i]);
-            g2d.fillRect(x, y, elementSize, elementSize);
-
-            if (i == currentColorId) {
-                g2d.setColor(Color.WHITE);
-                g2d.setStroke(new BasicStroke(LEGEND_STROKE_WIDTH));
-                g2d.drawRect(x - LEGEND_STROKE_NEW_START,
-                        y - LEGEND_STROKE_NEW_START,
-                        elementSize + LEGEND_STROKE_RESIZE,
-                        elementSize + LEGEND_STROKE_RESIZE);
-            }
-        }
-    }// fine showLegend
-
     private void drawDebugHitbox(Graphics2D g2d, IHitbox hitbox) {
         g2d.setColor(Color.RED);
         g2d.setStroke(new BasicStroke(1f));
@@ -242,6 +210,10 @@ public class GameSpace extends JPanel {
 
     public JButton getRestarButton() {
         return restartButton;
+    }
+
+    public Color[] getColorPalette() {
+        return colorPalette;
     }
 
     // setters di GameSpace

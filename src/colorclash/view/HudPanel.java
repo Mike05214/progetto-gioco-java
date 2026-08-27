@@ -24,6 +24,7 @@ public class HudPanel extends JPanel {
 
     // costanti
     private final int MAX_LIVES = 3;
+    private final int MAX_COLORS = 4;
     private final int HUD_WIDTH = 0;
     private final int HUD_HEIGHT = 35;
     private final int PAUSE_BUTTON_WIDTH = 150;
@@ -42,6 +43,9 @@ public class HudPanel extends JPanel {
     private JLabel titleScoreLabel;
     private JLabel valueScoreLabel;
     private JPanel livesContainer;
+    private JPanel legendContainer;
+    private JPanel scorePanel;
+    private JLabel[] colorLabels = new JLabel[MAX_COLORS];
     private int lastLives = -1;
     private int lastScore = -1;
     private JLabel[] heartLabels = new JLabel[MAX_LIVES];
@@ -49,7 +53,8 @@ public class HudPanel extends JPanel {
 
     public HudPanel() {
         setLayout(new BorderLayout());
-        setBackground(Color.LIGHT_GRAY);
+
+        setBackground(new Color(170, 40, 60));
         setPreferredSize(new Dimension(HUD_WIDTH, HUD_HEIGHT));
         initWesternPanel();
         initCenterPanel();
@@ -69,40 +74,72 @@ public class HudPanel extends JPanel {
     }// fine initWesternPanel
 
     private void initCenterPanel() {
-        JPanel centerPanel = new JPanel();
+        JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 0));
         centerPanel.setOpaque(false);
-        
-        titleScoreLabel = new JLabel("SCORE: ");
-        titleScoreLabel.setForeground(Color.BLACK);
-        titleScoreLabel.setFont(new Font("Impact", Font.PLAIN, SCORE_LABEL_FONT_SIZE));
-        
-        valueScoreLabel = new JLabel("0");
-        valueScoreLabel.setForeground(Color.BLACK);
-        valueScoreLabel.setFont(new Font("Impact", Font.PLAIN, SCORE_LABEL_FONT_SIZE));
-        valueScoreLabel.setPreferredSize(new Dimension(80, 25)); // Spazio riservato ai numeri
-        valueScoreLabel.setHorizontalAlignment(SwingConstants.LEFT);
 
-        centerPanel.add(titleScoreLabel);
-        centerPanel.add(valueScoreLabel);
+        initScorePanel();
+        initLegendContainer();
+
+        centerPanel.add(scorePanel);
+        centerPanel.add(legendContainer);
+
         add(centerPanel, BorderLayout.CENTER);
     }// fine initCenterPanel
 
+    private void initScorePanel() {
+        scorePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 3));
+        scorePanel.setOpaque(true);
+        scorePanel.setBackground(new Color(0, 100, 0));
+        scorePanel.setPreferredSize(new Dimension(220, HUD_HEIGHT - 1));
+        scorePanel.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 1));
+
+        titleScoreLabel = new JLabel("SCORE: ");
+        titleScoreLabel.setForeground(Color.WHITE);
+        titleScoreLabel.setFont(new Font("Impact", Font.PLAIN, SCORE_LABEL_FONT_SIZE));
+
+        valueScoreLabel = new JLabel("0");
+        valueScoreLabel.setForeground(Color.WHITE);
+        valueScoreLabel.setFont(new Font("Impact", Font.PLAIN, SCORE_LABEL_FONT_SIZE));
+        valueScoreLabel.setPreferredSize(new Dimension(60, 25));
+        valueScoreLabel.setHorizontalAlignment(SwingConstants.LEFT);
+
+        scorePanel.add(titleScoreLabel);
+        scorePanel.add(valueScoreLabel);
+    }// fine initScorePanel
+
+    private void initLegendContainer() {
+        legendContainer = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 5));
+        legendContainer.setOpaque(true);
+        legendContainer.setBackground(Color.DARK_GRAY);
+        legendContainer.setPreferredSize(new Dimension(120, HUD_HEIGHT - 1));
+        legendContainer.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 1));
+
+        for (int i = 0; i < MAX_COLORS; i++) {
+            colorLabels[i] = new JLabel();
+            colorLabels[i].setOpaque(true);
+            colorLabels[i].setPreferredSize(new Dimension(20, 20));
+            colorLabels[i].setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 1));
+            colorLabels[i].setVisible(false);
+            legendContainer.add(colorLabels[i]);
+        }
+    }
+
     private void initLivesContainer() {
-        livesContainer = new JPanel(new FlowLayout(FlowLayout.RIGHT, HGAP, VGAP));// DOC: A flow layout arranges
-                                                // components in a directional flow,
-                                                // much like lines of text in a
-                                                // paragraph.
-                                                // The flow direction is determined by
-                                                // the container's
-                                                // componentOrientation property
+
+        JPanel easternPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+        easternPanel.setOpaque(false);
+
+        livesContainer = new JPanel(new FlowLayout(FlowLayout.RIGHT, HGAP, 0));
         livesContainer.setOpaque(true);
         livesContainer.setBackground(new Color(0, 100, 0));
-        livesContainer.setBorder(
-                BorderFactory.createEmptyBorder(LC_BORDER_TOP, LC_BORDER_LEFT, LC_BORDER_BOTTOM, LC_BORDER_RIGHT));
-        livesContainer.setPreferredSize(new Dimension(LIVES_CONTAINER_WIDTH, HUD_HEIGHT));
-        add(livesContainer, BorderLayout.EAST);
+        livesContainer.setPreferredSize(new Dimension(LIVES_CONTAINER_WIDTH, HUD_HEIGHT - 1));
+        livesContainer.setBorder(BorderFactory.createLineBorder(Color.WHITE, 1));
 
         generateVisualHearts();
+
+        easternPanel.add(livesContainer);
+
+        add(easternPanel, BorderLayout.EAST);
     }// fine initLivesContainer
 
     private void generateVisualHearts() {
@@ -111,16 +148,14 @@ public class HudPanel extends JPanel {
             heartLabels[i].setPreferredSize(heartLabels[i].getPreferredSize());
             livesContainer.add(heartLabels[i]);
         }
-        saveIcon = heartLabels[0].getIcon();// DOC: Returns the graphic image (glyph, icon) that the label displays.
+        saveIcon = heartLabels[0].getIcon();
     }// fine generateVisualHearts
 
     private JLabel loadImage() {
-        BufferedImage image; // DOC: The BufferedImage subclass describes an Image with an accessible buffer
-                             // of image data. extends Image
+        BufferedImage image;
         JLabel imageContainer;
 
-        try {// DOC: ImageIO containing static convenience methods for locating ImageReaders
-             // and ImageWriters, and performing simple encoding and decoding.
+        try {
             URL imgUrl = getClass().getResource("/colorclash/resources/heart.png");
             if (imgUrl == null) {
                 imgUrl = getClass().getResource("/src/colorclash/resources/heart.png");
@@ -129,12 +164,8 @@ public class HudPanel extends JPanel {
                 throw new Exception("File heart.png not found in any directory");
             }
 
-            image = ImageIO.read(imgUrl);// DOC: read(URL input) Returns a BufferedImage as the result of decoding a
-                                         // supplied URL
-                                         // with an ImageReader chosen automatically from among those currently
-                                         // registered.
-
-            imageContainer = new JLabel(new ImageIcon(image));// DOC: Creates an ImageIcon from an image object.
+            image = ImageIO.read(imgUrl);
+            imageContainer = new JLabel(new ImageIcon(image));
             return imageContainer;
 
         } catch (Exception e) {
@@ -149,14 +180,28 @@ public class HudPanel extends JPanel {
 
     // METODI PUBBLICI
 
-    public void updateLivesView(int currentLives) {
+    public void updateLegendView(int availableColors, int currentColorId, Color[] palette) {
+        for (int i = 0; i < MAX_COLORS; i++) {
+            if (i < availableColors) {
+                colorLabels[i].setVisible(true);
+                colorLabels[i].setBackground(palette[i]);
 
+                if (i == currentColorId) {
+                    colorLabels[i].setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
+                } else {
+                    colorLabels[i].setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 1));
+                }
+            } else {
+                colorLabels[i].setVisible(false);
+            }
+        }
+    }// fine updateLegendView
+
+    public void updateLivesView(int currentLives) {
         if (currentLives == lastLives) {
             return;
         }
-
         for (int i = 0; i < MAX_LIVES; i++) {
-
             if (i >= (MAX_LIVES - currentLives)) {
                 heartLabels[i].setIcon(saveIcon);
                 heartLabels[i].setForeground(Color.RED);
@@ -181,17 +226,20 @@ public class HudPanel extends JPanel {
     public void showCountdown(int secondsLeft) {
         titleScoreLabel.setText("GAME RESTARTS IN: " + secondsLeft);
         valueScoreLabel.setVisible(false);
+        legendContainer.setVisible(false);
     }// fine showCountdown
 
     public void showNewColorUnlocked() {
         titleScoreLabel.setText("NEW COLOR UNLOCKED!");
         valueScoreLabel.setVisible(false);
+        legendContainer.setVisible(false);
     }// fine showNewColorUnlocked
 
     public void restoreScoreLabel(int currentScore) {
         titleScoreLabel.setText("SCORE: ");
         valueScoreLabel.setText(String.valueOf(currentScore));
         valueScoreLabel.setVisible(true);
+        legendContainer.setVisible(true);
         lastScore = currentScore;
     }// fine restoreScoreLabel
 
@@ -203,10 +251,10 @@ public class HudPanel extends JPanel {
     public void setScoreVisible(boolean visible) {
         titleScoreLabel.setVisible(visible);
         valueScoreLabel.setVisible(visible);
-    }
+        legendContainer.setVisible(visible);
+    }// fine setScoreVisible
 
     // getters di HudPanel
-
     public JButton getPauseButton() {
         return pauseButton;
     }

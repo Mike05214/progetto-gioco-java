@@ -53,6 +53,7 @@ public class GamePanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 model.update(getGameSpaceWidth(), getGameSpaceHeight());
                 hudPanel.updateLivesView(model.getLives());
+                hudPanel.updateLegendView(model.getAvailableColorsCount(), model.getPlayer().getColorId(), gameSpace.getColorPalette());
                 if (!isScoreUpdateBlocked) {
                     hudPanel.updateScoreText(model.getScore());
                 }
