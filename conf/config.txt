@@ -11,9 +11,9 @@ player_width=70
 player_height=80
 
 #OBSTACLES
-obstacle_base_speed=3.0
+obstacle_base_speed=3.5
 default_obstacle_points=100
-speed_racer_multiplier=2.0
+speed_racer_multiplier=1.5
 speed_racer_points=200
 sinusoidal_madness_color_change_interval_ms=500
 sinusoidal_madness_amplitude=80 
