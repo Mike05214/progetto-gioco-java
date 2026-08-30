@@ -52,7 +52,7 @@ public class GameSpace extends JPanel {
 
     public GameSpace(IGameModel injectedModel) {
         setBackground(new Color(10, 10, 20));
-        this.model = injectedModel; 
+        this.model = injectedModel;
         setLayout(new GridBagLayout());
         restartButton = new JButton("BACK TO MENU");
         restartButton.setFont(new Font("Impact", Font.PLAIN, RESTART_BUTTON_FONT_SIZE));
@@ -84,16 +84,16 @@ public class GameSpace extends JPanel {
         drawFloatingScore(g2d);
 
         if (debugMode) {
-        
+
             drawDebugHitbox(g2d, model.getPlayer().getHitbox());
-            
+
             for (IObstacle obs : model.getEnemies()) {
                 if (obs.isActive()) {
                     drawDebugHitbox(g2d, obs.getHitbox());
                 }
             }
-        }//fine debug
-        
+        } // fine debug
+
         if (model.isGameOver()) {
             showGameOver(g2d);
         }
@@ -134,17 +134,22 @@ public class GameSpace extends JPanel {
     }// fine drawParticles
 
     private void drawFloatingScore(Graphics2D g2d) {
+
+        g2d.setFont(new Font("Impact", Font.PLAIN, 20));
+
         for (IFloatingScore fs : model.getFloatingScores()) {
-            g2d.setColor(new Color(255, 255, 255, fs.getAlpha()));
-            g2d.setFont(new Font("Impact", Font.PLAIN, 20));
-            g2d.drawString(fs.getText(), (float) fs.getX(), (float) fs.getY());
+            
+            if (fs.isActive()) {
+                g2d.setColor(new Color(255, 255, 255, fs.getAlpha()));
+                g2d.drawString(fs.getText(), (float) fs.getX(), (float) fs.getY());
+            }
         }
     }// fine drawFloatingScore
 
     private void drawPlayer(Graphics2D g2d) {
 
         if (model.isPlayerDead()) {
-            return; 
+            return;
         }
         boolean drawShipBody = true;
         boolean isInvuln = model.isInvulnerable();
@@ -202,7 +207,7 @@ public class GameSpace extends JPanel {
                     (int) rect.getX(),
                     (int) rect.getY(),
                     (int) rect.getWidth(),
-                    (int) rect.getHeight()); 
+                    (int) rect.getHeight());
         }
     }// fine drawDebugHitbox
 

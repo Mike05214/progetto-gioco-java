@@ -6,5 +6,6 @@ public interface IFloatingScore {
     double getY();
     int getAlpha();
     String getText();
+    boolean isActive();
     
 }// fine IFloatingScore

@@ -32,6 +32,7 @@ public class GameModel implements IGameModel {
     private final int SPEEDRACER_CHANCE_PHASE_2 = 30;
     private final int SPEEDRACER_CHANCE_PHASE_3 = 40;
     private final int SINUSOIDALMADNESS_CHANCE = 15;
+    private final int MAX_FLOATING_SCORES = 10;
     private final int MAX_PARTICLES = 200;
     private final int EXPLOSION_OFFSET = 20; // per alzare il centro esplosione
     private final int MAX_LIVES = 3;
@@ -87,6 +88,7 @@ public class GameModel implements IGameModel {
         allEnemies = new ArrayList<>();
         initObstaclesPool();
         initParticlesPool();
+        initFloatingScoresPool();
         player = new Player(START_X, START_Y, START_COLOR_ID);
         lives = MAX_LIVES;
         isGameOver = false;
@@ -121,6 +123,15 @@ public class GameModel implements IGameModel {
         }
     }// fine initParticlesPool
 
+    private void initFloatingScoresPool() {
+        floatingScores.clear();
+        for (int i = 0; i < MAX_FLOATING_SCORES; i++) {
+            FloatingScore fs = new FloatingScore();
+            fs.setActive(false);
+            floatingScores.add(fs);
+        }
+    }// fine initFloatingScoresPool
+
     private void initStars(int panelWidth, int panelHeight) {
         for (int i = 0; i < NUM_STARS; i++) {
             stars.add(new Star(panelWidth, panelHeight));
@@ -146,9 +157,10 @@ public class GameModel implements IGameModel {
 
     private void updateFloatingScore() {
         for (FloatingScore fs : floatingScores) {
-            fs.update();
+            if (fs.isActive()) {
+                fs.update();
+            }
         }
-        floatingScores.removeIf(fs -> fs.isDead());
     }// fine updateFloatingScore
 
     private void updateStars(int panelWidth, int panelHeight) {
@@ -331,6 +343,15 @@ public class GameModel implements IGameModel {
         }
     }// fine createExplosion
 
+    private void spawnFloatingScore(double x, double y, int points) {
+        for (FloatingScore fs : floatingScores) {
+            if (!fs.isActive()) {
+                fs.spawn(x, y, points);
+                break;
+            }
+        }
+    }// fine spawnFloatingScore
+
     private void checkCollisions() {
         Hitbox playerHitbox = player.getHitbox();
 
@@ -350,7 +371,7 @@ public class GameModel implements IGameModel {
     private void handlePositiveCollision(Obstacle obs) {
         AudioManager.getInstance().playSoundEffect("hit.wav");
         createObstaclesExplosion(obs.getX(), obs.getY() - EXPLOSION_OFFSET, obs.getColorId());
-        floatingScores.add(new FloatingScore(obs.getX(), obs.getY(), obs.getPoints()));
+        spawnFloatingScore(obs.getX(), obs.getY(), obs.getPoints());
         addScore(obs.getPoints());
         obs.setActive(false);
         obs.setY(DEFAULT_POSITION);
@@ -392,7 +413,9 @@ public class GameModel implements IGameModel {
     }// fine resetParticles
 
     private void resetFloatingScore() {
-        floatingScores.clear();
+        for (FloatingScore fs : floatingScores) {
+            fs.setActive(false);
+        }
     }// fine resetFloatingScore
 
     private void resetDifficulty() {
@@ -507,9 +530,7 @@ public class GameModel implements IGameModel {
         }
     }// fine autoSave
 
-
-
-    // getters del GameModel 
+    // getters del GameModel
 
     @Override
     public boolean isInvulnerable() {
@@ -546,7 +567,6 @@ public class GameModel implements IGameModel {
         return stars;
     }
 
-
     @Override
     public int getScore() {
         return this.score;
@@ -561,7 +581,6 @@ public class GameModel implements IGameModel {
     public boolean isGameOver() {
         return isGameOver;
     }
-
 
     @Override
     public int getAvailableColorsCount() {
@@ -588,7 +607,7 @@ public class GameModel implements IGameModel {
         return isPlayerDead;
     }
 
-    // setters del GameModel 
+    // setters del GameModel
 
     @Override
     public void setScore(int score) {

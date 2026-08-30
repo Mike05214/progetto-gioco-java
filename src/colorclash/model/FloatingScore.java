@@ -6,31 +6,37 @@ public class FloatingScore implements IFloatingScore {
     private double x, y;
     private String text;
     private int alpha = 255;
+    private boolean isActive = false;
 
-    public FloatingScore(double startX, double startY, int points) {
-        x = startX;
-        y = startY;
-        text = "+" + points;
+    public FloatingScore() {
+        this.x = 0;
+        this.y = -2000; 
+        this.text = "";
+        this.isActive = false;
     }// fine costruttore
 
     // METODI PUBBLICI 
+
+    public void spawn(double startX, double startY, int points) {
+        this.x = startX;
+        this.y = startY;
+        this.text = "+" + points;
+        this.alpha = 255;
+        this.isActive = true;
+    }// fine spawn
 
     public void update() {
         y -= 1.5;
         alpha -= 3;
 
-        if (alpha < 0) {
+        if (alpha <= 0) {
             alpha = 0;
+            this.isActive = false;
         }
     }// fine update
 
-    // getters
+    // GETTERS
 
-    
-    public boolean isDead() {
-        return alpha <= 0;
-    }// fine isDead
-    
     @Override
     public double getX() { return x; }
 
@@ -42,5 +48,12 @@ public class FloatingScore implements IFloatingScore {
 
     @Override
     public int getAlpha() { return alpha; }
-    
+
+    @Override
+    public boolean isActive() { return isActive; }
+
+    // SETTERS
+
+    public void setActive(boolean active) { this.isActive = active; }
+
 }// fine classe FloatingScore
