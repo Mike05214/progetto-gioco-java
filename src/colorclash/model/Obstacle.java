@@ -63,18 +63,27 @@ public abstract class Obstacle implements IObstacle {
 
     @Override
     public Hitbox getHitbox() { return hitbox;  }
+
     public abstract String getType();
+
     public abstract int getPoints();
+
     public double getFallSpeed() { return fallSpeed; }
 
     // SETTERS
 
     public void setActive(boolean active) { this.isActive = active; }
+
     public void setY(double CordY) { this.y = CordY; }
+
     public void setX(double CordX) { this.x = CordX; }
+
     public void setWidth(int width) { this.width = width; }
+
     public void setHeight(int height) { this.height = height; }
+
     public void setFallSpeed(double speed) { this.fallSpeed = speed; }
+    
     public void setColorId(int colorId) { this.colorId = colorId; }
 
 }// fine classe astratta Obstacle
