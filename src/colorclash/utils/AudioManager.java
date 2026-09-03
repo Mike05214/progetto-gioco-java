@@ -47,19 +47,19 @@ public class AudioManager {
         Clip[] clips = new Clip[numClips];
 
         for (int i = 0; i < numClips; i++) {
-            InputStream is = null;
+            java.net.URL audioUrl = null;
             AudioInputStream ais = null;
 
             try {
-                is = AudioManager.class.getResourceAsStream("/colorclash/sounds/" + fileName);
-                if (is == null) {
-                    is = AudioManager.class.getResourceAsStream("/src/colorclash/sounds/" + fileName);
+                audioUrl = AudioManager.class.getResource("/colorclash/sounds/" + fileName);
+                if (audioUrl == null) {
+                    audioUrl = AudioManager.class.getResource("/src/colorclash/sounds/" + fileName);
                 }
-                if (is == null) {
+                if (audioUrl == null) {
                     throw new FileNotFoundException("ERROR: Audio file not found -> " + fileName);
                 }
 
-                ais = AudioSystem.getAudioInputStream(is);
+                ais = AudioSystem.getAudioInputStream(audioUrl);
 
                 // DOC: Obtains the audio format of the sound data in this audio input stream.
                 AudioFormat af = ais.getFormat();
@@ -99,9 +99,6 @@ public class AudioManager {
                     if (ais != null) {
                         ais.close();
                     }
-                    if (is != null) {
-                        is.close();
-                    }
                 } catch (IOException ioe) {
                     ioe.printStackTrace();
                 }
@@ -112,7 +109,7 @@ public class AudioManager {
         soundIndexes.put(fileName, 0);
 
     } // fine preloadSoundEffect
-
+    
     public void playSoundEffect(String fileName) {
         if (isMuted)
             return;
@@ -144,19 +141,19 @@ public class AudioManager {
             backgroundMusic.close();
         }
 
-        InputStream is = null;
+        java.net.URL audioUrl = null;
         AudioInputStream ais = null;
 
         try {
-            is = AudioManager.class.getResourceAsStream("/colorclash/sounds/" + fileName);
-            if (is == null) {
-                is = AudioManager.class.getResourceAsStream("/src/colorclash/sounds/" + fileName);
+            audioUrl = AudioManager.class.getResource("/colorclash/sounds/" + fileName);
+            if (audioUrl == null) {
+                audioUrl = AudioManager.class.getResource("/src/colorclash/sounds/" + fileName);
             }
-            if (is == null) {
+            if (audioUrl == null) {
                 throw new FileNotFoundException("ERROR: Audio file not found -> " + fileName);
             }
 
-            ais = AudioSystem.getAudioInputStream(is);
+            ais = AudioSystem.getAudioInputStream(audioUrl);
             AudioFormat af = ais.getFormat();
             int bufferSize = (int) ais.getFrameLength() * af.getFrameSize();
             DataLine.Info info = new DataLine.Info(Clip.class, af, bufferSize);
@@ -186,9 +183,6 @@ public class AudioManager {
             try {
                 if (ais != null) {
                     ais.close();
-                }
-                if (is != null) {
-                    is.close();
                 }
             } catch (IOException ioe) {
                 ioe.printStackTrace();
