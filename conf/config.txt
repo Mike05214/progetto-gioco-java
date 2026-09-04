@@ -27,3 +27,36 @@ score_delay_ms=1000
 score_default_gain=100
 speed_phase_multiplier=1.35
 
+
+
+#DEFAULT SETTINGS
+
+#WINDOW
+#frame_width=700
+#frame_height=900
+#color_cooldown=20
+
+#PLAYER
+#player_start_x=325.0
+#player_start_y=550.0
+#player_speed=2.5
+#player_width=70
+#player_height=80
+
+#OBSTACLES
+#obstacle_base_speed=4.0
+#default_obstacle_points=100
+#speed_racer_multiplier=1.5
+#speed_racer_points=200
+#sinusoidal_madness_color_change_interval_ms=500
+#sinusoidal_madness_amplitude=80 
+#sinusoidal_madness_points=300
+
+#DIFFICULTY_PROGRESSION
+#obstacle_spawn_interval_ms=400
+#phase_2_score_threshold=2500
+#phase_3_score_threshold=5000
+#score_delay_ms=1000
+#score_default_gain=100
+#speed_phase_multiplier=1.35
+
