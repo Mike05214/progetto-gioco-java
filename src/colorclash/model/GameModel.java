@@ -182,19 +182,83 @@ public class GameModel implements IGameModel {
         }
     }// fine invulnerabilityHandler
 
-    private void spawningHandler(int panelWidth) {
+    private void spawningHandler(int panelWidth, int panelHeight) {
         spawnTimer += TICK_TIME;
 
         if (spawnTimer >= SPAWN_INTERVAL_MS) {
-            spawnRandomEnemy(panelWidth);
+            spawnRandomEnemy(panelWidth, panelHeight);
             spawnTimer -= SPAWN_INTERVAL_MS;
         }
     }// fine handleSpawning
 
-    private void spawnStandard(StandardObstacle obs, int panelWidth, double startY, double speed, int colorId) {
-        int randomWidth = random.nextInt(StandardObstacle.MIN_SIZE, StandardObstacle.MAX_SIZE);
-        int randomHeight = random.nextInt(StandardObstacle.MIN_SIZE, StandardObstacle.MAX_SIZE);
-        double randomX = random.nextDouble(panelWidth - randomWidth);
+    private boolean isSafeToSpawn(double newX, double newY, double newWidth, double newHeight, double newSpeed,
+            int screenHeight) {
+
+        for (Obstacle obs : allEnemies) {
+
+            if (!obs.isActive()) {
+                continue;
+            }
+
+            boolean xOverlap = (newX < obs.getX() + obs.getWidth()) &&
+                    (newX + newWidth > obs.getX());
+
+            if (xOverlap) {
+
+                if (!isVerticalSafe(obs, newY, newHeight, newSpeed, screenHeight)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+
+    }// Fine isSafeToSpawn
+
+    private boolean isVerticalSafe(Obstacle obs, double newY, double newHeight, double newSpeed, int screenHeight) {
+        double safeInitialGap = 30;
+
+        double distanceY = obs.getY() - (newY + newHeight);
+
+        if (distanceY < safeInitialGap) {
+            return false;
+        }
+
+        if (newSpeed > obs.getFallSpeed()) {
+
+            if (distanceY < 0) {
+                return false;
+            }
+
+            double relativeSpeed = newSpeed - obs.getFallSpeed();
+            double timeToImpact = distanceY / relativeSpeed;
+            double impactY = newY + (newSpeed * timeToImpact);
+
+            if (impactY < screenHeight) {
+                return false;
+            }
+        }
+
+        return true;
+    }// fine isVerticalSafe
+
+    private void spawnStandard(StandardObstacle obs, int panelWidth, int screenHeight, double startY, double speed,
+            int colorId) {
+        int randomWidth = 0;
+        int randomHeight = 0;
+        double randomX = 0;
+        boolean safe = false;
+        int attempts = 0;
+
+        while (!safe && attempts < 15) {
+            randomWidth = random.nextInt(StandardObstacle.MIN_SIZE, StandardObstacle.MAX_SIZE);
+            randomHeight = random.nextInt(StandardObstacle.MIN_SIZE, StandardObstacle.MAX_SIZE);
+            randomX = random.nextDouble(panelWidth - randomWidth);
+            safe = isSafeToSpawn(randomX, startY, randomWidth, randomHeight, speed, screenHeight);
+            attempts++;
+        }
+
+        if (!safe)
+            return;
 
         obs.setX(randomX);
         obs.setY(startY);
@@ -207,8 +271,20 @@ public class GameModel implements IGameModel {
         obs.setActive(true);
     }// fine spawnStandard
 
-    private void spawnSpeedRacer(SpeedRacer obs, int panelWidth, double startY, double speed, int colorId) {
-        double randomX = random.nextDouble(panelWidth - SpeedRacer.WIDTH);
+    private void spawnSpeedRacer(SpeedRacer obs, int panelWidth, int screenHeight, double startY, double speed,
+            int colorId) {
+        double randomX = 0;
+        boolean safe = false;
+        int attempts = 0;
+
+        while (!safe && attempts < 15) {
+            randomX = random.nextDouble(panelWidth - SpeedRacer.WIDTH);
+            safe = isSafeToSpawn(randomX, startY, SpeedRacer.WIDTH,SpeedRacer.HEIGHT, speed, screenHeight);
+            attempts++;
+        }
+
+        if (!safe)
+            return;
 
         obs.setX(randomX);
         obs.setY(startY);
@@ -220,10 +296,23 @@ public class GameModel implements IGameModel {
         obs.setActive(true);
     }// fine spawnSpeedRacer
 
-    private void spawnSinusoidal(SinusoidalMadness obs, int panelWidth, double startY, double speed, int colorId) {
+    private void spawnSinusoidal(SinusoidalMadness obs, int panelWidth, int screenHeight, double startY, double speed,
+            int colorId) {
         double safeMinX = SinusoidalMadness.AMPLITUDE;
         double safeMaxX = panelWidth - SinusoidalMadness.WIDTH - SinusoidalMadness.AMPLITUDE;
-        double randomX = random.nextDouble(safeMinX, safeMaxX);
+        double randomX = 0;
+        boolean safe = false;
+        int attempts = 0;
+        double effectiveWidth = SinusoidalMadness.WIDTH + (SinusoidalMadness.AMPLITUDE * 2);
+
+        while (!safe && attempts < 15) {
+            randomX = random.nextDouble(safeMinX, safeMaxX);
+            safe = isSafeToSpawn(randomX - SinusoidalMadness.AMPLITUDE, startY, effectiveWidth, SinusoidalMadness.HEIGHT, speed, screenHeight);
+            attempts++;
+        }
+
+        if (!safe)
+            return;
 
         obs.setX(randomX);
         obs.setStartX(randomX);
@@ -236,49 +325,52 @@ public class GameModel implements IGameModel {
         obs.setActive(true);
     }// fine spawnSinusoidal
 
-    private void activateFromPool(Obstacle[] pool, int panelWidth, double startY, double speed, int colorId) {
+    private void activateFromPool(Obstacle[] pool, int panelWidth, int panelHeight, double startY, double speed,
+            int colorId) {
         for (int i = 0; i < pool.length; i++) {
             if (!pool[i].isActive()) {
                 if (pool[i] instanceof StandardObstacle) {
-                    spawnStandard((StandardObstacle) pool[i], panelWidth, startY, speed, colorId);
+                    spawnStandard((StandardObstacle) pool[i], panelWidth, panelHeight, startY, speed, colorId);
                 } else if (pool[i] instanceof SpeedRacer) {
-                    spawnSpeedRacer((SpeedRacer) pool[i], panelWidth, startY, speed, colorId);
+                    spawnSpeedRacer((SpeedRacer) pool[i], panelWidth, panelHeight, startY, speed, colorId);
                 } else if (pool[i] instanceof SinusoidalMadness) {
-                    spawnSinusoidal((SinusoidalMadness) pool[i], panelWidth, startY, speed, colorId);
+                    spawnSinusoidal((SinusoidalMadness) pool[i], panelWidth, panelHeight, startY, speed, colorId);
                 }
                 return;
             }
         }
     }// fine activateFromPool
 
-    private void spawnRandomEnemy(int panelWidth) {
+    private void spawnRandomEnemy(int panelWidth, int panelHeight) {
         int startY = OBSTACLE_START_Y;
         int randomColorId = random.nextInt(availableColorsCount);
         int chance = random.nextInt(MAX_CHANCE);
 
         switch (currentPhase) {
             case 1:
-                activateFromPool(standardPool, panelWidth, startY, currentFallSpeed, randomColorId);
+                activateFromPool(standardPool, panelWidth, panelHeight, startY, currentFallSpeed, randomColorId);
                 break;
 
             case 2:
                 if (chance < SPEEDRACER_CHANCE_PHASE_2) {
-                    activateFromPool(speedRacerPool, panelWidth, startY, currentFallSpeed * SPEEDRACER_MULTIPLIER,
+                    activateFromPool(speedRacerPool, panelWidth, panelHeight, startY,
+                            currentFallSpeed * SPEEDRACER_MULTIPLIER,
                             randomColorId);
                 } else {
-                    activateFromPool(standardPool, panelWidth, startY, currentFallSpeed, randomColorId);
+                    activateFromPool(standardPool, panelWidth, panelHeight, startY, currentFallSpeed, randomColorId);
                 }
                 break;
 
             case 3:
             default:
                 if (chance < SINUSOIDALMADNESS_CHANCE) {
-                    activateFromPool(sinusoidalPool, panelWidth, startY, currentFallSpeed, randomColorId);
+                    activateFromPool(sinusoidalPool, panelWidth, panelHeight, startY, currentFallSpeed, randomColorId);
                 } else if (chance < SPEEDRACER_CHANCE_PHASE_3) {
-                    activateFromPool(speedRacerPool, panelWidth, startY, currentFallSpeed * SPEEDRACER_MULTIPLIER,
+                    activateFromPool(speedRacerPool, panelWidth, panelHeight, startY,
+                            currentFallSpeed * SPEEDRACER_MULTIPLIER,
                             randomColorId);
                 } else {
-                    activateFromPool(standardPool, panelWidth, startY, currentFallSpeed, randomColorId);
+                    activateFromPool(standardPool, panelWidth, panelHeight, startY, currentFallSpeed, randomColorId);
                 }
                 break;
         }
@@ -479,7 +571,7 @@ public class GameModel implements IGameModel {
         player.constrainX(MIN_X, panelWidth);
         player.constrainY(MIN_Y, panelHeight);
 
-        spawningHandler(panelWidth);
+        spawningHandler(panelWidth, panelHeight);
         updateEnemies(panelHeight);
 
         updateParticles();
