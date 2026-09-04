@@ -1,11 +1,11 @@
 #WINDOW
 frame_width=700
 frame_height=900
-color_cooldown=20
 
 #PLAYER
 player_start_x=325.0
 player_start_y=550.0
+color_cooldown=20
 player_speed=2.5
 player_width=70
 player_height=80
@@ -34,11 +34,11 @@ speed_phase_multiplier=1.35
 #WINDOW
 #frame_width=700
 #frame_height=900
-#color_cooldown=20
 
 #PLAYER
 #player_start_x=325.0
 #player_start_y=550.0
+#color_cooldown=20
 #player_speed=2.5
 #player_width=70
 #player_height=80
