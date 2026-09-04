@@ -20,7 +20,7 @@ sinusoidal_madness_amplitude=80
 sinusoidal_madness_points=300
 
 #DIFFICULTY_PROGRESSION
-obstacle_spawn_interval_ms=500
+obstacle_spawn_interval_ms=400
 phase_2_score_threshold=2500
 phase_3_score_threshold=5000
 score_delay_ms=1000
