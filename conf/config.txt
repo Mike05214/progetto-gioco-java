@@ -11,7 +11,7 @@ player_width=70
 player_height=80
 
 #OBSTACLES
-obstacle_base_speed=3.5
+obstacle_base_speed=4.0
 default_obstacle_points=100
 speed_racer_multiplier=1.5
 speed_racer_points=200

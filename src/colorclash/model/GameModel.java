@@ -215,7 +215,7 @@ public class GameModel implements IGameModel {
     }// Fine isSafeToSpawn
 
     private boolean isVerticalSafe(Obstacle obs, double newY, double newHeight, double newSpeed, int screenHeight) {
-        double safeInitialGap = 30;
+        double safeInitialGap = 10;
 
         double distanceY = obs.getY() - (newY + newHeight);
 
